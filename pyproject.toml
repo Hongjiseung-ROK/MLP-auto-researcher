@@ -69,6 +69,15 @@ mypy_path = "src"
 module = ["ase.*"]
 ignore_missing_imports = true
 
+# ASE ships partial annotations; calls into its untyped surface are expected
+# in the modules that wrap it.
+[[tool.mypy.overrides]]
+module = [
+    "mlip_research_agent.skills.atomistics.*",
+    "mlip_research_agent.skills.dft.*",
+]
+disallow_untyped_calls = false
+
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]
 addopts = "-q"

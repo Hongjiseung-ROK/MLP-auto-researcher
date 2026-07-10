@@ -1,0 +1,63 @@
+{
+  "architecture": "arm64",
+  "commands_executed": [
+    "conda env create -f environment.yml",
+    "conda run -n mlip-research-agent python --version  # 3.11.15",
+    "conda info --envs",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m pip check  # clean; bare pip check polluted by host PYTHONPATH=~/developer/chemsmart",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m pip install -e .",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m pytest  # 62 passed",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m ruff check .  # clean",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m mypy src  # clean, strict"
+  ],
+  "cuda": {
+    "available": false,
+    "reason": "nvidia-smi not found on PATH"
+  },
+  "environment_file_hash": "8da6b291c74ff354305bf7dfa0d5f7ae85d2a29d9ec63de316844d7107fad6b0",
+  "environment_name": "mlip-research-agent",
+  "external_tools": {
+    "conda": {
+      "available": true,
+      "path": "/opt/anaconda3/condabin/conda"
+    },
+    "docker": {
+      "available": false,
+      "path": null
+    },
+    "git": {
+      "available": true,
+      "path": "/usr/bin/git"
+    },
+    "lmp": {
+      "available": false,
+      "path": null
+    },
+    "orca": {
+      "available": true,
+      "path": "/Users/hongjiseung/programs/orca_6_1_1/orca"
+    },
+    "pw.x": {
+      "available": false,
+      "path": null
+    }
+  },
+  "failed_or_unavailable_tools": [
+    "docker",
+    "lmp",
+    "pw.x"
+  ],
+  "generated_at": "2026-07-10T12:32:54+00:00",
+  "installed_direct_dependencies": {
+    "PyYAML": "6.0.3",
+    "ase": "3.29.0",
+    "mypy": "2.2.0",
+    "numpy": "2.4.6",
+    "pydantic": "2.13.4",
+    "pytest": "8.4.2",
+    "ruff": "0.15.21"
+  },
+  "operating_system": "macOS-26.5.1-arm64-arm-64bit",
+  "python_version": "3.11.15",
+  "schema_version": "0.1.0"
+}
