@@ -1,0 +1,21 @@
+# Minimal bootstrap environment for the MLIP research agent.
+# Scope: repo development, schema validation, orchestration skeleton,
+# small-structure manipulation, unit tests, lint, static typing.
+# Heavy scientific integrations (MLIP backends, DFT, tracking) live in
+# optional dependency groups in pyproject.toml — see DEPENDENCIES.md.
+name: mlip-research-agent
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - pip>=24
+  - numpy>=1.26,<3
+  - ase>=3.23,<4
+  - pydantic>=2.6,<3
+  - pyyaml>=6,<7
+  - pytest>=8,<9
+  - pytest-cov>=5
+  - ruff>=0.5
+  - mypy>=1.10
+  - types-pyyaml

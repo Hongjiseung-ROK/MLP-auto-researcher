@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlip-research-agent"
+version = "0.1.0"
+description = "Autonomous active-learning scientist for ML interatomic potentials (bootstrap vertical slice)"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.26,<3",
+    "ase>=3.23,<4",
+    "pydantic>=2.6,<3",
+    "pyyaml>=6,<7",
+]
+
+[project.scripts]
+mlip-agent = "mlip_research_agent.cli:main"
+
+[project.optional-dependencies]
+# LLM-driven planning/triage. Provider choice pending approval (docs/OPEN_QUESTIONS.md).
+agent = []
+# Extended atomistics beyond the bootstrap ASE core.
+atomistics = ["pymatgen>=2024.1", "scikit-learn>=1.4", "scipy>=1.11"]
+# MLIP backends: separate extras because their torch/e3nn pins can conflict.
+# Install at most one per environment until per-backend isolation lands.
+mace = ["mace-torch>=0.3.6"]
+sevennet = ["sevenn>=0.10"]
+orb = ["orb-models>=0.4"]
+# DFT: real backends are external licensed binaries (see DEPENDENCIES.md §10);
+# this group holds Python-side wrappers only. Empty until the backend is approved.
+dft = []
+tracking = ["mlflow>=2.14", "dvc>=3.50"]
+provenance = ["rocrate>=0.10", "prov>=2.0"]
+dev = [
+    "pytest>=8,<9",
+    "pytest-cov>=5",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "types-PyYAML",
+]
+docs = ["mkdocs-material>=9.5", "mkdocstrings[python]>=0.25"]
+# 'all' deliberately excludes the mutually incompatible MLIP backend extras
+# and is never installed by default.
+all = [
+    "mlip-research-agent[atomistics,tracking,provenance,dev,docs]",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src"]
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["ase.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "src"]
+addopts = "-q"
