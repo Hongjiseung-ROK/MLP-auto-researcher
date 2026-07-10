@@ -4,7 +4,24 @@ Material uncertainties requiring the project owner's decision. Work that is
 independent and reversible (schemas, mocks, tests) proceeded; everything
 listed here **blocks the corresponding real integration**, not the skeleton.
 
-Status: **all open** (recorded 2026-07-10).
+Status (updated 2026-07-10, owner answered via bootstrap Q&A):
+**resolved** — OQ-1 (fcc Cu perturbed bulk), OQ-2 (materials-first),
+OQ-3 (MACE first), OQ-4 (MACE mandatory baseline), OQ-5 (ORCA — see caveat
+below), OQ-7 (OpenAI provider), OQ-8 (OpenHands as architectural reference).
+**still open** — OQ-6 (GPU type/budget), OQ-9 (DVC/MLflow config),
+OQ-10 (dataset credentials/storage), OQ-11 (Linux-only release),
+OQ-12 (approval thresholds).
+
+> **OQ-5 caveat (needs follow-up):** ORCA has no periodic boundary conditions,
+> while the chosen benchmark (OQ-1, bulk fcc Cu) is periodic. Either labeling
+> uses embedded/finite-cluster models cut from the bulk (method to be designed
+> and validated), or a periodic code (Quantum ESPRESSO) is added later for the
+> production labels. Raised as OQ-13.
+
+**OQ-13. Periodic-labeling strategy given ORCA + bulk Cu.**
+- Recommended default: prototype the ORCA integration on finite Cu clusters
+  (exercises the real parser/failure triage either way), and decide
+  cluster-embedding vs adding QE before the first production AL campaign.
 
 ---
 

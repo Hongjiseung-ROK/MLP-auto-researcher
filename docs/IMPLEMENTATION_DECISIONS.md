@@ -85,6 +85,15 @@ decision-gate design (refine/pivot/sufficient) and belongs to the next
 milestone with the real backend; wiring a fake loop now would create schema
 churn.
 
+## D-13: Owner decisions from bootstrap Q&A (2026-07-10)
+The project owner resolved: benchmark = **fcc Cu perturbed bulk,
+materials-first** (OQ-1/2); first backend = **MACE, mandatory baseline**
+(OQ-3/4); DFT backend = **ORCA** (already installed on host, academic
+license) (OQ-5); LLM provider = **OpenAI**, with **OpenHands kept as an
+architectural reference, not a runtime dependency** (OQ-7/8). Consequence:
+the `agent` extra will carry `openai`; ORCA's lack of periodic boundary
+conditions vs the periodic benchmark is tracked as OQ-13.
+
 ## D-12: Skill tests live inside each skill package
 Per the SKILL contract (`skills/<name>/tests/`), with cross-cutting tests
 (executor, schemas, end-to-end) under top-level `tests/`. `pytest` testpaths
