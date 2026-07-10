@@ -1,0 +1,5 @@
+{
+  "labels_path": "steps/labeling/labels.json",
+  "model_name": "mock_mean_baseline",
+  "holdout_fraction": 0.25
+}

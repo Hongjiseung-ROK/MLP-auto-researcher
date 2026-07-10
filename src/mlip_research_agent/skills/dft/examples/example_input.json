@@ -1,0 +1,6 @@
+{
+  "structures_path": "steps/structures/structures.json",
+  "selection_path": "steps/selection/selection.json",
+  "method": "mock_lj",
+  "inject_failure_times": 1
+}

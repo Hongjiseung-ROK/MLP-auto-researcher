@@ -1,0 +1,8 @@
+{
+  "formula": "Cu",
+  "crystal_structure": "fcc",
+  "lattice_constant": 3.6,
+  "supercell": [2, 2, 2],
+  "n_candidates": 8,
+  "max_perturbation": 0.12
+}

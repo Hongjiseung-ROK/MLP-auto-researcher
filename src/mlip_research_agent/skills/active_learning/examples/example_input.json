@@ -1,0 +1,5 @@
+{
+  "structures_path": "steps/structures/structures.json",
+  "n_select": 4,
+  "strategy": "mock_uncertainty"
+}

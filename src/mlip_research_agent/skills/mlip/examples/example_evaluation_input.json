@@ -1,0 +1,4 @@
+{
+  "model_path": "steps/training/model.json",
+  "labels_path": "steps/labeling/labels.json"
+}
