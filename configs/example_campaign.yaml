@@ -1,0 +1,26 @@
+# First execution target: a small mock research campaign.
+# Runs without GPU, DFT binaries, paid APIs, or datasets, and intentionally
+# triggers one recoverable failure in the labeling step to demonstrate
+# bounded recovery and checkpoint resume.
+schema_version: "0.1.0"
+name: cu-fcc-mock-al
+description: >-
+  Mock active-learning campaign on perturbed fcc Cu supercells with
+  uncertainty-proxy acquisition and mean-baseline training.
+mode: active_learning
+backend: mock
+target_system:
+  formula: Cu
+  crystal_structure: fcc
+  lattice_constant: 3.6
+  supercell: [2, 2, 2]
+budget:
+  max_labels: 8
+  max_retries_per_step: 2
+stopping:
+  max_iterations: 1
+seed: 42
+n_candidates: 16
+failure_injection:
+  step: labeling
+  times: 1
