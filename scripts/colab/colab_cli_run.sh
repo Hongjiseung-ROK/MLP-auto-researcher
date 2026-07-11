@@ -139,7 +139,7 @@ echo "== releasing the VM =="
 colab stop -s "$SESSION" || true
 
 echo "== verifying pulled-back artifact hashes =="
-python "$REPO_ROOT/scripts/colab/verify_pullback.py" "$PULLBACK_DIR"
+python3 "$REPO_ROOT/scripts/colab/verify_pullback.py" "$PULLBACK_DIR"
 
 echo "== done: task exit code $TASK_EXIT; artifacts under $PULLBACK_DIR =="
 if [ "$TASK" = "staging" ] && [ "$TASK_EXIT" = "5" ]; then

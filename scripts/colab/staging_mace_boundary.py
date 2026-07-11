@@ -202,7 +202,7 @@ def stage_attestation(
         config_hash=sha256_file(REPO_ROOT / "configs" / "compute_policy.yaml"),
     )
     write_attestation(record, run_dir)
-    if record.policy_decision.decision != Decision.ALLOW:
+    if record.policy_decision != Decision.ALLOW:
         raise SystemExit(EXIT_POLICY_DENIED)
     import torch
 
