@@ -48,7 +48,9 @@ wheels). CLAUDE.md forbids co-installing *multiple* MLIP extras, not one.
 Recommended default: install the pinned `mace` extra locally; keep remote
 tests opt-in.
 Status: **proceeding under recommended default unless the owner objects**
-(reversible; recorded here for transparency).
+(reversible; recorded here for transparency). **Local installation complete:**
+`mace-torch 0.3.16`, conda-forge `torch 2.12.1`; real CPU inference fixture
+passes. Colab/Linux pins and CPU/GPU parity remain WP3 staging work.
 
 **P2-Q6. Dataset redistribution.**
 If mlearn's license permits redistribution, tiny fixtures (≤ a few

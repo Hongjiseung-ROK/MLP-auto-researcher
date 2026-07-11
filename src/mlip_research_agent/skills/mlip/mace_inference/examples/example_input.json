@@ -1,0 +1,7 @@
+{
+  "structures_path": "steps/structures/structures.json",
+  "checkpoint_manifest_path": "configs/models/mace_mp_0_small_candidate.json",
+  "checkpoint_path": "data/cache/models/2023-12-10-mace-128-L0_energy_epoch-249.model",
+  "device": "cpu",
+  "default_dtype": "float64"
+}

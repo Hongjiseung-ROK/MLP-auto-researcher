@@ -4,5 +4,6 @@ from mlip_research_agent.skills.mlip.implementation import (
     MockEvaluationSkill,
     MockMLIPTrainingSkill,
 )
+from mlip_research_agent.skills.mlip.mace_inference import MACEInferenceSkill
 
-__all__ = ["MockEvaluationSkill", "MockMLIPTrainingSkill"]
+__all__ = ["MACEInferenceSkill", "MockEvaluationSkill", "MockMLIPTrainingSkill"]

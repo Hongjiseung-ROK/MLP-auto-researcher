@@ -28,7 +28,7 @@ Last updated: 2026-07-11.
 | WPS | Secure `api.env` loader + Materials Project SKILL | `src/mlip_research_agent/secrets/api_env.py`, `skills/data/materials_project/` | — | — | implemented locally (synthetic-key tests only; no live API call) |
 | WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1** | implemented locally; 11 checks pass; blocked on H1 promotion |
 | WP2 | Leakage-safe grouped split + simulated oracle | `data/{split,oracle}.py`, `skills/active_learning/oracle_reveal/` | WP1 | — | implemented locally (full suite 204 passed; independent final follow-up pending) |
-| WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | not_started |
+| WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | in_progress (real pinned CPU fixture passes; H2 selection + Colab CPU/GPU parity pending) |
 | WP5 | Independent evaluation suite | `skills/evaluation/mlip_metrics/` (+ learning_curve, calibration) | WP2, WP3 | — | not_started |
 | WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | not_started |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | not_started |
@@ -87,6 +87,7 @@ publication-claim eligible
 **Current: WP2 locally complete; no real inference or remote scientific
 execution has occurred.**
 
-Local gate evidence (2026-07-11): `pytest` 204 passed / 2 remote-resource
-tests deselected; `ruff check .` clean; `mypy src` clean. Remote testing:
+Local gate evidence (2026-07-11): default `pytest` 206 passed / 1 opt-in real
+MACE fixture skipped / 2 remote-resource tests deselected; opt-in real MACE
+CPU fixture 3 passed; `ruff check .` clean; `mypy src` clean. Remote testing:
 not run. Scientific approval: H1/H2 remain open.

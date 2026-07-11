@@ -69,6 +69,12 @@ checkpoint. Selection requires: Cu support, L4 memory fit, documented level
 of theory, stable download URL, SHA-256 pinning, license recorded, E0
 compatibility with the qualified dataset. Unqualified `mace_mp()` convenience
 aliases are forbidden in evidence-producing code paths.
+The first integration candidate is MACE-MP-0 small
+`2023-12-10-mace-128-L0_energy_epoch-249.model`, 32,581,838 bytes, SHA-256
+`2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736`.
+It is explicitly `candidate_only`, not H2-selected. The SKILL passes this
+verified local path to MACE and never asks the library to resolve or download
+an alias.
 
 **D-P2-9. `bounded_research_pilot` is a new workload class, distinct from
 `production_research`.** Colab-allowed, max 1 GPU, 60 min, ≤3 acquisition

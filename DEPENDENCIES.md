@@ -59,7 +59,7 @@ so none of these are in the bootstrap env.
 
 | Package | Purpose | Group | Channel | Version constraint | License | System req | Status |
 |---|---|---|---|---|---|---|---|
-| mace-torch | MACE foundation models — plan.md's recommended v1 default | `mace` | pip | `>=0.3.6` | MIT | torch; CUDA GPU strongly preferred for training | **Needs approval** (baseline choice — OQ-3/OQ-4) |
+| mace-torch | MACE foundation models — mandatory Phase 2 baseline | `mace` | pip | `==0.3.16` | MIT | torch; CUDA GPU strongly preferred for training | Confirmed; local CPU adapter validated, remote lock/parity pending |
 | chgnet | Charge-informed materials baseline | `chgnet` (add when needed) | pip | `>=0.3` | BSD-3 (model weights: check MP terms) | torch | Needs approval |
 | sevenn | SevenNet multi-GPU MD | `sevennet` | pip | `>=0.10` | GPL-3.0 | torch, LAMMPS for parallel MD | Needs approval (GPL — infects derived distributions) |
 | orb-models | ORB fast screening | `orb` | pip | `>=0.4` | Apache-2.0 (weights under ORB license terms) | torch | Needs approval |

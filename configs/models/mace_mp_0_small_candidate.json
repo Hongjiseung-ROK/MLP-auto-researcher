@@ -1,0 +1,15 @@
+{
+  "checkpoint_filename": "2023-12-10-mace-128-L0_energy_epoch-249.model",
+  "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+  "checkpoint_size_bytes": 32581838,
+  "family": "mace_mp",
+  "license_spdx": "MIT",
+  "mace_torch_version": "0.3.16",
+  "model_id": "mace-mp-0-small-2023-12-10",
+  "scientific_status": "candidate_only",
+  "source_url": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_energy_epoch-249.model",
+  "supported_species": [
+    "Cu"
+  ],
+  "training_data_statement": "MACE-MP-0 small checkpoint trained on Materials Project trajectories; exact target-label compatibility remains an H2 review item"
+}

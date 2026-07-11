@@ -80,6 +80,7 @@ ignore_missing_imports = true
 module = [
     "mlip_research_agent.skills.atomistics.*",
     "mlip_research_agent.skills.dft.*",
+    "mlip_research_agent.skills.mlip.mace_inference.*",
 ]
 disallow_untyped_calls = false
 
