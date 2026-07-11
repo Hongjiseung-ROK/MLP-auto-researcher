@@ -62,20 +62,31 @@ trap cleanup EXIT
 
 # remote_py <timeout-seconds>: run stdin as Python in the session's kernel and
 # require the STEP_OK sentinel, because `colab exec` does not propagate remote
-# exceptions as exit codes.
+# exceptions as exit codes. The CLI's kernel client occasionally hits a
+# transient 10s HTTP read timeout while attaching, so one bounded retry is
+# allowed for that transport failure only (kernel state persists; every
+# snippet here is safe to resend).
 remote_py() {
   local timeout=$1
-  local output
-  output=$(colab exec -s "$SESSION" --timeout "$timeout" 2>&1) || {
+  local code output status
+  code=$(cat)
+  for attempt in 1 2; do
+    output=$(colab exec -s "$SESSION" --timeout "$timeout" <<<"$code" 2>&1)
+    status=$?
+    if [ $status -eq 0 ] && grep -q "STEP_OK" <<<"$output"; then
+      echo "$output"
+      return 0
+    fi
+    if grep -qE "ReadTimeout|ConnectionError|Read timed out" <<<"$output" && [ "$attempt" -eq 1 ]; then
+      echo "warning: transient colab exec transport failure; retrying once" >&2
+      sleep 15
+      continue
+    fi
     echo "$output" >&2
-    echo "error: colab exec failed" >&2
+    echo "error: remote step failed (colab exec exit $status)" >&2
     return 2
-  }
-  echo "$output"
-  if ! grep -q "STEP_OK" <<<"$output"; then
-    echo "error: remote step did not report STEP_OK" >&2
-    return 2
-  fi
+  done
+  return 2
 }
 
 echo "== bundling $FULL_SHA =="
