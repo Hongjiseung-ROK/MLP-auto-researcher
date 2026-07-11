@@ -1,0 +1,10 @@
+{
+  "structures_path": "steps/build/ase_structures.json",
+  "structure_index": 0,
+  "pair_style": "deepmd",
+  "model_filename": "graph.pb",
+  "ensemble": "nve",
+  "timestep_ps": 0.0005,
+  "n_steps": 0,
+  "mode": "prepare"
+}

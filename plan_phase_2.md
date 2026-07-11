@@ -596,27 +596,32 @@ Large model checkpoints may remain provider-side only when their URI and checksu
 
 Google Drive mounting is optional, not a default requirement. The production path should not depend on interactive Drive behavior.
 
-## 7.5 Notebook policy
+## 7.5 Launcher policy (colab CLI)
 
-The notebook is a thin launcher, not the source of scientific logic.
+Owner decision (2026-07-12): the research agent drives all Colab execution
+through the security-reviewed `google-colab-cli` from the local machine.
+Notebooks are not an execution path and no notebook writers are maintained.
+The launcher is a thin driver, not the source of scientific logic.
 
 Required files:
 
 ```text
 scripts/colab/run_research.py
 scripts/colab/bootstrap_research.sh
-notebooks/colab_phase2_research.ipynb
+scripts/colab/colab_cli_run.sh
+scripts/colab/verify_pullback.py
 configs/research/cu_mace_al_pilot.yaml
 workflows/cu_mace_al_pilot.yaml
 ```
 
-The notebook must:
+The CLI launcher must:
 
 - contain no hidden scientific parameters;
-- call versioned repository code;
-- avoid committed output cells;
+- ship the exact commit to the VM (git bundle) and verify it there;
+- call versioned repository code only;
 - print the exact commit, run ID, dataset hash, model hash, and policy decision;
-- export a final artifact bundle.
+- pull back a final artifact bundle and verify its SHA-256 manifest locally;
+- always release the VM (`colab stop`), including on failure.
 
 ---
 
@@ -1450,8 +1455,8 @@ scripts/data/fetch_cu_benchmark.py
 scripts/data/qualify_cu_benchmark.py
 scripts/colab/bootstrap_research.sh
 scripts/colab/run_research.py
-
-notebooks/colab_phase2_research.ipynb
+scripts/colab/colab_cli_run.sh
+scripts/colab/verify_pullback.py
 
 src/mlip_research_agent/data/
 src/mlip_research_agent/research/

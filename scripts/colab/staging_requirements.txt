@@ -1,0 +1,6 @@
+# Colab staging dependency lock (P2-Q4). The repository package itself is
+# installed with `pip install -e .`; this file adds the exact real-MLIP pin.
+# torch/e3nn arrive as mace-torch dependencies; the staging record captures
+# the fully resolved versions (pip_freeze.txt) as the Linux/Colab pin
+# evidence required before the next H2 packet.
+mace-torch==0.3.16

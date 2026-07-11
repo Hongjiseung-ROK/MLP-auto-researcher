@@ -1,0 +1,70 @@
+{
+  "files": [
+    {
+      "relative_path": "compute/staging-7cb93ea9/attestation.json",
+      "sha256": "46660d9fb00f6f585e208989df1fd071924c6356c002a403c3259cf817914cbc",
+      "size_bytes": 748
+    },
+    {
+      "relative_path": "inference-cpu/inputs/structures.json",
+      "sha256": "45eb47a26e6a62c34afa4de174291f5d4d19b9f6b5db6d423eb1e628635f6c8e",
+      "size_bytes": 732
+    },
+    {
+      "relative_path": "inference-cpu/steps/staging-inference/mace_predictions.json",
+      "sha256": "599ddf5d35ceff1afd76acb0915de2ca710a0ad40fe19588ff5216650c5bd93e",
+      "size_bytes": 2325
+    },
+    {
+      "relative_path": "inference-cpu/steps/staging-inference/model_manifest.json",
+      "sha256": "dae1716f2dabda51e05031ae18cd523370a8b9bda2326a1a551df5c2c5915f7b",
+      "size_bytes": 1413
+    },
+    {
+      "relative_path": "inference-cuda/inputs/structures.json",
+      "sha256": "45eb47a26e6a62c34afa4de174291f5d4d19b9f6b5db6d423eb1e628635f6c8e",
+      "size_bytes": 732
+    },
+    {
+      "relative_path": "inference-cuda/steps/staging-inference/mace_predictions.json",
+      "sha256": "3e03eff8c995c402dc7a280e39b7cf918e65b0dd933f84556a508d40dff83e98",
+      "size_bytes": 2330
+    },
+    {
+      "relative_path": "inference-cuda/steps/staging-inference/model_manifest.json",
+      "sha256": "ac5459eb384122480201cc490b1be7455c69d45368618e75f51f9ce18d81dbf5",
+      "size_bytes": 1414
+    },
+    {
+      "relative_path": "nvidia_smi.txt",
+      "sha256": "214a3d21c762536371f9b28352f6b13ecdf1d487ee306eb02b005fb3fc445145",
+      "size_bytes": 1689
+    },
+    {
+      "relative_path": "pip_freeze.txt",
+      "sha256": "7ef294fc9153005f649f3b6c73e44952d4cc8de875419ff5bbe5dd15930f47db",
+      "size_bytes": 14356
+    },
+    {
+      "relative_path": "training/controlled-checkpoint-resumed.pt",
+      "sha256": "e76735f55851bba8e656f14fd92b1e3040f9f5970e45526fedaa6181a6e1f84a",
+      "size_bytes": 124806990
+    },
+    {
+      "relative_path": "training/controlled-checkpoint.pt",
+      "sha256": "874a082a2ecb92f5ae1d5315eecc666075b4114029410fcc1aa1ff6ee1d10d62",
+      "size_bytes": 124805286
+    },
+    {
+      "relative_path": "training/step-one.model",
+      "sha256": "448a30f4b7e30abfb3a6558223f60e90cfd325245e3c7fe90b687e263bf33324",
+      "size_bytes": 32594977
+    },
+    {
+      "relative_path": "training/step-two.model",
+      "sha256": "1572e401e4a07ae6b63cf259cb95fbf15ce916fbf8e082a83aec30550906d6f2",
+      "size_bytes": 32594977
+    }
+  ],
+  "schema_version": "1.0.0"
+}

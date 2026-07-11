@@ -1,0 +1,84 @@
+{
+  "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+  "dataset_content_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "dataset_id": "colab-staging-fixture",
+  "default_dtype": "float64",
+  "device": "cuda",
+  "energy_unit": "eV",
+  "force_unit": "eV/angstrom",
+  "model_id": "mace-mp-0-small-2023-12-10",
+  "model_manifest_artifact": "staging-inference:model_manifest.json",
+  "predictions": [
+    {
+      "energy_ev": -16.35929954742303,
+      "forces_ev_per_a": [
+        [
+          -7.462903210691886e-18,
+          -5.545694112263355e-17,
+          -4.7813315806610746e-17
+        ],
+        [
+          -5.39926683927849e-17,
+          9.336220866484944e-17,
+          5.17435486818707e-17
+        ],
+        [
+          4.8559073971284094e-17,
+          -5.430562267410733e-17,
+          -2.959871930885427e-17
+        ],
+        [
+          1.605361024864387e-17,
+          8.754932542820448e-18,
+          3.515525544284248e-17
+        ]
+      ],
+      "record_id": "base",
+      "stress_ev_per_a3_voigt6": [
+        -0.00969941825983755,
+        -0.009699418259837549,
+        -0.009699418259837557,
+        -9.113100384453641e-19,
+        -2.9596668383861446e-18,
+        5.35527712377951e-19
+      ]
+    },
+    {
+      "energy_ev": -16.34895733762938,
+      "forces_ev_per_a": [
+        [
+          -0.08027744343127785,
+          -0.09255970096544808,
+          -0.13635131582891052
+        ],
+        [
+          -0.011300740639771068,
+          0.12106901165721787,
+          0.13356466254869653
+        ],
+        [
+          -0.1072389514263413,
+          0.08767057376411205,
+          -0.029066721405501036
+        ],
+        [
+          0.19881713549739022,
+          -0.11617988445588186,
+          0.0318533746857151
+        ]
+      ],
+      "record_id": "rattled",
+      "stress_ev_per_a3_voigt6": [
+        -0.010088625782313102,
+        -0.01077191348993478,
+        -0.010602964847754985,
+        -0.00017036785521453723,
+        0.00030347084713537034,
+        -0.00015590876769860617
+      ]
+    }
+  ],
+  "schema_version": "2.0.0",
+  "split_semantic_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "structure_set_sha256": "45eb47a26e6a62c34afa4de174291f5d4d19b9f6b5db6d423eb1e628635f6c8e"
+}

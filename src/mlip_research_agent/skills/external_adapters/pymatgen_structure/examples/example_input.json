@@ -1,0 +1,4 @@
+{
+  "structures_path": "steps/build/ase_structures.json",
+  "symprec": 0.001
+}

@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """Pre-publication gate: scan staged files for secrets and oversized blobs.
 
-Usage: python scripts/check_staged.py [--max-bytes 1048576]
+Usage: python scripts/check_staged.py [--max-bytes 1048576] [--tracked]
+`--tracked` scans every tracked file at HEAD instead of the staged index —
+that is the CI mode, where nothing is staged.
 Exit codes: 0 clean, 1 findings, 2 git error.
 """
 
@@ -30,27 +32,39 @@ SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ALLOWLIST_SUBSTRINGS = ("[REDACTED]", "supersecret123", "example", "PLACEHOLDER")
 
 
-def staged_files() -> list[str]:
-    proc = subprocess.run(
-        ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
-        capture_output=True,
-        text=True,
-    )
+def _git_listing(command: list[str]) -> list[str]:
+    proc = subprocess.run(command, capture_output=True, text=True)
     if proc.returncode != 0:
         print(proc.stderr, file=sys.stderr)
         raise SystemExit(2)
     return [line for line in proc.stdout.splitlines() if line.strip()]
 
 
+def staged_files() -> list[str]:
+    return _git_listing(
+        ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"]
+    )
+
+
+def tracked_files() -> list[str]:
+    return _git_listing(["git", "ls-files"])
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--max-bytes", type=int, default=1_048_576)
+    parser.add_argument(
+        "--tracked",
+        action="store_true",
+        help="scan all tracked files at HEAD (CI mode) instead of the staged index",
+    )
     args = parser.parse_args()
 
+    revision_prefix = "HEAD:" if args.tracked else ":"
     findings: list[str] = []
-    for path in staged_files():
+    for path in tracked_files() if args.tracked else staged_files():
         show = subprocess.run(
-            ["git", "show", f":{path}"], capture_output=True
+            ["git", "show", f"{revision_prefix}{path}"], capture_output=True
         )
         if show.returncode != 0:
             continue

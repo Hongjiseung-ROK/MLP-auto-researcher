@@ -1,0 +1,6 @@
+{
+  "structures_path": "steps/build/ase_structures.json",
+  "structure_index": 0,
+  "supercell": [2, 2, 2],
+  "displacement_distance_a": 0.01
+}

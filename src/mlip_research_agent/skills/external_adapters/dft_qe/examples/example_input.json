@@ -1,0 +1,9 @@
+{
+  "structures_path": "steps/build/ase_structures.json",
+  "structure_index": 0,
+  "calculation": "scf",
+  "ecutwfc_ry": 60.0,
+  "kpoints": [4, 4, 4],
+  "pseudopotentials": {"Cu": "Cu.paw.upf"},
+  "mode": "prepare"
+}

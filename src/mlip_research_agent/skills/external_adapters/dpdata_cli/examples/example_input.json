@@ -1,0 +1,4 @@
+{
+  "dataset_path": "inputs/normalized_dataset.json",
+  "to_format": "deepmd/npy"
+}

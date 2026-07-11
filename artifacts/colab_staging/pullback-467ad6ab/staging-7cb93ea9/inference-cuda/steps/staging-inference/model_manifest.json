@@ -1,0 +1,26 @@
+{
+  "checkpoint": {
+    "manifest_sha256": "53d9b5ccb38b2760f55fecb81db07581fbda8782a133417ebcfb0fd44759b6ae",
+    "model_id": "mace-mp-0-small-2023-12-10",
+    "path": "/content/MLP-auto-researcher/data/cache/models/2023-12-10-mace-128-L0_energy_epoch-249.model",
+    "sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+    "size_bytes": 32581838
+  },
+  "checkpoint_license_spdx": "MIT",
+  "checkpoint_source_url": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_energy_epoch-249.model",
+  "dataset_content_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "dataset_id": "colab-staging-fixture",
+  "default_dtype": "float64",
+  "device": "cuda",
+  "family": "mace_mp",
+  "mace_torch_version": "0.3.16",
+  "model_id": "mace-mp-0-small-2023-12-10",
+  "predictions_artifact": "staging-inference:mace_predictions.json",
+  "schema_version": "2.0.0",
+  "scientific_status": "candidate_only",
+  "split_semantic_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "structure_set_sha256": "45eb47a26e6a62c34afa4de174291f5d4d19b9f6b5db6d423eb1e628635f6c8e",
+  "structures_path": "inputs/structures.json",
+  "torch_version": "2.11.0+cu128",
+  "training_data_statement": "MACE-MP-0 small checkpoint trained on Materials Project trajectories; exact target-label compatibility remains an H2 review item"
+}

@@ -1,0 +1,41 @@
+{
+  "authorization": "P2-Q4 bounded staging (one GPU, <=60 min, no full pilot)",
+  "created_at": "2026-07-11T15:22:41.544845+00:00",
+  "exit_code": 1,
+  "failure": {
+    "error_type": "AttributeError",
+    "stage": "gpu_attestation_policy"
+  },
+  "gpu_name": null,
+  "kind": "colab_staging_mace_boundary",
+  "packages": {
+    "ase": "3.29.0",
+    "e3nn": "0.4.4",
+    "mace-torch": "0.3.16",
+    "mlip-research-agent": "0.1.0",
+    "numpy": "2.0.2",
+    "pydantic": "2.13.4",
+    "torch": "2.11.0+cu128"
+  },
+  "parity_tolerances": {
+    "energy_atol_ev": 5e-05,
+    "force_atol_ev_per_a": 5e-05
+  },
+  "passed": false,
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+  "python": "3.12.13",
+  "repo_commit": "f8b63bc0c6be6d416eeb4faf659c402162566d78",
+  "requested_accelerator": "nvidia-l4",
+  "run_id": "staging-f93a23d0",
+  "schema_version": "1.0.0",
+  "scientific_status": "staging_only",
+  "stages": [
+    {
+      "detail": "AttributeError: 'Decision' object has no attribute 'decision'",
+      "name": "gpu_attestation_policy",
+      "seconds": 4.6069728009999835,
+      "status": "fail"
+    }
+  ],
+  "wall_seconds": 6.283245571000009
+}

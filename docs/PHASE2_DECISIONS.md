@@ -160,3 +160,36 @@ diagnostic was run for both candidates with no fitted shift and no access to
 protected evaluation labels. Because H2 contains no frozen diagnostic
 threshold, the memo records evidence and limitations only; both checkpoints
 remain `candidate_only` until owner selection after optimizer/staging gates.
+
+**D-P2-18. Colab execution is CLI-driven; notebooks are retired (owner
+directive, 2026-07-12).** The research agent drives every Colab run through
+the security-reviewed `google-colab-cli` v0.6.0 from the local machine:
+`scripts/colab/colab_cli_run.sh` ships the exact commit as a git bundle
+(no GitHub dependency), installs `scripts/colab/staging_requirements.txt`
+pins, executes the repository script, pulls the artifact bundle back, and
+verifies its SHA-256 manifest with `scripts/colab/verify_pullback.py` before
+anything is cited as evidence. The notebook writers
+(`scripts/colab/make_notebook.py`, generated `notebooks/*.ipynb`) were
+deleted; plan_phase_2.md §7.5 became "Launcher policy (colab CLI)". Remote
+exceptions do not propagate through `colab exec` exit codes, so the driver
+requires an explicit STEP_OK sentinel per remote step and reads the task's
+exit code from a TASK_EXIT marker; the VM is always released via a shell
+trap.
+
+**D-P2-19. Bounded Colab staging executed and passed (2026-07-12).** Under
+the P2-Q4 authorization, `scripts/colab/colab_cli_run.sh staging` ran commit
+`467ad6a` on one policy-attested NVIDIA L4 (colab CLI, git-bundle commit
+shipping). All five stages passed: GPU attestation (allow), pinned
+MACE-MP-0-small checkpoint resolution (SHA-256 `2ddb079c…5736`),
+real-inference CPU/GPU float64 parity (max energy delta 0.0 eV, max force
+component delta 1.14e-15 eV/Å against declared 5e-5 tolerances), one
+controlled optimizer step (26 parameter tensors changed) with checkpoint
+round-trip resuming at the epoch boundary, and a 13-file SHA-256 artifact
+manifest whose pull-back verified locally. Boundary fixtures are synthetic
+bulk-Cu structures — protected Cu partitions were never touched. Linux pins
+recorded: torch 2.11.0+cu128, mace-torch 0.3.16, e3nn 0.4.4, numpy 2.0.2,
+Python 3.12. Two earlier attempts surfaced and fixed real defects
+(attestation enum access; CUDA resume required CPU-deserialized RNG states);
+a third was lost to a transient CLI transport timeout, after which the
+driver gained one bounded retry. Staging consumes staging-only status: it
+does not satisfy H3.
