@@ -1,0 +1,22 @@
+schema_version: "1.0.0"
+current_program_goal: >-
+  Build a reusable AI researcher pipeline that can generate, compare, execute,
+  critique, and report bounded atomistic research programs with traceable
+  evidence and human review at irreversible scientific boundaries.
+current_benchmark_role: >-
+  The mlearn fcc-Cu and MACE work is a bounded pipeline-hardening scaffold for
+  data, model, evaluation, fine-tuning, and remote-staging boundaries; it is
+  not the repository's final scientific topic.
+non_goals:
+  - Complete a scientific conclusion about fcc Cu in this phase.
+  - Run a full active-learning campaign without H3 approval.
+  - Mint replicated or publication-eligible claims.
+  - Encode Cu-specific assumptions in reusable controller or evaluator APIs.
+  - Change the dataset, model family, or primary endpoint without a recorded PIVOT.
+allowed_claim_tier: pilot_only
+next_human_gate: H2
+criteria_to_exit_benchmark_mode:
+  - A second pinned checkpoint and E0 compatibility have been reviewed.
+  - Evaluation and fine-tuning skills pass non-Cu synthetic fixtures.
+  - The bounded Colab staging bundle passes exact-hash and parity checks.
+  - The owner freezes H2 or records a scientific PIVOT to a broader program.

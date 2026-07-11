@@ -12,6 +12,7 @@ from mlip_research_agent.schemas.claims import (
     ClaimClass,
     ClaimStatus,
     EvaluationPartition,
+    MetricValueBinding,
     ScientificEvidenceTier,
 )
 from mlip_research_agent.schemas.events import Event, EventType
@@ -21,6 +22,7 @@ from mlip_research_agent.schemas.failure import (
     RecoveryDecision,
     Severity,
 )
+from mlip_research_agent.schemas.predictions import PredictionBatch, PredictionRecord
 from mlip_research_agent.schemas.workflow import WorkflowSpec, WorkflowStep
 
 __all__ = [
@@ -35,6 +37,9 @@ __all__ = [
     "FailureClass",
     "FailureRecord",
     "LabelBudget",
+    "MetricValueBinding",
+    "PredictionBatch",
+    "PredictionRecord",
     "RecoveryDecision",
     "ScientificEvidenceTier",
     "Severity",

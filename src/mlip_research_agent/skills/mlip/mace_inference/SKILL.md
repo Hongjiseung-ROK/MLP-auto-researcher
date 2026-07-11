@@ -10,8 +10,11 @@ Pinned MACE energy/force/stress inference over the repository's deterministic
   license, and training-data statement are checked before deserialization.
 - Convenience aliases and runtime downloads are forbidden. A missing or
   mismatched checkpoint fails closed.
+- Inputs bind the ordered structures to dataset record ids plus exact dataset
+  content and split semantic hashes; duplicate or count-mismatched ids fail.
 - Produces registered `mlip_predictions` and `model_manifest` artifacts with
-  eV, eV/angstrom, and eV/angstrom^3 Voigt-6 units.
+  explicit eV, eV/angstrom, and eV/angstrom^3 Voigt-6 units. Both artifacts
+  carry the dataset/split identities required by the independent evaluator.
 - Finite outputs are mandatory. Requested CUDA without a visible device fails;
   CPU never silently becomes a scientific GPU run.
 

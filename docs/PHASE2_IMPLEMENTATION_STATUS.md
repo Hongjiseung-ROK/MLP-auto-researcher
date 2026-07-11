@@ -24,12 +24,13 @@ Last updated: 2026-07-11.
 
 | WP | Scope | Target files | Depends on | Human gate | Status |
 |---|---|---|---|---|---|
+| META | Tea Time research pause + program guardrail | `skills/reflection/`, `research/program_guardrail.py`, `configs/research/program_guardrail.yaml` | — | — | implemented locally; focused/full gates pending this change |
 | WP0 | Preregistration schema, experiment matrix, pilot config | `src/mlip_research_agent/research/{preregistration,experiment_matrix,pilot_status}.py`, `configs/research/cu_mace_al_pilot.yaml`, `docs/research/phase2_preregistration.md` | — | H2 before results | in_progress (WP1/WP2 values pinned; WP3/WP4 TBD) |
 | WPS | Secure `api.env` loader + Materials Project SKILL | `src/mlip_research_agent/secrets/api_env.py`, `skills/data/materials_project/` | — | — | implemented locally (synthetic-key tests only; no live API call) |
-| WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1** | implemented locally; 11 checks pass; blocked on H1 promotion |
-| WP2 | Leakage-safe grouped split + simulated oracle | `data/{split,oracle}.py`, `skills/active_learning/oracle_reveal/` | WP1 | — | implemented locally (full suite 204 passed; independent final follow-up pending) |
-| WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | in_progress (real pinned CPU fixture passes; H2 selection + Colab CPU/GPU parity pending) |
-| WP5 | Independent evaluation suite | `skills/evaluation/mlip_metrics/` (+ learning_curve, calibration) | WP2, WP3 | — | not_started |
+| WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1 approved** | implemented locally; 11 checks pass; energy/force promoted, stress excluded |
+| WP2 | Leakage-safe grouped split + simulated oracle | `data/{split,oracle}.py`, `skills/active_learning/oracle_reveal/` | WP1 | — | implemented locally; independent leakage review passed |
+| WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | in_progress (two candidates pinned; both CPU fixtures pass; D0 E0 diagnostic complete; H2 selection + Colab parity pending) |
+| WP5 | Independent evaluation suite | `skills/evaluation/mlip_metrics/` (+ learning_curve, calibration) | WP2, WP3 | — | in_progress (aggregate prototype: 24 tests pass; fresh audit found leakage/unit/claim-binding/authorization gaps under repair) |
 | WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | not_started |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | not_started |
 | WP7 | Multi-round controller + stopping rules | `research/` controller, round state schema | WP4–WP6 | — | not_started |
@@ -72,11 +73,12 @@ Last updated: 2026-07-11.
 
 | Gate | Meaning | Status |
 |---|---|---|
-| H1 | Dataset promotion | awaiting owner approval of qualified hashes and time-block limitation |
-| H2 | Preregistration approval | not reached (draft exists) |
+| H1 | Dataset promotion | approved for recorded energy/force dataset and whole-family split; stress excluded |
+| H2 | Preregistration approval | deliberately not frozen; second checkpoint, E0, optimizer-step, and Linux pins pending |
 | H3 | Remote execution approval | not reached |
 | H4 | Scientific pivot | n/a |
 | H5 | Claim release | not reached |
+| Staging | Bounded Colab integration test | authorized: L4, one GPU, ≤60 min, OOM-only A100-40GB retry; no full pilot |
 
 ## Repository capability ladder
 
@@ -84,10 +86,13 @@ mock-only → real-inference capable → real-fine-tuning capable →
 Colab-staging capable → Colab-pilot complete → VESSL-replicated →
 publication-claim eligible
 
-**Current: WP2 locally complete; no real inference or remote scientific
-execution has occurred.**
+**Current: Level 3 local real-model boundary; Level 4 bounded-staging
+preparation is in progress.** Real pinned MACE CPU inference has occurred.
+No remote scientific execution, fine-tuning result, full pilot, or
+publication-eligible claim has occurred.
 
-Local gate evidence (2026-07-11): default `pytest` 206 passed / 1 opt-in real
-MACE fixture skipped / 2 remote-resource tests deselected; opt-in real MACE
-CPU fixture 3 passed; `ruff check .` clean; `mypy src` clean. Remote testing:
-not run. Scientific approval: H1/H2 remain open.
+Recovery evidence (2026-07-11, HEAD `4bdfa06` before the current changes):
+default `pytest` 206 passed / 1 opt-in real MACE fixture skipped / 2 remote
+tests deselected; opt-in pinned MACE CPU fixture 3 passed; Ruff and strict
+mypy clean; secret/large-file scan clean. Remote testing: not run. Scientific
+approval: H1 granted; H2/H3/H5 remain open.

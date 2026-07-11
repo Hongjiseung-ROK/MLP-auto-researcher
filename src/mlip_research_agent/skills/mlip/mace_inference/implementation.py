@@ -37,6 +37,7 @@ from mlip_research_agent.skills.mlip.mace_inference.validators import (
     require_finite,
     require_mace_installation,
     run_relative_file,
+    validate_record_ids,
     validate_structures,
 )
 
@@ -103,9 +104,10 @@ class MACEInferenceSkill(Skill):
 
         structures = StructureSet.load(structures_path)
         validate_structures(structures, set(manifest.supported_species))
+        validate_record_ids(params.record_ids, len(structures.systems))
         calculator = _make_calculator(checkpoint_path, params.device, params.default_dtype)
         predictions: list[dict[str, Any]] = []
-        for record in structures.systems:
+        for record_id, record in zip(params.record_ids, structures.systems, strict=True):
             atoms = record_to_atoms(record)
             atoms.calc = calculator
             energy = float(atoms.get_potential_energy())
@@ -116,7 +118,7 @@ class MACEInferenceSkill(Skill):
             require_finite(stress, "stress")
             predictions.append(
                 {
-                    "structure_index": record.index,
+                    "record_id": record_id,
                     "energy_ev": energy,
                     "forces_ev_per_a": forces,
                     "stress_ev_per_a3_voigt6": stress,
@@ -126,8 +128,14 @@ class MACEInferenceSkill(Skill):
         predictions_path = ctx.step_dir / PREDICTIONS_FILE
         predictions_payload = {
             "schema_version": "2.0.0",
+            "dataset_id": params.dataset_id,
+            "dataset_content_sha256": params.dataset_content_sha256,
+            "split_semantic_sha256": params.split_semantic_sha256,
             "model_id": manifest.model_id,
+            "model_manifest_artifact": f"{ctx.step_id}:{MODEL_MANIFEST_FILE}",
             "checkpoint_sha256": resolved.sha256,
+            "energy_unit": "eV",
+            "force_unit": "eV/angstrom",
             "device": params.device,
             "default_dtype": params.default_dtype,
             "structure_set_sha256": sha256_file(structures_path),
@@ -156,6 +164,9 @@ class MACEInferenceSkill(Skill):
             "default_dtype": params.default_dtype,
             "structures_path": params.structures_path,
             "structure_set_sha256": sha256_file(structures_path),
+            "dataset_id": params.dataset_id,
+            "dataset_content_sha256": params.dataset_content_sha256,
+            "split_semantic_sha256": params.split_semantic_sha256,
             "predictions_artifact": predictions_artifact.artifact_id,
         }
         model_manifest_path.write_text(

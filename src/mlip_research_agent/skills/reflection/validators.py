@@ -1,9 +1,7 @@
-"""Validation for the tea-time skill."""
+"""Validation for the tea-time research-pause skill."""
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
 from typing import Any
 
 from mlip_research_agent.schemas.failure import FailureClass, Severity
@@ -21,42 +19,44 @@ def validate_poem_key(poem_key: str | None) -> None:
         )
 
 
-def load_data(run_dir: Path, data_path: str | None) -> dict[str, Any] | None:
-    if data_path is None:
-        return None
-    path = run_dir / data_path
-    if not path.is_file():
-        raise SkillError(
-            f"data artifact not found: {data_path}",
-            failure_class=FailureClass.VALIDATION_ERROR,
-            severity=Severity.MEDIUM,
-            retryable=False,
-        )
-    try:
-        loaded: Any = json.loads(path.read_text())
-    except json.JSONDecodeError as exc:
-        raise SkillError(
-            f"data artifact is not valid JSON: {data_path} ({exc})",
-            failure_class=FailureClass.VALIDATION_ERROR,
-            severity=Severity.MEDIUM,
-            retryable=False,
-        ) from exc
-    if not isinstance(loaded, dict):
-        raise SkillError(
-            f"data artifact must be a JSON object: {data_path}",
-            failure_class=FailureClass.VALIDATION_ERROR,
-            severity=Severity.MEDIUM,
-            retryable=False,
-        )
-    return loaded
+FORBIDDEN_PAYLOAD_KEYS = frozenset(
+    {
+        "api_key",
+        "energy_ev",
+        "forces_ev_per_a",
+        "hidden_labels",
+        "per_record_errors",
+        "secret",
+        "stress_ev_per_a3",
+        "test_metric_details",
+    }
+)
 
 
-def assert_no_claims_registered(n_claims: int) -> None:
-    """Tea-time output is agent-text class: it must never register claims."""
-    if n_claims != 0:
+def assert_no_sensitive_payload(value: Any) -> None:
+    """Fail if a future edit tries to serialize restricted research data."""
+    if isinstance(value, dict):
+        forbidden = FORBIDDEN_PAYLOAD_KEYS.intersection(value)
+        if forbidden:
+            raise SkillError(
+                f"Tea Time payload contains forbidden keys: {sorted(forbidden)}",
+                failure_class=FailureClass.VALIDATION_ERROR,
+                severity=Severity.HIGH,
+                retryable=False,
+            )
+        for nested in value.values():
+            assert_no_sensitive_payload(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            assert_no_sensitive_payload(nested)
+
+
+def assert_claim_count_unchanged(before: int, after: int) -> None:
+    """Tea-time output is agent-text class: it must never add claims."""
+    if after != before:
         raise SkillError(
-            f"tea_time_with_reading_poem registered {n_claims} claim(s); its output "
-            "is reflection, never evidence",
+            "tea_time_with_reading_poem changed the claim count; its output is "
+            "reflection, never evidence",
             failure_class=FailureClass.UNSUPPORTED_CLAIM,
             severity=Severity.HIGH,
             retryable=False,

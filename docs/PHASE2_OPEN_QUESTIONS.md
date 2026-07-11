@@ -9,8 +9,9 @@ Approve the qualified Cu dataset: source, license/redistribution terms,
 units, level of theory, quality metrics, leakage-risk assessment, and the
 qualified manifest hash. Presented after WP1 produces
 `data_registry/datasets/cu_phase2/qualification_report.json`.
-Status: **open — due diligence and local qualification complete; owner H1
-approval pending.** Review subject: qualified dataset content SHA-256
+Status: **resolved — owner approved energy/force use with documented
+limitations on 2026-07-11; stress remains excluded.** Approval subject:
+qualified dataset content SHA-256
 `bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48`,
 normalized-manifest file SHA-256
 `ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3`,
@@ -22,8 +23,11 @@ Approve `docs/research/phase2_preregistration.md` (research question, primary
 endpoint = force MAE eV/Å on frozen test set, four arms, budgets, split rule,
 checkpoint, seed schedule, stopping rules). The preregistration hash must be
 recorded before the first result-producing run.
-Status: **open — draft written; WP1/WP2 fields are pinned locally, remaining
-values depend on WP3/WP4 due diligence.**
+Status: **open by explicit owner decision — do not freeze yet.** WP1/WP2 are
+pinned. Two checkpoints are now content-addressed and their D0-only raw
+energy-offset evidence is recorded without selection. One local optimizer
+step, checkpoint round trip, and Linux/Colab pins remain required before the
+next H2 packet.
 
 **P2-Q3 (Gate H3). First remote execution.**
 Approve exact commit, `bounded_research_pilot` workload, requested GPU (L4),
@@ -39,7 +43,9 @@ treats it as human-triggered. Does the owner authorize the staging run as
 soon as it is ready, or require a separate ask?
 Recommended default: authorize staging when local gates pass, since OQ-14
 already approved Pro-tier preflights ≤60 min.
-Status: **open.**
+Status: **resolved — bounded staging is authorized** for one L4, one GPU,
+at most 60 minutes, with one A100-40GB fallback only after verified OOM. This
+does not authorize a full acquisition campaign or satisfy H3.
 
 **P2-Q5. Local `mace` extra installation.**
 Real CPU-boundary tests (WP3/WP4) require `mace-torch` + CPU torch in the
@@ -47,8 +53,7 @@ Real CPU-boundary tests (WP3/WP4) require `mace-torch` + CPU torch in the
 wheels). CLAUDE.md forbids co-installing *multiple* MLIP extras, not one.
 Recommended default: install the pinned `mace` extra locally; keep remote
 tests opt-in.
-Status: **proceeding under recommended default unless the owner objects**
-(reversible; recorded here for transparency). **Local installation complete:**
+Status: **resolved. Local installation complete:**
 `mace-torch 0.3.16`, conda-forge `torch 2.12.1`; real CPU inference fixture
 passes. Colab/Linux pins and CPU/GPU parity remain WP3 staging work.
 

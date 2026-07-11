@@ -13,6 +13,7 @@ from mlip_research_agent.schemas.claims import (
     ClaimClass,
     ClaimStatus,
     EvaluationPartition,
+    MetricValueBinding,
     ScientificEvidenceTier,
 )
 from mlip_research_agent.schemas.failure import FailureClass
@@ -36,6 +37,10 @@ def scientific_kwargs() -> dict[str, object]:
         "created_by_step": "evaluation",
         "artifact_references": ARTIFACTS[:4],
         "metric_artifact_references": [ARTIFACTS[0]],
+        "metric_value_binding": MetricValueBinding(
+            metric_artifact_reference=ARTIFACTS[0],
+            json_pointer="/aggregate/force_component_mae_ev_per_a",
+        ),
         "dataset_manifest_reference": ARTIFACTS[1],
         "split_manifest_reference": ARTIFACTS[2],
         "model_manifest_reference": ARTIFACTS[3],
@@ -123,6 +128,14 @@ def test_numerical_scientific_claim_requires_metrics_and_dataset() -> None:
     kwargs = scientific_kwargs()
     kwargs["metric_artifact_references"] = []
     with pytest.raises(ValidationError, match="metric artifact"):
+        Claim(
+            **kwargs,
+            claim_class=ClaimClass.PILOT_SCIENTIFIC,
+            scientific_evidence_tier=ScientificEvidenceTier.PILOT_ONLY,
+        )
+    kwargs = scientific_kwargs()
+    kwargs["metric_value_binding"] = None
+    with pytest.raises(ValidationError, match="exact metric value binding"):
         Claim(
             **kwargs,
             claim_class=ClaimClass.PILOT_SCIENTIFIC,

@@ -1,0 +1,15 @@
+{
+  "checkpoint_filename": "mace-mpa-0-medium.model",
+  "checkpoint_sha256": "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638",
+  "checkpoint_size_bytes": 79462305,
+  "family": "mace_mpa",
+  "license_spdx": "MIT",
+  "mace_torch_version": "0.3.16",
+  "model_id": "mace-mpa-0-medium-2024-12-17",
+  "scientific_status": "candidate_only",
+  "source_url": "https://github.com/ACEsuit/mace-foundations/releases/download/mace_mpa_0/mace-mpa-0-medium.model",
+  "supported_species": [
+    "Cu"
+  ],
+  "training_data_statement": "MACE-MPA-0 medium trained on MPTrj plus sAlex at DFT PBE+U; direct mlearn-to-sAlex overlap is unknown and remains an H2 limitation"
+}

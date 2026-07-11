@@ -75,6 +75,23 @@ def validate_structures(structures: StructureSet, supported_species: set[str]) -
         )
 
 
+def validate_record_ids(record_ids: list[str], n_structures: int) -> None:
+    if len(record_ids) != n_structures:
+        raise SkillError(
+            "MACE record_ids must match the number of input structures",
+            failure_class=FailureClass.VALIDATION_ERROR,
+            severity=Severity.HIGH,
+            retryable=False,
+        )
+    if len(record_ids) != len(set(record_ids)):
+        raise SkillError(
+            "MACE record_ids must be unique",
+            failure_class=FailureClass.VALIDATION_ERROR,
+            severity=Severity.HIGH,
+            retryable=False,
+        )
+
+
 def require_finite(values: list[float], description: str) -> None:
     if not all(math.isfinite(value) for value in values):
         raise SkillError(

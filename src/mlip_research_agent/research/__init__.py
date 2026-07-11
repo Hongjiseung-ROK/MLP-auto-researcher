@@ -22,6 +22,7 @@ from mlip_research_agent.research.preregistration import (
     load_pilot_config,
     require_approval,
 )
+from mlip_research_agent.research.program_guardrail import ResearchProgramGuardrail
 
 __all__ = [
     "ApprovalRecord",
@@ -32,6 +33,7 @@ __all__ = [
     "PilotStage",
     "PilotStatus",
     "Preregistration",
+    "ResearchProgramGuardrail",
     "RoundState",
     "default_phase2a_matrix",
     "load_pilot_config",

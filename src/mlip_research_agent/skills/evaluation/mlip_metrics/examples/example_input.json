@@ -1,0 +1,10 @@
+{
+  "dataset_artifact": "qualify:normalized_dataset.json",
+  "dataset_manifest_artifact": "qualify:normalized_manifest.json",
+  "evaluation_authorization_artifact": "approve:evaluation_authorization.json",
+  "high_error_threshold_ev_per_a": 0.5,
+  "model_manifest_artifact": "mace:model_manifest.json",
+  "partition": "frozen_test",
+  "predictions_artifact": "mace:mace_predictions.json",
+  "split_manifest_artifact": "split:split_manifest.json"
+}

@@ -122,3 +122,41 @@ Separate campaign IDs isolate random and hybrid arm budgets. Within one
 campaign, every new reveal must name the unique registered prior-state head.
 State commits use a file lock plus compare-and-swap hash, so stale writers
 cannot overwrite a newer budget ledger.
+
+**D-P2-14. Owner gate decisions recorded on 2026-07-11.** H1 promotes the
+qualified mlearn Cu energy/force dataset at content SHA-256
+`bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48`
+and the whole-family split at file SHA-256
+`80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e`.
+Stress remains excluded because its kbar unit is inferred. H2 is deliberately
+not frozen: compare one additional compatible checkpoint, run an E0/reference
+diagnostic, demonstrate one optimizer step, and pin the Linux staging
+environment first. Bounded Colab staging is authorized for one L4, at most
+60 minutes, with one A100-40GB retry only after verified OOM; this is not H3
+approval for a full pilot. Branch push plus a draft PR is authorized; merge is
+not.
+
+**D-P2-15. Cu is a benchmark scaffold, not the research program.**
+`configs/research/program_guardrail.yaml` records the long-term program goal,
+current benchmark role, non-goals, claim ceiling, next human gate, and exit
+criteria. Reusable controller, evaluator, provenance, and compute interfaces
+must not encode Cu-specific assumptions. The current ceiling is `pilot_only`;
+the guardrail cannot authorize replicated or publication evidence.
+
+**D-P2-16. Tea Time is the deterministic pause-and-review layer.** The
+existing reflection SKILL is extended rather than duplicated. At recovery,
+post-checkpoint/E0 review, preregistration freeze, Colab prelaunch, and staged
+failure boundaries it emits: stage purpose, benchmark-lock-in audit, two or
+three bounded alternatives, and an owner-question draft. It cannot accept a
+data-artifact path, cannot add claims, and its `reflection` artifacts remain
+forbidden claim evidence.
+
+**D-P2-17. The sole second checkpoint candidate is content-pinned MACE-MPA-0
+medium, without selecting a winner.** The official 79,462,305-byte asset has
+SHA-256 `75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638`,
+MIT license, 89-element MPTrj+sAlex/PBE+U training coverage, and passes the
+same local CPU fixture as MACE-MP-0 small. A D0-only raw energy-offset
+diagnostic was run for both candidates with no fitted shift and no access to
+protected evaluation labels. Because H2 contains no frozen diagnostic
+threshold, the memo records evidence and limitations only; both checkpoints
+remain `candidate_only` until owner selection after optimizer/staging gates.

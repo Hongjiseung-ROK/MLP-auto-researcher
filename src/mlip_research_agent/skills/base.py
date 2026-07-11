@@ -127,6 +127,7 @@ def _ensure_builtin_skills_loaded() -> None:
         compute,
         data,
         dft,
+        evaluation,
         literature,
         mlip,
         reflection,

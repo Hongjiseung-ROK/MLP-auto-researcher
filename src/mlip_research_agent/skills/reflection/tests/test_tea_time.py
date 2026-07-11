@@ -1,9 +1,8 @@
-"""Correctness tests for the tea_time_with_reading_poem skill."""
+"""Correctness tests for the deterministic Tea Time research pause."""
 
 import json
 from pathlib import Path
 
-import numpy as np
 import pytest
 from pydantic import ValidationError
 
@@ -11,24 +10,13 @@ from mlip_research_agent.artifacts.registry import ArtifactRegistry
 from mlip_research_agent.schemas.failure import FailureClass
 from mlip_research_agent.skills.base import SkillContext, SkillError
 from mlip_research_agent.skills.reflection.implementation import TeaTimeWithReadingPoemSkill
-from mlip_research_agent.skills.reflection.schema import TeaTimeInput, TeaTimeOutput
+from mlip_research_agent.skills.reflection.schema import (
+    TeaTimeInput,
+    TeaTimeOutput,
+    TeaTimeTrigger,
+)
 
 QUESTION = "Why does the model trust the perturbed structures more than the pristine one?"
-ENERGIES = [1.0, 2.0, 3.0, 4.0, 100.0]
-
-
-def write_labels(tmp_path: Path) -> str:
-    labels_dir = tmp_path / "steps" / "labeling"
-    labels_dir.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "method": "mock_lj",
-        "settings": {},
-        "labels": [{"index": i, "energy": e, "fmax": 0.0} for i, e in enumerate(ENERGIES)],
-    }
-    (labels_dir / "labels.json").write_text(json.dumps(payload, sort_keys=True))
-    return "steps/labeling/labels.json"
-
-
 def run_skill(
     tmp_path: Path, seed: int = 7, **overrides: object
 ) -> tuple[TeaTimeOutput, SkillContext]:
@@ -46,10 +34,8 @@ def run_skill(
 
 
 def test_byte_deterministic_for_equal_seeds(tmp_path: Path) -> None:
-    data_a = write_labels(tmp_path / "a")
-    data_b = write_labels(tmp_path / "b")
-    out_a, _ = run_skill(tmp_path / "a", seed=7, data_path=data_a)
-    out_b, _ = run_skill(tmp_path / "b", seed=7, data_path=data_b)
+    out_a, _ = run_skill(tmp_path / "a", seed=7)
+    out_b, _ = run_skill(tmp_path / "b", seed=7)
     for rel_a, rel_b in [
         (out_a.report_path, out_b.report_path),
         (out_a.reframings_path, out_b.reframings_path),
@@ -65,16 +51,30 @@ def test_seed_changes_the_break(tmp_path: Path) -> None:
     assert content_a != content_b
 
 
-def test_alternative_views_match_numpy(tmp_path: Path) -> None:
-    data_path = write_labels(tmp_path)
-    out, _ = run_skill(tmp_path, data_path=data_path)
-    views = json.loads((tmp_path / out.reframings_path).read_text())["alternative_data_views"]
-    arr = np.asarray(ENERGIES)
-    assert views["mean"] == pytest.approx(float(arr.mean()))
-    assert views["median"] == pytest.approx(float(np.median(arr)))
-    assert views["strangest_index"] == 4  # 100.0 is farthest from the median
-    assert views["rank_top3_indices"][0] == 4
-    assert views["n_values"] == len(ENERGIES)
+def test_required_research_pause_sections_are_structured(tmp_path: Path) -> None:
+    out, _ = run_skill(
+        tmp_path,
+        trigger=TeaTimeTrigger.CHECKPOINT_E0_COMPLETE,
+        reusable_components=["artifact registry", "model-agnostic evaluator"],
+        benchmark_specific_components=["Cu fixture"],
+        open_owner_questions=[
+            {
+                "question_id": "H2",
+                "question": "Freeze the checkpoint after due diligence?",
+                "why_needed": "Checkpoint selection is a scientific gate.",
+                "current_evidence": "Two pinned candidates and an E0 diagnostic exist.",
+                "recommended_default": "Wait for the comparison memo.",
+                "choices": ["A. Approve", "B. Gather more evidence"],
+            }
+        ],
+    )
+    payload = json.loads((tmp_path / out.reframings_path).read_text())
+    assert payload["current_stage_purpose"] == out.purpose_summary
+    assert payload["benchmark_overfitting_audit"]["risk"] == "low"
+    assert len(payload["alternative_paths"]) in {2, 3}
+    assert payload["owner_question_packet_draft"]["status"] == "questions_pending"
+    assert out.trigger is TeaTimeTrigger.CHECKPOINT_E0_COMPLETE
+    assert out.n_owner_questions == 1
 
 
 def test_zero_claims_invariant(tmp_path: Path) -> None:
@@ -92,10 +92,29 @@ def test_poem_override_and_unknown_poem(tmp_path: Path) -> None:
     assert excinfo.value.failure_class is FailureClass.VALIDATION_ERROR
 
 
-def test_missing_data_rejected(tmp_path: Path) -> None:
-    with pytest.raises(SkillError) as excinfo:
-        run_skill(tmp_path, data_path="steps/nowhere/data.json")
-    assert excinfo.value.failure_class is FailureClass.VALIDATION_ERROR
+def test_data_artifact_access_is_schema_forbidden() -> None:
+    with pytest.raises(ValidationError):
+        TeaTimeInput.model_validate(
+            {
+                "focus_question": QUESTION,
+                "data_path": "steps/evaluation/test_metrics.json",
+            }
+        )
+
+
+def test_serialized_pause_contains_no_restricted_research_payload(tmp_path: Path) -> None:
+    out, _ = run_skill(tmp_path)
+    payload = json.loads((tmp_path / out.reframings_path).read_text())
+    text = json.dumps(payload, sort_keys=True)
+    for forbidden in (
+        '"api_key"',
+        '"energy_ev"',
+        '"forces_ev_per_a"',
+        '"hidden_labels"',
+        '"per_record_errors"',
+        '"test_metric_details"',
+    ):
+        assert forbidden not in text
 
 
 def test_n_provocations_bounds() -> None:

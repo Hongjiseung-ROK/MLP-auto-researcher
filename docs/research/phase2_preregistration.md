@@ -1,6 +1,6 @@
 # Phase 2 Preregistration — Cu MACE Active-Learning Pilot
 
-**Status: DRAFT — not H2-approved. No result-producing run may start until
+**Status: DRAFT — owner explicitly deferred H2 freeze. No result-producing run may start until
 this document's values are frozen, its SHA-256 recorded, and the owner's H2
 approval is stored in the run state.**
 
@@ -50,6 +50,9 @@ model?
   is contextual, not independent proof.
 - MPTrj is **not** an eligible independent test source for a MACE-MP
   checkpoint (pretraining overlap).
+- H1 approval: granted on 2026-07-11 for energy and force labels at the
+  recorded content/manifest hashes. Virial stress remains excluded because
+  its unit is inferred rather than source-documented.
 
 ## 5. Partitioning (leakage-safe)
 
@@ -76,6 +79,9 @@ model?
   pins verified by install)`.
 - Checkpoint: `TBD(WP3 selection artifact — MACE-MP-0 small vs current
   compatible materials checkpoint)`, pinned by file SHA-256 + license.
+- Comparison evidence now covers content-pinned MACE-MP-0 small and MACE-MPA-0
+  medium plus a D0-only raw energy-offset diagnostic. Neither is selected;
+  see `docs/research/mace_checkpoint_comparison.md`.
 - Default dtype: float64 for evaluation, float32 permitted for training if
   recorded. Device: cuda on Colab, cpu for fixtures.
 - E0 policy: explicit atomic reference energies with source recorded;
@@ -131,3 +137,6 @@ Split seed 20260711. All recorded per-run in the evidence bundle.
 
 - Preregistration SHA-256: recorded at H2 approval (not before).
 - H2 approval: pending (`docs/PHASE2_OPEN_QUESTIONS.md` P2-Q2).
+- Required before the next freeze proposal: second pinned checkpoint review,
+  E0/reference-energy diagnostic, one real optimizer-step boundary test, and
+  pinned Linux/Colab dependency evidence.

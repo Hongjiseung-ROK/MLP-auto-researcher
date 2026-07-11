@@ -13,6 +13,13 @@ class MACEInferenceInput(BaseModel):
     structures_path: str = Field(description="Run-dir-relative StructureSet JSON")
     checkpoint_manifest_path: str = Field(description="Repository/local manifest JSON")
     checkpoint_path: str = Field(description="Local gitignored checkpoint path")
+    dataset_id: str = Field(min_length=1)
+    dataset_content_sha256: str = Field(min_length=64, max_length=64)
+    split_semantic_sha256: str = Field(min_length=64, max_length=64)
+    record_ids: list[str] = Field(
+        min_length=1,
+        description="Dataset record ids in the exact order of structures_path",
+    )
     device: Literal["cpu", "cuda"] = "cpu"
     default_dtype: Literal["float32", "float64"] = "float64"
 

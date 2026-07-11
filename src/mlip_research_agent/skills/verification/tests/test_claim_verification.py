@@ -10,6 +10,8 @@ from mlip_research_agent.schemas.claims import (
     Claim,
     ClaimClass,
     ClaimStatus,
+    EvaluationPartition,
+    MetricValueBinding,
     ScientificEvidenceTier,
 )
 from mlip_research_agent.schemas.failure import FailureClass
@@ -103,6 +105,51 @@ def test_agent_prose_cannot_verify_a_claim(tmp_path: Path) -> None:
     (tmp_path / "claims.json").write_text(json.dumps([claim.model_dump(mode="json")]))
     out = verify(tmp_path, registry, strict=False)
     assert out.rejection_reason_categories == {"agent_prose_as_evidence": 1}
+
+
+def test_scientific_claim_value_must_match_bound_metric_field(tmp_path: Path) -> None:
+    registry = ArtifactRegistry(tmp_path)
+    step_dir = tmp_path / "steps" / "evaluation"
+    step_dir.mkdir(parents=True)
+    metrics = step_dir / "metrics.json"
+    metrics.write_text(
+        json.dumps({"aggregate": {"force_component_mae_ev_per_a": 0.12}})
+    )
+    metric_artifact = registry.register(metrics, kind="mlip_metrics", step_id="evaluation")
+    references = [metric_artifact.artifact_id]
+    for name, kind in (
+        ("dataset.json", "normalized_dataset_manifest"),
+        ("split.json", "split_manifest"),
+        ("model.json", "model_manifest"),
+    ):
+        path = step_dir / name
+        path.write_text("{}")
+        references.append(registry.register(path, kind=kind, step_id="evaluation").artifact_id)
+    claim = Claim(
+        claim_id="forged_metric_value",
+        statement="Frozen-test force MAE",
+        value=999.0,
+        units="eV/angstrom",
+        created_by_step="evaluation",
+        artifact_references=references,
+        claim_class=ClaimClass.PILOT_SCIENTIFIC,
+        scientific_evidence_tier=ScientificEvidenceTier.PILOT_ONLY,
+        metric_artifact_references=[metric_artifact.artifact_id],
+        metric_value_binding=MetricValueBinding(
+            metric_artifact_reference=metric_artifact.artifact_id,
+            json_pointer="/aggregate/force_component_mae_ev_per_a",
+        ),
+        dataset_manifest_reference=references[1],
+        split_manifest_reference=references[2],
+        model_manifest_reference=references[3],
+        evaluation_partition=EvaluationPartition.FROZEN_TEST,
+        derived_from_model_metrics=True,
+    )
+    (tmp_path / "claims.json").write_text(
+        json.dumps([claim.model_dump(mode="json")])
+    )
+    out = verify(tmp_path, registry, strict=False)
+    assert out.rejection_reason_categories == {"metric_value_binding_mismatch": 1}
 
 
 def test_missing_claims_file_rejected(tmp_path: Path) -> None:

@@ -48,6 +48,7 @@ data_registry/**/*.extxyz
 # Generated scientific artifacts (small manifests/fixtures/reports that
 # demonstrate the repo are committed explicitly, e.g. artifacts/bootstrap/)
 artifacts/runs/
+artifacts/research/
 artifacts/colab/private/
 artifacts/vessl/private/
 artifacts/compute/

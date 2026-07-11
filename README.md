@@ -1,17 +1,24 @@
 # MLIP Research Agent
 
-Autonomous active-learning scientist for ML interatomic potentials —
-bootstrap vertical slice. Architectural source of truth: [`plan.md`](plan.md).
+Autonomous, evidence-grounded AI researcher for ML interatomic potentials.
+Architectural sources of truth: [`plan.md`](plan.md) and
+[`plan_phase_2.md`](plan_phase_2.md).
 
-The current milestone is a fully mock, fully deterministic research campaign:
+The repository preserves a fully deterministic Phase 1 mock campaign while Phase 2
+has crossed the local real-model boundary and is preparing bounded Colab staging:
 
 ```text
-research goal → validated campaign spec → workflow DAG → mock skills
-→ event log → artifact registry → claim verification → reproducible report
+research goal → preregistration + human gates → typed skills → artifact registry
+→ leakage-safe data/oracle boundary → real-model/evaluation boundaries
+→ verification → bounded remote staging → evidence-grounded report
 ```
 
-It runs without GPU, DFT binaries, paid APIs, or datasets, and demonstrates
-bounded failure recovery, checkpoint resume, and byte-reproducible artifacts.
+Locally verified Phase 2 capabilities include a qualified Cu energy/force benchmark,
+a whole-group split, a hidden-label simulated oracle, scientific evidence tiers,
+and pinned MACE CPU inference. Cu is a bounded pipeline-hardening scaffold rather
+than the final research topic. Fine-tuning, independent evaluation, and Colab
+CPU/GPU parity are still in progress; no full pilot or publication-grade claim has
+been completed.
 
 ## Setup
 
@@ -44,6 +51,10 @@ conda run -n mlip-research-agent python -m ruff check .
 conda run -n mlip-research-agent python -m mypy src
 ```
 
+On this host, prefix all commands with `env -u PYTHONPATH` to prevent an unrelated
+checkout from entering Python imports. Real MACE and remote-resource tests remain
+explicitly opt-in.
+
 ## Where things live
 
 - `src/mlip_research_agent/skills/` — bounded, typed SKILLs; each directory
@@ -51,9 +62,10 @@ conda run -n mlip-research-agent python -m mypy src
   `tests/`, `examples/`.
 - `src/mlip_research_agent/runtime/` — event-sourced executor, checkpoints,
   bounded recovery policy.
-- `docs/OPEN_QUESTIONS.md` — decisions awaiting the project owner (scientific
-  target, MLIP backend, DFT backend, GPU budget, LLM provider, …). Real
-  scientific integrations are gated on these.
+- `configs/research/program_guardrail.yaml` — machine-readable statement that the
+  current benchmark is a scaffold, including non-goals, claim ceiling, next gate,
+  and criteria for leaving benchmark mode.
+- `docs/PHASE2_OPEN_QUESTIONS.md` — current human scientific and remote-run gates.
 - `docs/IMPLEMENTATION_DECISIONS.md`, `docs/IMPLEMENTATION_STATUS.md` —
   decision log and current gap analysis vs `plan.md`.
 - `DEPENDENCIES.md` — full dependency policy; heavy backends are optional

@@ -11,6 +11,7 @@ import pytest
 from ase.build import bulk
 
 from mlip_research_agent.artifacts.registry import ArtifactRegistry
+from mlip_research_agent.schemas.predictions import PredictionBatch
 from mlip_research_agent.skills.atomistics.structures_io import (
     StructureSet,
     atoms_to_record,
@@ -29,6 +30,7 @@ from mlip_research_agent.skills.mlip.mace_inference.schema import (
 
 ROOT = Path(__file__).resolve().parents[6]
 MANIFEST_PATH = ROOT / "configs/models/mace_mp_0_small_candidate.json"
+MPA_MANIFEST_PATH = ROOT / "configs/models/mace_mpa_0_medium_candidate.json"
 
 
 def test_checkpoint_hash_mismatch_aborts_before_model_load(tmp_path: Path) -> None:
@@ -44,6 +46,12 @@ def test_checkpoint_manifest_is_candidate_not_h2_selection() -> None:
     assert manifest.scientific_status == "candidate_only"
     assert manifest.mace_torch_version == "0.3.16"
     assert "Cu" in manifest.supported_species
+    comparison = MACECheckpointManifest.load(MPA_MANIFEST_PATH)
+    assert comparison.scientific_status == "candidate_only"
+    assert comparison.checkpoint_sha256 == (
+        "75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638"
+    )
+    assert "Cu" in comparison.supported_species
 
 
 def _real_checkpoint() -> Path:
@@ -53,8 +61,14 @@ def _real_checkpoint() -> Path:
     return Path(value).resolve()
 
 
+def _real_manifest() -> Path:
+    value = os.environ.get("MACE_TEST_MANIFEST")
+    return MANIFEST_PATH if value is None else Path(value).resolve()
+
+
 def test_real_cpu_inference_invariance_and_provenance(tmp_path: Path) -> None:
     checkpoint = _real_checkpoint()
+    manifest_path = _real_manifest()
     base = bulk("Cu", "fcc", a=3.6, cubic=True)
     translated = base.copy()
     translated.translate([0.31, -0.27, 0.19])
@@ -84,8 +98,12 @@ def test_real_cpu_inference_invariance_and_provenance(tmp_path: Path) -> None:
     output = MACEInferenceSkill().run(
         MACEInferenceInput(
             structures_path="inputs/structures.json",
-            checkpoint_manifest_path=str(MANIFEST_PATH),
+            checkpoint_manifest_path=str(manifest_path),
             checkpoint_path=str(checkpoint),
+            dataset_id="mace-inference-fixture",
+            dataset_content_sha256="d" * 64,
+            split_semantic_sha256="e" * 64,
+            record_ids=["base", "translated", "rotated", "permuted"],
             device="cpu",
             default_dtype="float64",
         ),
@@ -93,7 +111,16 @@ def test_real_cpu_inference_invariance_and_provenance(tmp_path: Path) -> None:
     )
     assert isinstance(output, MACEInferenceOutput)
     payload = json.loads((tmp_path / output.predictions_path).read_text())
+    PredictionBatch.model_validate(payload)
     predictions = payload["predictions"]
+    assert [item["record_id"] for item in predictions] == [
+        "base",
+        "translated",
+        "rotated",
+        "permuted",
+    ]
+    assert payload["energy_unit"] == "eV"
+    assert payload["force_unit"] == "eV/angstrom"
     energies = np.asarray([item["energy_ev"] for item in predictions])
     assert np.allclose(energies, energies[0], rtol=0.0, atol=1e-8)
     base_forces = np.asarray(predictions[0]["forces_ev_per_a"])

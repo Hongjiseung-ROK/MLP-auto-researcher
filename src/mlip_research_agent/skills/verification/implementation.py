@@ -31,6 +31,31 @@ VERIFIED_CLAIMS_FILENAME = "verified_claims.json"
 FORBIDDEN_EVIDENCE_KINDS = frozenset({"agent_text", "reflection", "report", "run_report"})
 
 
+def _metric_binding_error(claim: Claim, ctx: SkillContext) -> str | None:
+    binding = claim.metric_value_binding
+    if binding is None:
+        return None
+    artifact = ctx.registry.get(binding.metric_artifact_reference)
+    if artifact is None or not ctx.registry.verify(binding.metric_artifact_reference):
+        return None  # Missing/corrupted evidence is categorized by the outer audit.
+    if artifact.kind != "mlip_metrics":
+        return f"bound artifact kind is {artifact.kind!r}, expected 'mlip_metrics'"
+    try:
+        value: object = json.loads((ctx.run_dir / artifact.relative_path).read_text())
+        for token in binding.json_pointer.removeprefix("/").split("/"):
+            if not isinstance(value, dict) or token not in value:
+                return f"metric JSON pointer does not exist: {binding.json_pointer}"
+            value = value[token]
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"metric binding artifact is unreadable: {exc}"
+    if value != claim.value:
+        return (
+            f"claim value {claim.value!r} does not match metric field "
+            f"{binding.json_pointer}={value!r}"
+        )
+    return None
+
+
 @register_skill
 class ClaimVerificationSkill(Skill):
     name = "claim_verification"
@@ -56,13 +81,16 @@ class ClaimVerificationSkill(Skill):
                 if (artifact := ctx.registry.get(ref)) is not None
                 and artifact.kind in FORBIDDEN_EVIDENCE_KINDS
             ]
-            if missing or corrupted or prose:
+            binding_error = _metric_binding_error(claim, ctx)
+            if missing or corrupted or prose or binding_error:
                 if missing:
                     category = "unregistered_artifact"
                 elif corrupted:
                     category = "corrupted_artifact"
-                else:
+                elif prose:
                     category = "agent_prose_as_evidence"
+                else:
+                    category = "metric_value_binding_mismatch"
                 audited.append(
                     claim.model_copy(
                         update={
@@ -70,13 +98,19 @@ class ClaimVerificationSkill(Skill):
                             "rejection_reason": (
                                 f"unregistered artifacts: {missing}; "
                                 f"corrupted artifacts: {corrupted}; "
-                                f"forbidden agent prose artifacts: {prose}"
+                                f"forbidden agent prose artifacts: {prose}; "
+                                f"metric binding error: {binding_error}"
                             ),
                             "rejection_reason_category": category,
                             "rejection_evidence": [
                                 *[f"unregistered:{ref}" for ref in missing],
                                 *[f"corrupted:{ref}" for ref in corrupted],
                                 *[f"agent_prose:{ref}" for ref in prose],
+                                *(
+                                    [f"metric_binding:{binding_error}"]
+                                    if binding_error is not None
+                                    else []
+                                ),
                             ],
                         }
                     )

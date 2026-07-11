@@ -48,6 +48,15 @@ class EvaluationPartition(StrEnum):
     STRESS_TEST = "stress_test"
 
 
+class MetricValueBinding(BaseModel):
+    """Bind a claim value to one exact field in one metric artifact."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    metric_artifact_reference: str = Field(min_length=1)
+    json_pointer: str = Field(pattern=r"^/aggregate/[a-z0-9_]+$")
+
+
 class Claim(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -64,6 +73,7 @@ class Claim(BaseModel):
     scientific_evidence_tier: ScientificEvidenceTier = ScientificEvidenceTier.NON_SCIENTIFIC
     source_run_references: list[str] = Field(default_factory=list)
     metric_artifact_references: list[str] = Field(default_factory=list)
+    metric_value_binding: MetricValueBinding | None = None
     dataset_manifest_reference: str | None = None
     split_manifest_reference: str | None = None
     model_manifest_reference: str | None = None
@@ -96,6 +106,11 @@ class Claim(BaseModel):
         metric_refs = set(self.metric_artifact_references)
         if not metric_refs.issubset(refs):
             raise ValueError("metric artifact references must also be claim artifact references")
+        if (
+            self.metric_value_binding is not None
+            and self.metric_value_binding.metric_artifact_reference not in metric_refs
+        ):
+            raise ValueError("metric value binding must reference a declared metric artifact")
         manifest_refs = {
             ref
             for ref in (
@@ -115,6 +130,12 @@ class Claim(BaseModel):
             raise ValueError("scientific claims require a dataset manifest reference")
         if is_scientific and isinstance(self.value, (int, float)) and not metric_refs:
             raise ValueError("numerical scientific claims require metric artifact references")
+        if (
+            is_scientific
+            and isinstance(self.value, (int, float))
+            and self.metric_value_binding is None
+        ):
+            raise ValueError("numerical scientific claims require an exact metric value binding")
         if (
             self.evaluation_partition is EvaluationPartition.FROZEN_TEST
             and self.split_manifest_reference is None
