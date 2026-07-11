@@ -24,10 +24,13 @@ endpoint = force MAE eV/Å on frozen test set, four arms, budgets, split rule,
 checkpoint, seed schedule, stopping rules). The preregistration hash must be
 recorded before the first result-producing run.
 Status: **open by explicit owner decision — do not freeze yet.** WP1/WP2 are
-pinned. Two checkpoints are now content-addressed and their D0-only raw
-energy-offset evidence is recorded without selection. One local optimizer
-step, checkpoint round trip, and Linux/Colab pins remain required before the
-next H2 packet.
+pinned. Two checkpoints are content-addressed with D0-only raw energy-offset
+evidence recorded without selection. The remaining prerequisites are now
+complete (2026-07-12): a real optimizer step + checkpoint round trip passed
+locally (CPU) and on a policy-attested Colab L4, and the Linux/Colab pins are
+recorded in the staging record (torch 2.11.0+cu128, mace-torch 0.3.16,
+e3nn 0.4.4). The H2 packet is ready to assemble; checkpoint selection and
+preregistration freeze remain owner decisions.
 
 **P2-Q3 (Gate H3). First remote execution.**
 Approve exact commit, `bounded_research_pilot` workload, requested GPU (L4),

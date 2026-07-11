@@ -1,0 +1,62 @@
+{
+  "authorization": "P2-Q4 bounded staging (one GPU, <=60 min, no full pilot)",
+  "created_at": "2026-07-11T15:43:57.318868+00:00",
+  "exit_code": 0,
+  "failure": null,
+  "gpu_name": "NVIDIA L4 (torch: NVIDIA L4)",
+  "kind": "colab_staging_mace_boundary",
+  "packages": {
+    "ase": "3.29.0",
+    "e3nn": "0.4.4",
+    "mace-torch": "0.3.16",
+    "mlip-research-agent": "0.1.0",
+    "numpy": "2.0.2",
+    "pydantic": "2.13.4",
+    "torch": "2.11.0+cu128"
+  },
+  "parity_tolerances": {
+    "energy_atol_ev": 5e-05,
+    "force_atol_ev_per_a": 5e-05
+  },
+  "passed": true,
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+  "python": "3.12.13",
+  "repo_commit": "467ad6abac3d2feea84cb100c4b70fe6ce0d8a16",
+  "requested_accelerator": "nvidia-l4",
+  "run_id": "staging-7cb93ea9",
+  "schema_version": "1.0.0",
+  "scientific_status": "staging_only",
+  "stages": [
+    {
+      "detail": "NVIDIA L4 (torch: NVIDIA L4)",
+      "name": "gpu_attestation_policy",
+      "seconds": 4.52168959100004,
+      "status": "pass"
+    },
+    {
+      "detail": "/content/MLP-auto-researcher/data/cache/models/2023-12-10-mace-128-L0_energy_epoch-249.model",
+      "name": "pinned_checkpoint_resolution",
+      "seconds": 0.8068743040000754,
+      "status": "pass"
+    },
+    {
+      "detail": "max |E_gpu - E_cpu| = 0.000e+00 eV, max |F_gpu - F_cpu| = 1.138e-15 eV/A",
+      "name": "real_inference_cpu_gpu_parity",
+      "seconds": 17.841996381000172,
+      "status": "pass"
+    },
+    {
+      "detail": "step-1 validation force MAE 0.000000 eV/A, changed tensors 26; resume reached epoch 2 with preserved epoch-0 record",
+      "name": "one_optimizer_step_and_checkpoint_round_trip",
+      "seconds": 2.143670180000072,
+      "status": "pass"
+    },
+    {
+      "detail": "13 files hashed for pull-back",
+      "name": "artifact_manifest",
+      "seconds": 0.9031896480000796,
+      "status": "pass"
+    }
+  ],
+  "wall_seconds": 27.88191732899986
+}

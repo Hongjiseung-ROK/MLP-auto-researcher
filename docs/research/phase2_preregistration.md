@@ -75,8 +75,11 @@ model?
 
 ## 6. Model
 
-- Family: MACE (mace-torch). Versions: `TBD(WP3 — mace-torch, torch, e3nn
-  pins verified by install)`.
+- Family: MACE (mace-torch). Versions (recorded, not yet H2-frozen):
+  `mace-torch 0.3.16`, `e3nn 0.4.4` on both platforms; local macOS boundary
+  env uses conda-forge `torch 2.12.1`; the Colab/Linux staging record
+  (2026-07-12, NVIDIA L4) pins `torch 2.11.0+cu128`, `numpy 2.0.2`,
+  Python 3.12 (`artifacts/colab_staging/pullback-467ad6ab/`).
 - Checkpoint: `TBD(WP3 selection artifact — MACE-MP-0 small vs current
   compatible materials checkpoint)`, pinned by file SHA-256 + license.
 - Comparison evidence now covers content-pinned MACE-MP-0 small and MACE-MPA-0
@@ -91,9 +94,12 @@ model?
 ## 7. Fine-tuning protocol (Protocol A — naive)
 
 - Max epochs: 50 with early stopping (patience 10 on validation force MAE).
-- Gradient clipping: 10.0. Optimizer/LR: `TBD(WP4 — from mace-torch
-  defaults, recorded exactly)`. Seeds: base 42; arm-specific offsets
-  recorded in the experiment matrix.
+- Gradient clipping: 10.0. Optimizer (recorded from the WP4 boundary
+  implementation, not yet H2-frozen): Adam with `amsgrad=True`,
+  `ReduceLROnPlateau` (factor 0.5, patience `max(1, patience // 2)` on
+  validation force MAE); the pilot learning rate is proposed at 0.01 and
+  frozen only at H2. Seeds: base 42; arm-specific offsets recorded in the
+  experiment matrix.
 - Checkpoint every epoch; resume supported; NaN/OOM classified failures with
   one bounded repair each (plan §13.2).
 - Protocol B (multihead replay) is a Phase 2b robustness arm, not part of
@@ -137,6 +143,9 @@ Split seed 20260711. All recorded per-run in the evidence bundle.
 
 - Preregistration SHA-256: recorded at H2 approval (not before).
 - H2 approval: pending (`docs/PHASE2_OPEN_QUESTIONS.md` P2-Q2).
-- Required before the next freeze proposal: second pinned checkpoint review,
-  E0/reference-energy diagnostic, one real optimizer-step boundary test, and
-  pinned Linux/Colab dependency evidence.
+- Required before the next freeze proposal: second pinned checkpoint review
+  (done — `docs/research/mace_checkpoint_comparison.md`), E0/reference-energy
+  diagnostic (done, D0-only), one real optimizer-step boundary test (done —
+  CPU and Colab L4, 2026-07-12), and pinned Linux/Colab dependency evidence
+  (done — staging record). All prerequisites are met; the freeze itself
+  remains an owner decision (P2-Q2).

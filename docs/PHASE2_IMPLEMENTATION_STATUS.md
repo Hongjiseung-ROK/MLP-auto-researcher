@@ -9,7 +9,7 @@ tests pass) / `verified` (independent fresh-context review passed) /
 Branch: `phase2/real-colab-research`. Phase 1 behavior is preserved; every
 interface migration is recorded in `docs/PHASE2_DECISIONS.md`.
 
-Last updated: 2026-07-11.
+Last updated: 2026-07-12.
 
 ## Security preconditions (done first)
 
@@ -29,9 +29,9 @@ Last updated: 2026-07-11.
 | WPS | Secure `api.env` loader + Materials Project SKILL | `src/mlip_research_agent/secrets/api_env.py`, `skills/data/materials_project/` | — | — | implemented locally (synthetic-key tests only; no live API call) |
 | WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1 approved** | implemented locally; 11 checks pass; energy/force promoted, stress excluded |
 | WP2 | Leakage-safe grouped split + simulated oracle | `data/{split,oracle}.py`, `skills/active_learning/oracle_reveal/` | WP1 | — | implemented locally; independent leakage review passed |
-| WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | in_progress (two candidates pinned; both CPU fixtures pass; D0 E0 diagnostic complete; H2 selection + Colab parity pending) |
-| WP5 | Independent evaluation suite | `skills/evaluation/mlip_metrics/` (+ learning_curve, calibration) | WP2, WP3 | — | in_progress (aggregate prototype: 24 tests pass; fresh audit found leakage/unit/claim-binding/authorization gaps under repair) |
-| WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | not_started |
+| WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | implemented locally + Colab-staged (CPU/GPU float64 parity on L4: max energy delta 0.0 eV, max force delta 1.14e-15 eV/Å; H2 checkpoint selection still pending) |
+| WP5 | Independent evaluation suite | `skills/evaluation/mlip_metrics/` (+ learning_curve, calibration) | WP2, WP3 | — | implemented locally (audit repairs landed: val/test-only with one-shot protected authorization, unit gates, aggregates-only output, claim-binding metadata; 19 tests) |
+| WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | implemented locally + Colab-staged (full SKILL contract; boundary test: one real optimizer step changes 26 tensors; checkpoint round-trip resumes at epoch boundary on CPU and L4; NaN→LR/OOM→batch repair taxonomy tested) |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | not_started |
 | WP7 | Multi-round controller + stopping rules | `research/` controller, round state schema | WP4–WP6 | — | not_started |
 | WP8 | `bounded_research_pilot` policy + Colab research runner | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/{run_research.py,bootstrap_research.sh,colab_cli_run.sh}` | WP7 | **H3** before real run | not_started |
@@ -74,11 +74,11 @@ Last updated: 2026-07-11.
 | Gate | Meaning | Status |
 |---|---|---|
 | H1 | Dataset promotion | approved for recorded energy/force dataset and whole-family split; stress excluded |
-| H2 | Preregistration approval | deliberately not frozen; second checkpoint, E0, optimizer-step, and Linux pins pending |
-| H3 | Remote execution approval | not reached |
+| H2 | Preregistration approval | deliberately not frozen; all owner-required evidence is now recorded (second checkpoint memo, D0 E0 diagnostic, real optimizer step + round-trip, Linux/Colab pins from the staging record) — awaiting owner selection/freeze |
+| H3 | Remote execution approval | not reached (staging passed; H3 packet can now be assembled) |
 | H4 | Scientific pivot | n/a |
 | H5 | Claim release | not reached |
-| Staging | Bounded Colab integration test | authorized: L4, one GPU, ≤60 min, OOM-only A100-40GB retry; no full pilot |
+| Staging | Bounded Colab integration test | **executed and passed 2026-07-12** on one NVIDIA L4 at commit `467ad6a` via the colab CLI driver: attestation allow, pinned checkpoint (2ddb079c…) resolved, real-inference CPU/GPU float64 parity, one optimizer step, checkpoint round-trip, 13-file hash-verified pull-back (`artifacts/colab_staging/pullback-467ad6ab/`); VM released |
 
 ## Repository capability ladder
 
@@ -86,13 +86,19 @@ mock-only → real-inference capable → real-fine-tuning capable →
 Colab-staging capable → Colab-pilot complete → VESSL-replicated →
 publication-claim eligible
 
-**Current: Level 3 local real-model boundary; Level 4 bounded-staging
-preparation is in progress.** Real pinned MACE CPU inference has occurred.
-No remote scientific execution, fine-tuning result, full pilot, or
-publication-eligible claim has occurred.
+**Current: Level 4 — bounded Colab staging complete.** Real pinned MACE
+inference and one controlled fine-tuning optimizer step (with checkpoint
+round-trip) have run on a policy-attested NVIDIA L4 via the colab CLI
+driver, with hash-verified artifact pull-back. No full pilot, scientific
+fine-tuning result, or publication-eligible claim has occurred; boundary
+runs use synthetic fixtures, never the protected Cu partitions.
 
-Recovery evidence (2026-07-11, HEAD `4bdfa06` before the current changes):
-default `pytest` 206 passed / 1 opt-in real MACE fixture skipped / 2 remote
-tests deselected; opt-in pinned MACE CPU fixture 3 passed; Ruff and strict
-mypy clean; secret/large-file scan clean. Remote testing: not run. Scientific
+Evidence (2026-07-12, through commit `8247a68` + staging record):
+default `pytest` 281 passed / 7 skipped (opt-in real-model + optional-dep
+paths) / 2 remote deselected; opt-in real MACE CPU fine-tune fixture passes
+(one step + resume); Ruff and strict mypy (195 files) clean; tracked-file
+secret/large-file scan clean. Colab staging record
+`artifacts/colab_staging/pullback-467ad6ab/staging-*/staging_record.json`:
+all five stages pass on NVIDIA L4, Linux pins torch 2.11.0+cu128 /
+mace-torch 0.3.16 / e3nn 0.4.4 / numpy 2.0.2 (python 3.12). Scientific
 approval: H1 granted; H2/H3/H5 remain open.
