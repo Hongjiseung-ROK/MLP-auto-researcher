@@ -10,35 +10,83 @@ on:
   pull_request:
 
 jobs:
-  gates:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-
       - name: Install package with dev tools
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
-
       - name: Lint (ruff)
         run: python -m ruff check .
 
+  typecheck:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package with dev tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
       - name: Strict typing (mypy)
         run: python -m mypy src
 
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package with dev tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
       - name: Tests (mock/CPU suite, includes WP4 mace_finetune and WP5 mlip_metrics)
         run: python -m pytest
 
+  whitespace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Whitespace hygiene
         run: git diff --check
 
+  security-scan:
+    # A typecheck failure must not prevent the security scan from running.
+    # By separating it into its own job without a 'needs' dependency, it runs in parallel.
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package with dev tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
       - name: Secret and large-file scan (tracked files)
         run: python scripts/check_staged.py --tracked

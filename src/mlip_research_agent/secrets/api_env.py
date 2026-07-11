@@ -82,7 +82,7 @@ def load_mp_api_key(
         )
 
     try:
-        from dotenv import dotenv_values
+        from dotenv import dotenv_values  # type: ignore[import-untyped,import-not-found]
     except ImportError as exc:
         raise RuntimeError(_DOTENV_INSTALL_HINT) from exc
 
