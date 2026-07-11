@@ -52,6 +52,11 @@ artifacts/research/
 artifacts/colab/private/
 artifacts/vessl/private/
 artifacts/compute/
+# Colab staging pull-backs: JSON records/manifests are committed explicitly;
+# model/checkpoint binaries never are.
+artifacts/colab_staging/**/*.model
+artifacts/colab_staging/**/*.pt
+artifacts/colab_staging/**/*.zip
 
 # OS noise
 .DS_Store

@@ -128,6 +128,7 @@ def _ensure_builtin_skills_loaded() -> None:
         data,
         dft,
         evaluation,
+        external_adapters,
         literature,
         mlip,
         reflection,

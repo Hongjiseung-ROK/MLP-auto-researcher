@@ -34,6 +34,12 @@ mace = ["mace-torch==0.3.16"]
 materials-project = ["mp-api==0.46.4", "python-dotenv==1.2.2"]
 sevennet = ["sevenn>=0.10"]
 orb = ["orb-models>=0.4"]
+# DeepMD is likewise an MLIP backend extra; never co-install with mace/orb/sevennet.
+deepmd = ["deepmd-kit>=2.2"]
+# External adapter tools (adapters fail closed when these are absent).
+dpdata = ["dpdata>=0.2.18"]
+phonopy = ["phonopy>=2.20"]
+rdkit = ["rdkit>=2023.9"]
 # DFT: real backends are external licensed binaries (see DEPENDENCIES.md §10);
 # this group holds Python-side wrappers only. Empty until the backend is approved.
 dft = []
@@ -71,7 +77,10 @@ files = ["src"]
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["ase.*", "torch", "torch.*", "mp_api.*", "pymatgen.*", "emmet.*", "mace.*", "e3nn.*"]
+module = [
+    "ase.*", "torch", "torch.*", "mp_api.*", "pymatgen.*", "emmet.*", "mace.*", "e3nn.*",
+    "dpdata.*", "phonopy.*", "rdkit.*", "deepmd.*",
+]
 ignore_missing_imports = true
 
 # ASE ships partial annotations; calls into its untyped surface are expected
@@ -81,6 +90,7 @@ module = [
     "mlip_research_agent.skills.atomistics.*",
     "mlip_research_agent.skills.dft.*",
     "mlip_research_agent.skills.mlip.mace_inference.*",
+    "mlip_research_agent.skills.external_adapters.*",
 ]
 disallow_untyped_calls = false
 

@@ -1,0 +1,56 @@
+# Locked registration of the external computational-chemistry skill pack.
+#
+# The upstream repository is a collection of agent SKILL documents (markdown
+# instructions plus a few helper scripts), NOT a Python library. This
+# registration pins the exact commit the local adapters were written against.
+# Policy (mirrors docs/SKILL_SECURITY_REVIEW.md posture):
+#   - no upstream code is vendored into this repository or executed;
+#   - adapters under src/mlip_research_agent/skills/external_adapters/
+#     implement each capability natively against the underlying open-source
+#     tool (ASE, pymatgen, dpdata, Quantum ESPRESSO, phonopy, DeePMD-kit,
+#     LAMMPS, RDKit) behind the repository SKILL contract;
+#   - missing optional dependencies fail closed (tool_error, non-retryable);
+#   - adapter outputs are infrastructure artifacts, never claim evidence, and
+#     external adapters are excluded from byte-reproducibility-gated
+#     scientific DAGs until the owner approves each backend.
+#   - execution-class backends (pw.x, lmp, DeePMD models) stay prepare-only
+#     or fail-closed until the corresponding docs/OPEN_QUESTIONS.md /
+#     docs/PHASE2_OPEN_QUESTIONS.md gate is answered. The approved Phase 2
+#     DFT backend is ORCA (D-P1 owner decision); the dft-qe adapter is
+#     therefore input-preparation only.
+
+schema_version: "1.0.0"
+repository: https://github.com/jinzhezenggroup/computational-chemistry-agent-skills
+commit: 93ea0c4c716ad116869fba2ade26cccfd5cd05fc
+registered_at: "2026-07-12"
+collection_license: LGPL-3.0-only  # individual skills declare their own license field
+
+adopted_skills:
+  - upstream_path: atomistic-workflows/ase
+    upstream_license: MIT
+    adapter: src/mlip_research_agent/skills/external_adapters/ase
+    skill_name: external_ase
+  - upstream_path: data-processing/pymatgen-structure
+    adapter: src/mlip_research_agent/skills/external_adapters/pymatgen_structure
+    skill_name: external_pymatgen_structure
+  - upstream_path: data-processing/dpdata-cli
+    adapter: src/mlip_research_agent/skills/external_adapters/dpdata_cli
+    skill_name: external_dpdata_cli
+  - upstream_path: quantum-chemistry/dft-qe
+    adapter: src/mlip_research_agent/skills/external_adapters/dft_qe
+    skill_name: external_dft_qe
+    note: prepare-only; QE execution is not an approved backend
+  - upstream_path: analysis/phonopy
+    adapter: src/mlip_research_agent/skills/external_adapters/phonopy
+    skill_name: external_phonopy
+  - upstream_path: machine-learning-potentials/deepmd-python-inference
+    adapter: src/mlip_research_agent/skills/external_adapters/deepmd_inference
+    skill_name: external_deepmd_inference
+    note: deepmd-kit is an MLIP backend extra; never co-install with mace
+  - upstream_path: molecular-dynamics/lammps-deepmd
+    adapter: src/mlip_research_agent/skills/external_adapters/lammps
+    skill_name: external_lammps
+    note: prepare-only; lmp execution gated on owner approval
+  - upstream_path: molecular-representation/rdkit-repr
+    adapter: src/mlip_research_agent/skills/external_adapters/rdkit
+    skill_name: external_rdkit

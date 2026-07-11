@@ -1,0 +1,6 @@
+{
+  "structures_path": "steps/build/ase_structures.json",
+  "model_path": "data/cache/models/example-deepmd-model.pb",
+  "model_sha256": "replace-with-64-hex-model-hash-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "device": "cpu"
+}

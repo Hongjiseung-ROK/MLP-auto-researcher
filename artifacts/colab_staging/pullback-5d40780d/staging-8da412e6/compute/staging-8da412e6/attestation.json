@@ -1,0 +1,20 @@
+{
+  "canonical_accelerator": "nvidia-l4",
+  "config_hash": "3bb7072122544a51f586623b41cff5f29a49d20eea5b57d8bb73091d2e8fd8c9",
+  "cuda_runtime": "12.8",
+  "driver_version": "580.82.07",
+  "environment_hash": "8c97f1148af7e14623472ad797a1bf6b1f5e8a13e426370d8803809218529680",
+  "gpu_uuid": "GPU-33350b43-34c8-901b-31ae-fc21fb651284",
+  "observed_gpu_name": "NVIDIA L4",
+  "policy_decision": "allow",
+  "policy_reasons": [],
+  "provider": "colab",
+  "repo_commit": "5d40780da18a2f776eebc6fe4fcba7855c0c0e28",
+  "requested_accelerator": "nvidia-l4",
+  "run_id": "staging-8da412e6",
+  "schema_version": "0.1.0",
+  "started_at": "2026-07-11T15:27:54+00:00",
+  "torch_version": "2.11.0+cu128",
+  "vram_mb": 23034,
+  "workload_class": "gpu_smoke_test"
+}

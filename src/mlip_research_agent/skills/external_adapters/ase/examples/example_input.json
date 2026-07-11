@@ -1,0 +1,9 @@
+{
+  "element": "Cu",
+  "crystalstructure": "fcc",
+  "lattice_a": 3.6,
+  "cubic": true,
+  "repeat": 1,
+  "n_rattled": 4,
+  "rattle_stdev_a": 0.02
+}
