@@ -217,6 +217,7 @@ def test_summary_search_sanitizes_orders_and_registers(
 def test_get_structures_converts_fcc_cu_to_structure_set(
     fake_mp: FakeMPApi, tmp_path: Path, env_file: Path
 ) -> None:
+    pytest.importorskip("pymatgen")
     from pymatgen.core.lattice import Lattice
     from pymatgen.core.structure import Structure
 

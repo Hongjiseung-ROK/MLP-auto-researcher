@@ -1,0 +1,36 @@
+{
+  "pool_candidate_ids": ["cand-0001", "cand-0002"],
+  "metadata": {
+    "cand-0001": {"source_group": "group-a", "n_atoms": 2, "formula": "Cu2"},
+    "cand-0002": {"source_group": "group-b", "n_atoms": 2, "formula": "Cu2"}
+  },
+  "members": [
+    {
+      "member_id": "member-a",
+      "provenance_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "predicted_forces": {
+        "cand-0001": [[0.0, 0.0, 0.1], [0.0, 0.0, -0.1]],
+        "cand-0002": [[0.2, 0.0, 0.0], [-0.2, 0.0, 0.0]]
+      }
+    },
+    {
+      "member_id": "member-b",
+      "provenance_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "predicted_forces": {
+        "cand-0001": [[0.0, 0.0, 0.11], [0.0, 0.0, -0.11]],
+        "cand-0002": [[0.4, 0.0, 0.0], [-0.4, 0.0, 0.0]]
+      }
+    },
+    {
+      "member_id": "member-c",
+      "provenance_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "predicted_forces": {
+        "cand-0001": [[0.0, 0.0, 0.09], [0.0, 0.0, -0.09]],
+        "cand-0002": [[0.6, 0.0, 0.0], [-0.6, 0.0, 0.0]]
+      }
+    }
+  ],
+  "include_energy_disagreement": false,
+  "campaign_id": "demo-campaign",
+  "round_id": "round-1"
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "artifact_id": "iteration-001-tea-time:reframings.json",
+    "created_by_step": "iteration-001-tea-time",
+    "kind": "reflection",
+    "relative_path": "steps/iteration-001-tea-time/reframings.json",
+    "sha256": "5d128bb2f34d9edf93e94cf11056786e4cee3c37517b0fa062407d9b3893056d",
+    "size_bytes": 4280
+  },
+  {
+    "artifact_id": "iteration-001-tea-time:tea_time_report.md",
+    "created_by_step": "iteration-001-tea-time",
+    "kind": "reflection",
+    "relative_path": "steps/iteration-001-tea-time/tea_time_report.md",
+    "sha256": "f5efd0de93bad6399193b9fc95c93065bcfa37b2d07416eb5528717fdb155f9a",
+    "size_bytes": 3561
+  },
+  {
+    "artifact_id": "iteration-001:candidate_config.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/candidate_config.json",
+    "sha256": "ba39f212fe7d8e40e10f6e9fc70ccfb6353d6ddfe2b5be1ef3f80d419c8f5e33",
+    "size_bytes": 201
+  },
+  {
+    "artifact_id": "iteration-001:decision.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/decision.json",
+    "sha256": "18de5bc8a87a887a1f245f333b38bb377f836d3cced28eb6043a75f04ad3f2a2",
+    "size_bytes": 1555
+  },
+  {
+    "artifact_id": "iteration-001:evaluation.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/evaluation.json",
+    "sha256": "4262ceddf7f5e03a818394aca7ba1e92b73cd6f813f04994c0e0f41d85e9d115",
+    "size_bytes": 2121
+  },
+  {
+    "artifact_id": "iteration-001:execution.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/execution.json",
+    "sha256": "cdcaa0ebc72e6c1b69aacf716c08d647c7711937d75ca8fd5ed7d7ddcbd8db74",
+    "size_bytes": 978
+  },
+  {
+    "artifact_id": "iteration-001:fixture_definition.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/fixture_definition.json",
+    "sha256": "7222a5241de2074679b4090f50eac89aa9ae347750b9a3a7450eb9b83fb420ef",
+    "size_bytes": 491
+  },
+  {
+    "artifact_id": "iteration-001:legality.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/legality.json",
+    "sha256": "d988da6ca2c9fe7cc4b2e227b938176295762e35f41e9c587c4316a1c75058d8",
+    "size_bytes": 406
+  },
+  {
+    "artifact_id": "iteration-001:lesson.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/lesson.json",
+    "sha256": "e2a5a07208a3e06735d3e8ea03510250781cc6873195b8674132d6452f1d23b0",
+    "size_bytes": 1541
+  },
+  {
+    "artifact_id": "iteration-001:metrics.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/metrics.json",
+    "sha256": "7aba68546929bd46d5034224732494097cd9eeeae903b9ebf9c32f738f73e7b7",
+    "size_bytes": 319
+  },
+  {
+    "artifact_id": "iteration-001:mutation_diff.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/mutation_diff.json",
+    "sha256": "c8f20657fde7767e7170caeffacb3c891577fc477ae9314681bc7150b39c2ee4",
+    "size_bytes": 1127
+  },
+  {
+    "artifact_id": "iteration-001:predictions.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/predictions.json",
+    "sha256": "3f5eeb21290c4304d764c593590609479c9dcb7101fe40452759bb061d59e46f",
+    "size_bytes": 1468
+  },
+  {
+    "artifact_id": "iteration-001:predictions_rerun.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/predictions_rerun.json",
+    "sha256": "3f5eeb21290c4304d764c593590609479c9dcb7101fe40452759bb061d59e46f",
+    "size_bytes": 1468
+  },
+  {
+    "artifact_id": "iteration-001:proposal.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/proposal.json",
+    "sha256": "9e4bfcddfcefe906cb7303b7948be3fc996fe0ae235f0c94fc36f08eb8d8573b",
+    "size_bytes": 1977
+  },
+  {
+    "artifact_id": "iteration-001:tea_time.json",
+    "created_by_step": "iteration-001",
+    "kind": "reflection",
+    "relative_path": "iteration-001/tea_time.json",
+    "sha256": "f2ad8c432cb5915aef6b39fe71fb1434aef6d79e15529d311e103a3d3dba5fcd",
+    "size_bytes": 1338
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "pool_candidate_ids": ["cand-0001", "cand-0002", "cand-0003", "cand-0004"],
+  "metadata": {
+    "cand-0001": {"source_group": "group-a", "n_atoms": 8, "formula": "Cu8"},
+    "cand-0002": {"source_group": "group-a", "n_atoms": 8, "formula": "Cu8"},
+    "cand-0003": {"source_group": "group-b", "n_atoms": 16, "formula": "Cu16"},
+    "cand-0004": {"source_group": "group-b", "n_atoms": 16, "formula": "Cu16"}
+  },
+  "budget": 2,
+  "seed": 20260712,
+  "campaign_id": "demo-campaign",
+  "round_id": "round-1"
+}

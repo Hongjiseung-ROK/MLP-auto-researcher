@@ -193,3 +193,15 @@ Python 3.12. Two earlier attempts surfaced and fixed real defects
 a third was lost to a transient CLI transport timeout, after which the
 driver gained one bounded retry. Staging consumes staging-only status: it
 does not satisfy H3.
+
+**D-P2-MERGE-RECONCILIATION. PR #2 merge publishes infrastructure, not
+scientific approval (2026-07-12).** PR #2 was merged into main through an
+owner-controlled GitHub action (merge commit `cb5b927`). This publishes
+infrastructure implementation and staging evidence. It does not grant H2
+preregistration approval, H3 pilot authorization, or H5 claim-release
+approval. Current capability wording is "Level 4 — bounded Colab staging
+verified"; it must not be described as full pilot complete, scientific
+fine-tuning complete, Auto Research loop complete, or publication eligible.
+The successful staging run targeted commit `467ad6a`; any remote run at a
+later commit is a new request requiring new explicit owner authorization
+(the P2-Q4 staging authorization is consumed).

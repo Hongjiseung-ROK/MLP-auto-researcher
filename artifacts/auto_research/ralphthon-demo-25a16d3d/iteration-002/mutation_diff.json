@@ -1,0 +1,29 @@
+{
+  "applied": true,
+  "base_config_sha256": "4c05b4468b223809b31edee8381494e8c9b3a08b1dc4964dcbaccbd87eac03b6",
+  "changes": [
+    {
+      "allowed_range": {
+        "choices": null,
+        "maximum": 0.1,
+        "minimum": 1e-06,
+        "value_type": "float"
+      },
+      "content_sha256": "8532c4c3d9694370f2d3482b91f0372b62ed5b7372c6fbc5a8f6e75c12902630",
+      "engineering_effect": "Half-sized multiplicative step on the accepted knob.",
+      "new_value": 0.002,
+      "old_value": 0.004,
+      "reversibility": "reversible",
+      "schema_version": "1.0.0",
+      "scientific_effect": "Iteration iteration-001 accepted a move of learning_rate; a smaller step in the same direction tests whether the improvement continues toward the optimum.",
+      "target_key": "learning_rate",
+      "target_path": "config_store/current.json",
+      "target_type": "config"
+    }
+  ],
+  "content_sha256": "f9795ca95dc27bc0c2988af6b64bcb19803d8beea6c913d822bdf1ea5be9246a",
+  "proposal_id": "ralphthon-local-demo-p002",
+  "result_config_sha256": "23cbdd00fe556a7f0f896a47ad2c8fa20dd5c8ecd2ba99dd25ef959c521206e3",
+  "rolled_back": false,
+  "schema_version": "1.0.0"
+}

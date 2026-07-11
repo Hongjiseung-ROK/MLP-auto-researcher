@@ -5,7 +5,7 @@ Architectural sources of truth: [`plan.md`](plan.md) and
 [`plan_phase_2.md`](plan_phase_2.md).
 
 The repository preserves a fully deterministic Phase 1 mock campaign while Phase 2
-has crossed the local real-model boundary and is preparing bounded Colab staging:
+has verified bounded Colab staging (Level 4 on the capability ladder):
 
 ```text
 research goal → preregistration + human gates → typed skills → artifact registry
@@ -13,12 +13,15 @@ research goal → preregistration + human gates → typed skills → artifact re
 → verification → bounded remote staging → evidence-grounded report
 ```
 
-Locally verified Phase 2 capabilities include a qualified Cu energy/force benchmark,
-a whole-group split, a hidden-label simulated oracle, scientific evidence tiers,
-and pinned MACE CPU inference. Cu is a bounded pipeline-hardening scaffold rather
-than the final research topic. Fine-tuning, independent evaluation, and Colab
-CPU/GPU parity are still in progress; no full pilot or publication-grade claim has
-been completed.
+Verified Phase 2 capabilities include a qualified Cu energy/force benchmark, a
+whole-group split, a hidden-label simulated oracle, scientific evidence tiers,
+pinned MACE inference, a real fine-tuning boundary, and an independent aggregate
+evaluator. A bounded Colab staging run passed on a policy-attested NVIDIA L4
+(commit `467ad6a`, CLI-driven, hash-verified pull-back, synthetic fixtures,
+scientific status `staging_only`). Cu is a bounded pipeline-hardening scaffold
+rather than the final research topic. No full pilot, scientific fine-tuning
+result, or publication-grade claim has been completed; H2 (preregistration),
+H3 (pilot authorization), and H5 (claim release) remain open owner gates.
 
 ## Setup
 

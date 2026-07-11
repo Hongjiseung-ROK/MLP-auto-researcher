@@ -6,8 +6,10 @@ narrative. Statuses: `not_started` / `in_progress` / `implemented` (local
 tests pass) / `verified` (independent fresh-context review passed) /
 `blocked(<on what>)`.
 
-Branch: `phase2/real-colab-research`. Phase 1 behavior is preserved; every
-interface migration is recorded in `docs/PHASE2_DECISIONS.md`.
+Branch history: `phase2/real-colab-research` was merged to `main` as PR #2
+(merge commit `cb5b927`, 2026-07-11); current work continues on
+`phase2/ralphthon-core-loop`. Phase 1 behavior is preserved; every interface
+migration is recorded in `docs/PHASE2_DECISIONS.md`.
 
 Last updated: 2026-07-12.
 
@@ -24,7 +26,7 @@ Last updated: 2026-07-12.
 
 | WP | Scope | Target files | Depends on | Human gate | Status |
 |---|---|---|---|---|---|
-| META | Tea Time research pause + program guardrail | `skills/reflection/`, `research/program_guardrail.py`, `configs/research/program_guardrail.yaml` | — | — | implemented locally; focused/full gates pending this change |
+| META | Tea Time research pause + program guardrail | `skills/reflection/`, `research/program_guardrail.py`, `configs/research/program_guardrail.yaml` | — | — | implemented; merged to main in PR #2 with default gates green locally (281 passed) |
 | WP0 | Preregistration schema, experiment matrix, pilot config | `src/mlip_research_agent/research/{preregistration,experiment_matrix,pilot_status}.py`, `configs/research/cu_mace_al_pilot.yaml`, `docs/research/phase2_preregistration.md` | — | H2 before results | in_progress (WP1/WP2 values pinned; WP3/WP4 TBD) |
 | WPS | Secure `api.env` loader + Materials Project SKILL | `src/mlip_research_agent/secrets/api_env.py`, `skills/data/materials_project/` | — | — | implemented locally (synthetic-key tests only; no live API call) |
 | WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1 approved** | implemented locally; 11 checks pass; energy/force promoted, stress excluded |

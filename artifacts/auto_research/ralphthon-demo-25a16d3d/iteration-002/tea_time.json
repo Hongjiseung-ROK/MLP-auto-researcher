@@ -1,0 +1,21 @@
+{
+  "alternative_routes": [
+    "boundary_first",
+    "bounded_comparison"
+  ],
+  "benchmark_lock_in_risk": "low",
+  "claim_eligible": false,
+  "content_sha256": "4e3b9dcdb3dadee3d673a7e12a88cdfe5fa5275d40ff57c759f26491c5638395",
+  "continue_or_refine_recommendation": "continue",
+  "evidence_class": "agent_text",
+  "objective_alignment": "Proposal ralphthon-local-demo-p002 mutates learning_rate toward 'Locally verify the bounded Auto Research loop on a synthetic fixture'. Prior decisions: accept=1. Last failure category: none.",
+  "owner_question": "Budget remaining: 1 iterations, 591 compute-seconds. Continue this mutation direction, or ask for a bounded alternative?",
+  "pivot_request_rationale": "",
+  "post_hoc_selection_risk": "Selection uses the preregistered acceptance policy and aggregate metrics only; no per-record test errors reach the controller, so post-hoc metric shopping is structurally blocked. Residual risk: repeated bounded mutations of one knob can still overfit the fixture landscape.",
+  "proposal_id": "ralphthon-local-demo-p002",
+  "review_id": "tea-time-ralphthon-local-demo-p002",
+  "schema_version": "1.0.0",
+  "skill_reframings_artifact": "iteration-002-tea-time:reframings.json",
+  "skill_report_artifact": "iteration-002-tea-time:tea_time_report.md",
+  "trigger": "auto_research_iteration_boundary"
+}

@@ -36,7 +36,8 @@ preregistration freeze remain owner decisions.
 Approve exact commit, `bounded_research_pilot` workload, requested GPU (L4),
 60-minute runtime, artifact pull-back destination. Presented only after all
 local gates and the Colab staging test pass.
-Status: **open — not yet presentable.**
+Status: **open — staging passed (D-P2-19), so the H3 packet can now be
+assembled and presented; no pilot authorization exists yet.**
 
 **P2-Q4. Colab staging run authorization.**
 The manual staging gate (real MACE import, checkpoint download + hash, one
@@ -46,9 +47,13 @@ treats it as human-triggered. Does the owner authorize the staging run as
 soon as it is ready, or require a separate ask?
 Recommended default: authorize staging when local gates pass, since OQ-14
 already approved Pro-tier preflights ≤60 min.
-Status: **resolved — bounded staging is authorized** for one L4, one GPU,
-at most 60 minutes, with one A100-40GB fallback only after verified OOM. This
-does not authorize a full acquisition campaign or satisfy H3.
+Status: **resolved and consumed** — bounded staging was authorized for one
+L4, one GPU, at most 60 minutes, with one A100-40GB fallback only after
+verified OOM, and the authorization was consumed by the completed 2026-07-12
+staging run at commit `467ad6a` (D-P2-19). Any new remote execution,
+including an infrastructure replay at a later commit, requires a new explicit
+owner authorization. This never authorized a full acquisition campaign and
+does not satisfy H3.
 
 **P2-Q5. Local `mace` extra installation.**
 Real CPU-boundary tests (WP3/WP4) require `mace-torch` + CPU torch in the

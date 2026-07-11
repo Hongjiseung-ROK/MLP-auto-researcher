@@ -7,9 +7,14 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 An autonomous, evidence-grounded AI researcher for ML interatomic potentials.
 `plan.md` defines the long-term architecture; `plan_phase_2.md` defines the current
 real-model and bounded-Colab contract. Do not rewrite either without owner approval.
-Phase 1 remains a deterministic mock vertical slice. Phase 2 is at the local
-real-model boundary and is preparing bounded staging; it is not a completed Cu
-study, production research system, or publication-claim pipeline.
+Phase 1 remains a deterministic mock vertical slice. Phase 2 capability is
+Level 4 — bounded Colab staging verified: pinned real MACE inference and one
+controlled fine-tuning optimizer step (with checkpoint round-trip) passed on a
+policy-attested NVIDIA L4 at commit `467ad6a` via the colab CLI driver, with
+hash-verified artifact pull-back (`artifacts/colab_staging/pullback-467ad6ab/`,
+scientific status `staging_only`, synthetic fixtures only). It is not a
+completed Cu study, full pilot, production research system, or
+publication-claim pipeline.
 
 The mlearn Cu/MACE path is a pipeline-hardening scaffold. Keep reusable controller,
 evaluation, provenance, and compute interfaces model- and benchmark-agnostic.
@@ -102,10 +107,13 @@ alias normalization in `compute/policy.py`, unknown devices denied). Remote jobs
 run only after an immutable runtime attestation (`compute/attestation.py`) gets
 ALLOW; VESSL (primary) submissions additionally require a passing, non-stale Colab
 preflight record matching commit/deps/backend/CUDA-class/schema
-(`compute/preflight.py`). Real transports are not wired yet: `MockRemoteTransport`
-in `compute/_remote.py` simulates sessions; the real Colab transport must wrap the
-security-reviewed `google-colab-cli` v0.6.0 (`docs/SKILL_SECURITY_REVIEW.md`) and
-keep auth external (gcloud ADC). Attestation/compute artifacts carry timestamps —
+(`compute/preflight.py`). Real Colab execution is wired through the CLI driver
+`scripts/colab/colab_cli_run.sh` (owner-gated, D-P2-18): it wraps the
+security-reviewed `google-colab-cli` v0.6.0 (`docs/SKILL_SECURITY_REVIEW.md`),
+ships the exact commit as a git bundle, keeps auth external (gcloud ADC), and
+hash-verifies pulled-back artifacts. The router-level `MockRemoteTransport` in
+`compute/_remote.py` still simulates sessions for default tests; notebook
+execution paths are retired. Attestation/compute artifacts carry timestamps —
 never wire compute skills into byte-reproducibility-gated scientific DAGs.
 `pytest -m colab_remote` / `-m vessl_remote` markers are opt-in real-resource
 tests; ordinary CI runs mocks only.
@@ -122,8 +130,11 @@ per environment because torch/e3nn pins may conflict.
   remains excluded because its unit is inferred.
 - H2 is not frozen. Do not promote a checkpoint, freeze preregistration, or start a
   claim-bearing run without the exact approval artifact.
-- Bounded Colab staging is authorized: one GPU, L4 first, at most 60 minutes, and a
-  single A100-40GB fallback only for verified OOM. Full campaigns remain forbidden.
+- The bounded Colab staging authorization (one GPU, L4 first, ≤60 minutes,
+  single A100-40GB fallback only for verified OOM) was **consumed by the
+  completed 2026-07-12 staging run** (D-P2-19). Any new remote execution —
+  including an infrastructure replay at a later commit — requires a new
+  explicit owner authorization. Full campaigns remain forbidden until H3.
 - `api.env` is sealed: never read, print, hash, upload, pass to a subagent, or place
   it in a command argument/artifact. Only verify ignore/tracking status and mode 600.
 - Never commit raw datasets, cached checkpoints, secrets, notebook outputs, or run

@@ -1,0 +1,9 @@
+{
+  "iterations_completed": 2,
+  "iterations_planned": 2,
+  "reason": "maximum iterations reached with a complete audited chain",
+  "run_id": "ralphthon-demo-25a16d3d",
+  "schema_version": "1.0.0",
+  "scientific_status": "non_scientific",
+  "status": "complete"
+}
