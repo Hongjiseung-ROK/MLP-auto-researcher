@@ -10,6 +10,9 @@ credentials*
 secrets*
 token*
 cookies*
+# …but the typed secret *loader* is source code, not a secret (D-P2-2).
+!src/mlip_research_agent/secrets/
+!src/mlip_research_agent/secrets/**
 
 # Python build/tooling caches
 __pycache__/

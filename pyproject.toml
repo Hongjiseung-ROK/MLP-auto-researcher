@@ -26,7 +26,12 @@ agent = []
 atomistics = ["pymatgen>=2024.1", "scikit-learn>=1.4", "scipy>=1.11"]
 # MLIP backends: separate extras because their torch/e3nn pins can conflict.
 # Install at most one per environment until per-backend isolation lands.
-mace = ["mace-torch>=0.3.6"]
+# mace is pinned exactly: evidence runs record the resolved environment, and
+# MACE defaults can change between releases (docs/PHASE2_DECISIONS.md D-P2-8).
+mace = ["mace-torch==0.3.16"]
+# Materials Project reconnaissance/metadata access (D-P2-2, D-P2-7).
+# Pinned exactly; the API key lives only in the gitignored api.env.
+materials-project = ["mp-api==0.46.4", "python-dotenv==1.2.2"]
 sevennet = ["sevenn>=0.10"]
 orb = ["orb-models>=0.4"]
 # DFT: real backends are external licensed binaries (see DEPENDENCIES.md §10);

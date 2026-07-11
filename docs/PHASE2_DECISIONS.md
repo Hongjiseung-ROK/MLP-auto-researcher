@@ -72,6 +72,15 @@ forbidden, human approval (H3) required. Policy stays fail-closed: L4 first;
 one A100-40GB retry only on verified OOM-class failure; everything else
 escalates.
 
+**D-P2-11. Local macOS dev env uses conda-forge pytorch 2.12.1, not the pip
+torch wheel.** The pip wheel bundles its own libomp and aborts on import next
+to conda-forge's OpenMP (`OMP: Error #15`). The unsafe
+`KMP_DUPLICATE_LIB_OK=TRUE` workaround was rejected because it can silently
+corrupt numerics. Consequence: local CPU fixtures run torch 2.12.1; the
+Colab/Linux evidence environment pins its own torch in the staging
+constraints file, and CPU/GPU parity is a declared-tolerance test, not an
+assumption. `pip check` confirms mace-torch 0.3.16 accepts the conda torch.
+
 **D-P2-10. The three-seed ensemble is a ranking signal, not uncertainty
 truth.** Its correlation with observed error is a *reported measurement*
 (Spearman, post-reveal), never an assumption. Diversity (farthest-point
