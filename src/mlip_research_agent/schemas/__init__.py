@@ -7,7 +7,13 @@ from mlip_research_agent.schemas.campaign import (
     StoppingRule,
     TargetSystem,
 )
-from mlip_research_agent.schemas.claims import Claim, ClaimStatus
+from mlip_research_agent.schemas.claims import (
+    Claim,
+    ClaimClass,
+    ClaimStatus,
+    EvaluationPartition,
+    ScientificEvidenceTier,
+)
 from mlip_research_agent.schemas.events import Event, EventType
 from mlip_research_agent.schemas.failure import (
     FailureClass,
@@ -21,13 +27,16 @@ __all__ = [
     "CampaignMode",
     "CampaignSpec",
     "Claim",
+    "ClaimClass",
     "ClaimStatus",
+    "EvaluationPartition",
     "Event",
     "EventType",
     "FailureClass",
     "FailureRecord",
     "LabelBudget",
     "RecoveryDecision",
+    "ScientificEvidenceTier",
     "Severity",
     "StoppingRule",
     "TargetSystem",

@@ -19,7 +19,8 @@ on-disk sha256 hashes still match; otherwise it is REJECTED with a reason.
 
 ## Typed outputs — `schema.VerificationOutput`
 `report_artifact`/`report_path`, `verified_claims_artifact`/`verified_claims_path`,
-`n_claims`, `n_verified`, `n_rejected`.
+`n_claims`, `n_verified`, `n_rejected`, plus counts by claim class,
+scientific evidence tier, artifact-verification status, and rejection category.
 
 ## Required dependencies
 Standard library only.
@@ -29,7 +30,10 @@ The executor has persisted `claims.json` and the manifest before this step
 (it saves both after every step).
 
 ## Validation rules
-Missing or malformed claims file → `VALIDATION_ERROR`, non-retryable.
+Missing or malformed claims file → `VALIDATION_ERROR`, non-retryable. Agent
+prose/reflection/report artifacts are rejected as evidence even when their
+hashes are intact. `VERIFIED` means artifact integrity only; it never upgrades
+the claim's scientific evidence tier.
 
 ## Failure taxonomy
 `VALIDATION_ERROR`, `UNSUPPORTED_CLAIM` (strict mode, any rejection).

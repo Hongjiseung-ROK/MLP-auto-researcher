@@ -7,6 +7,7 @@ artifact exists in the run manifest and its on-disk sha256 still matches.
 from __future__ import annotations
 
 import json
+from collections import Counter
 
 from pydantic import BaseModel
 
@@ -24,6 +25,10 @@ from mlip_research_agent.skills.verification.validators import load_claims
 
 REPORT_FILENAME = "verification_report.json"
 VERIFIED_CLAIMS_FILENAME = "verified_claims.json"
+
+# Narrative/agent-text artifacts may explain a result but can never verify a
+# numerical claim (plan.md data-provenance policy).
+FORBIDDEN_EVIDENCE_KINDS = frozenset({"agent_text", "reflection", "report", "run_report"})
 
 
 @register_skill
@@ -45,23 +50,69 @@ class ClaimVerificationSkill(Skill):
                 for ref in claim.artifact_references
                 if ctx.registry.get(ref) is not None and not ctx.registry.verify(ref)
             ]
-            if missing or corrupted:
+            prose = [
+                ref
+                for ref in claim.artifact_references
+                if (artifact := ctx.registry.get(ref)) is not None
+                and artifact.kind in FORBIDDEN_EVIDENCE_KINDS
+            ]
+            if missing or corrupted or prose:
+                if missing:
+                    category = "unregistered_artifact"
+                elif corrupted:
+                    category = "corrupted_artifact"
+                else:
+                    category = "agent_prose_as_evidence"
                 audited.append(
                     claim.model_copy(
                         update={
                             "status": ClaimStatus.REJECTED,
                             "rejection_reason": (
                                 f"unregistered artifacts: {missing}; "
-                                f"corrupted artifacts: {corrupted}"
+                                f"corrupted artifacts: {corrupted}; "
+                                f"forbidden agent prose artifacts: {prose}"
                             ),
+                            "rejection_reason_category": category,
+                            "rejection_evidence": [
+                                *[f"unregistered:{ref}" for ref in missing],
+                                *[f"corrupted:{ref}" for ref in corrupted],
+                                *[f"agent_prose:{ref}" for ref in prose],
+                            ],
                         }
                     )
                 )
             else:
-                audited.append(claim.model_copy(update={"status": ClaimStatus.VERIFIED}))
+                audited.append(
+                    claim.model_copy(
+                        update={
+                            "status": ClaimStatus.VERIFIED,
+                            "rejection_reason": None,
+                            "rejection_reason_category": None,
+                            "rejection_evidence": [],
+                        }
+                    )
+                )
 
         n_verified = sum(1 for c in audited if c.status is ClaimStatus.VERIFIED)
         n_rejected = sum(1 for c in audited if c.status is ClaimStatus.REJECTED)
+        counts_by_claim_class = dict(
+            sorted(Counter(c.claim_class.value for c in audited).items())
+        )
+        counts_by_evidence_tier = dict(
+            sorted(Counter(c.scientific_evidence_tier.value for c in audited).items())
+        )
+        counts_by_verification_status = dict(
+            sorted(Counter(c.status.value for c in audited).items())
+        )
+        rejection_reason_categories = dict(
+            sorted(
+                Counter(
+                    c.rejection_reason_category or "unspecified"
+                    for c in audited
+                    if c.status is ClaimStatus.REJECTED
+                ).items()
+            )
+        )
 
         verified_path = ctx.step_dir / VERIFIED_CLAIMS_FILENAME
         verified_path.write_text(
@@ -75,6 +126,14 @@ class ClaimVerificationSkill(Skill):
                     "n_claims": len(audited),
                     "n_verified": n_verified,
                     "n_rejected": n_rejected,
+                    "artifact_integrity": {
+                        "verified": n_verified,
+                        "rejected": n_rejected,
+                    },
+                    "counts_by_claim_class": counts_by_claim_class,
+                    "counts_by_evidence_tier": counts_by_evidence_tier,
+                    "counts_by_verification_status": counts_by_verification_status,
+                    "rejection_reason_categories": rejection_reason_categories,
                     "rejected_claim_ids": sorted(
                         c.claim_id for c in audited if c.status is ClaimStatus.REJECTED
                     ),
@@ -113,4 +172,8 @@ class ClaimVerificationSkill(Skill):
             n_claims=len(audited),
             n_verified=n_verified,
             n_rejected=n_rejected,
+            counts_by_claim_class=counts_by_claim_class,
+            counts_by_evidence_tier=counts_by_evidence_tier,
+            counts_by_verification_status=counts_by_verification_status,
+            rejection_reason_categories=rejection_reason_categories,
         )
