@@ -15,6 +15,15 @@ class TeaTimeTrigger(StrEnum):
     PREREGISTRATION_FREEZE = "preregistration_freeze"
     COLAB_STAGING_PRELAUNCH = "colab_staging_prelaunch"
     STAGED_FAILURE = "staged_failure"
+    # Auto Research loop boundaries (extends the same skill per D-P2-16):
+    AUTO_RESEARCH_FIRST_PROPOSAL = "auto_research_first_proposal"
+    AUTO_RESEARCH_REMOTE_PRELAUNCH = "auto_research_remote_prelaunch"
+    AUTO_RESEARCH_REPEATED_MUTATION_CLASS = "auto_research_repeated_mutation_class"
+    AUTO_RESEARCH_CONSECUTIVE_FAILURES = "auto_research_consecutive_failures"
+    AUTO_RESEARCH_PIVOT_REQUEST = "auto_research_pivot_request"
+    AUTO_RESEARCH_CHECKPOINT_FAMILY_CHANGE = "auto_research_checkpoint_family_change"
+    AUTO_RESEARCH_CLAIM_RENDERING = "auto_research_claim_rendering"
+    AUTO_RESEARCH_ITERATION_BOUNDARY = "auto_research_iteration_boundary"
 
 
 class AlternativePath(BaseModel):

@@ -1,0 +1,60 @@
+# Fail-closed mutation policy for the Ralphthon local demonstration.
+# Anything not listed here is IMMUTABLE (MutationPolicy.classify falls
+# through to immutable for unknown keys). Bounds are engineering bounds for
+# a bounded fine-tuning configuration — they are NOT an H2 preregistration.
+schema_version: "1.0.0"
+policy_id: ralphthon-local-demo-mutation-policy
+policy_version: "1.0.0"
+
+bounded_mutable:
+  learning_rate:
+    value_type: float
+    minimum: 1.0e-06
+    maximum: 0.1
+  gradient_clip:
+    value_type: float
+    minimum: 0.01
+    maximum: 100.0
+  batch_size:
+    value_type: int
+    minimum: 1
+    maximum: 64
+  scheduler_patience:
+    value_type: int
+    minimum: 1
+    maximum: 50
+  force_loss_weight:
+    value_type: float
+    minimum: 0.1
+    maximum: 1000.0
+  energy_loss_weight:
+    value_type: float
+    minimum: 0.1
+    maximum: 1000.0
+  trainable_layer_policy:
+    value_type: choice
+    choices: [all, readout_only, last_interaction_and_readout]
+
+# Before H2, checkpoint selection is an owner decision (P2-Q2 / D-P2-17).
+owner_gated:
+  - checkpoint_id
+  - checkpoint_sha256
+  - checkpoint_family
+
+freely_mutable_fixture_only: []
+
+# Explicitly protected scientific constants of the Phase 2 benchmark. The
+# fail-closed default already protects unknown keys; these are named so the
+# protection is auditable and testable.
+immutable:
+  - dataset_content_sha256
+  - normalized_manifest_sha256
+  - split_manifest_sha256
+  - partition_membership
+  - primary_endpoint
+  - frozen_test_policy
+  - label_budget
+  - experiment_arms
+  - scientific_claim_ceiling
+  - approval_records
+  - source_code
