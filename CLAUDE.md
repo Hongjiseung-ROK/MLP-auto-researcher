@@ -87,6 +87,21 @@ Key contracts that everything obeys:
   `"$steps.<step_id>.<output_field>"`, resolved by the executor against completed
   step outputs.
 
+Compute layer (`compute/`): scientific skills never talk to providers directly —
+they submit typed `JobSpec`s through `ComputeRouter`, which enforces
+`configs/compute_policy.yaml` fail-closed (GPU allowlist L4/A100-40/A100-80, exact
+alias normalization in `compute/policy.py`, unknown devices denied). Remote jobs
+run only after an immutable runtime attestation (`compute/attestation.py`) gets
+ALLOW; VESSL (primary) submissions additionally require a passing, non-stale Colab
+preflight record matching commit/deps/backend/CUDA-class/schema
+(`compute/preflight.py`). Real transports are not wired yet: `MockRemoteTransport`
+in `compute/_remote.py` simulates sessions; the real Colab transport must wrap the
+security-reviewed `google-colab-cli` v0.6.0 (`docs/SKILL_SECURITY_REVIEW.md`) and
+keep auth external (gcloud ADC). Attestation/compute artifacts carry timestamps —
+never wire compute skills into byte-reproducibility-gated scientific DAGs.
+`pytest -m colab_remote` / `-m vessl_remote` markers are opt-in real-resource
+tests; ordinary CI runs mocks only.
+
 Mock-only guards: campaign `backend`, labeling `method`, and training `model_name`
 are validated against explicit allowlists (`"mock"` / `"mock_lj"` /
 `"mock_mean_baseline"`). Real backends get added by extending those allowlists

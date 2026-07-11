@@ -1,0 +1,78 @@
+# Compute-provider policy: local CPU -> Colab preflight -> VESSL primary.
+# Enforced fail-closed by src/mlip_research_agent/compute/policy.py.
+# Owner-authorized GPU families: NVIDIA L4, A100 40GB, A100 80GB (2026-07-11).
+version: 1
+
+routing:
+  primary_provider: vessl
+  validation_provider: colab
+  local_provider: local
+  require_preflight_before_primary: true
+
+providers:
+  local:
+    enabled: true
+    allowed_accelerators:
+      - cpu
+
+  colab:
+    enabled: true
+    purpose:
+      - preflight
+      - smoke_test
+      - gpu_validation
+      - failure_reproduction
+    allowed_accelerators:
+      - nvidia-l4
+      - nvidia-a100-40gb
+      - nvidia-a100-80gb
+    default_accelerator_preference:
+      - nvidia-l4
+      - nvidia-a100-40gb
+      - nvidia-a100-80gb
+    max_gpus_per_run: 1
+    allow_full_campaign: false
+    allow_long_training: false
+    require_runtime_attestation: true
+    # Bound for development_training on the validation provider (minutes).
+    max_runtime_minutes: 120
+
+  vessl:
+    enabled: true
+    purpose:
+      - primary_training
+      - active_learning
+      - benchmark
+      - production_research
+    allowed_accelerators:
+      - nvidia-a100-40gb
+      - nvidia-a100-80gb
+    default_accelerator_preference:
+      - nvidia-a100-80gb
+      - nvidia-a100-40gb
+    max_gpus_per_run: 1
+    require_runtime_attestation: true
+
+approval:
+  allowed_without_additional_gpu_model_approval:
+    - nvidia-l4
+    - nvidia-a100-40gb
+    - nvidia-a100-80gb
+
+  require_explicit_approval_for:
+    - multiple_gpus
+    - gpu_family_not_allowlisted
+    - colab_full_campaign
+    - production_run_without_colab_preflight
+    - budget_limit_increase
+    - runtime_limit_increase
+
+enforcement:
+  deny_unrecognized_gpu: true
+  deny_gpu_name_mismatch: true
+  deny_missing_attestation: true
+  fail_closed: true
+
+# A Colab preflight older than this is stale even if its keys still match.
+preflight:
+  max_age_hours: 168

@@ -66,7 +66,7 @@ files = ["src"]
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["ase.*"]
+module = ["ase.*", "torch", "torch.*"]
 ignore_missing_imports = true
 
 # ASE ships partial annotations; calls into its untyped surface are expected
@@ -80,4 +80,10 @@ disallow_untyped_calls = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]
-addopts = "-q"
+# Remote-resource tests are opt-in: run with `pytest -m colab_remote` etc.
+# (a later -m on the command line overrides this default deselection).
+addopts = "-q -m \"not colab_remote and not vessl_remote\""
+markers = [
+    "colab_remote: opt-in tests that consume real Colab resources (skipped without credentials)",
+    "vessl_remote: opt-in tests that consume real VESSL resources (skipped without credentials)",
+]

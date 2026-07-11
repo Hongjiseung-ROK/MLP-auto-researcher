@@ -113,6 +113,15 @@ metadata) with no external dependency.
 | mkdocs-material | Docs site | Optional (`docs`) | pip | `>=9.5` | MIT | Confirmed as optional |
 | mkdocstrings[python] | API docs from docstrings | Optional (`docs`) | pip | `>=0.25` | ISC | Confirmed as optional |
 
+## 9b. Compute providers (remote execution)
+
+| Tool | Purpose | Required? | Installation channel | License | Status |
+|---|---|---|---|---|---|
+| google-colab-cli (`colab`) | Colab preflight/validation sessions (validation provider) | Optional, external tool | `uv tool install google-colab-cli` / pip | Apache-2.0 (official googlecolab org) | **Reviewed and pinned v0.6.0** — docs/SKILL_SECURITY_REVIEW.md; auth via gcloud ADC, never bundled |
+| gcloud SDK | ADC authentication for the colab CLI | Optional, external tool | Google installer | Apache-2.0 | Present on host; user-owned credentials |
+| vessl (CLI) | Primary production compute (A100 allowlist) | Optional, post-approval | pip | Apache-2.0 | **Needs owner org/project/budget answers** before install/use |
+| torch (in remote envs) | GPU attestation detail + future backends | Remote-env only | pip (CUDA wheels on provider VMs) | BSD-3 | Never in the local bootstrap env |
+
 ## 10. External binaries and licensed software
 
 | Tool | Purpose | Required? | Installation channel | License consideration | Status |

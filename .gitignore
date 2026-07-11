@@ -1,11 +1,46 @@
+# Secrets and credentials — never committed
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*
+secrets*
+token*
+cookies*
+
+# Python build/tooling caches
 __pycache__/
 *.pyc
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.ipynb_checkpoints/
 *.egg-info/
 build/
 dist/
 .coverage
+.conda/
+venv/
+.venv/
+
+# Experiment tracking and heavy data — stays out of git
+wandb/
+mlruns/
+data/raw/
+data/cache/
+checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# Generated scientific artifacts (small manifests/fixtures/reports that
+# demonstrate the repo are committed explicitly, e.g. artifacts/bootstrap/)
 artifacts/runs/
+artifacts/colab/private/
+artifacts/vessl/private/
+artifacts/compute/
+
+# OS noise
 .DS_Store
