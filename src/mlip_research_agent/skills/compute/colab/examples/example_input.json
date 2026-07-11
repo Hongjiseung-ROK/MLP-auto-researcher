@@ -1,0 +1,7 @@
+{
+  "workload_class": "preflight",
+  "requested_accelerator": "nvidia-l4",
+  "max_runtime_minutes": 30,
+  "use_mock": true,
+  "mock_observed_gpu": "NVIDIA L4"
+}
