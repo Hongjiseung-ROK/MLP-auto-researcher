@@ -51,6 +51,9 @@ dev = [
     "ruff>=0.5",
     "mypy>=1.10",
     "types-PyYAML",
+    # The materials_project skill's mock tests exercise the real api.env parsing
+    # path; pinned identically to the materials-project extra to avoid skew.
+    "python-dotenv==1.2.2",
 ]
 docs = ["mkdocs-material>=9.5", "mkdocstrings[python]>=0.25"]
 # 'all' deliberately excludes the mutually incompatible MLIP backend extras
@@ -76,10 +79,13 @@ strict = true
 files = ["src"]
 mypy_path = "src"
 
+# Optional third-party backends: imports are runtime-guarded behind extras, so
+# these modules are legitimately absent in the default (CI) environment. dotenv
+# ships with the materials-project extra only (secrets/api_env.py guards it).
 [[tool.mypy.overrides]]
 module = [
     "ase.*", "torch", "torch.*", "mp_api.*", "pymatgen.*", "emmet.*", "mace.*", "e3nn.*",
-    "dpdata.*", "phonopy.*", "rdkit.*", "deepmd.*",
+    "dpdata.*", "phonopy.*", "rdkit.*", "deepmd.*", "dotenv",
 ]
 ignore_missing_imports = true
 
