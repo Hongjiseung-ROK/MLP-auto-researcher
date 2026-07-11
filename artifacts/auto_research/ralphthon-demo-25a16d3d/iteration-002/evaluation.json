@@ -1,0 +1,61 @@
+{
+  "aggregate_metrics": {
+    "n_records": 32.0,
+    "rerun_metric_delta": 0.0,
+    "synthetic_p95_residual": 0.055040198243816514,
+    "synthetic_validation_loss": 0.051631329124927954
+  },
+  "baseline_reference": {
+    "baseline_id": "accepted-config-baseline",
+    "metrics": {
+      "n_records": 32.0,
+      "rerun_metric_delta": 0.0,
+      "synthetic_p95_residual": 0.0946319754531523,
+      "synthetic_validation_loss": 0.08722767090924091
+    },
+    "source_artifact": null
+  },
+  "constraint_results": [
+    {
+      "constraint_id": "tail-max",
+      "description": "Synthetic p95 residual must stay under the demo tail limit.",
+      "limit": 2.0,
+      "observed": 0.055040198243816514,
+      "passed": true
+    },
+    {
+      "constraint_id": "runtime-max",
+      "description": "Simulated runtime must stay under the demo runtime limit.",
+      "limit": 60.0,
+      "observed": 9.0,
+      "passed": true
+    },
+    {
+      "constraint_id": "memory-max",
+      "description": "Simulated peak memory must stay under the demo memory limit.",
+      "limit": 1024.0,
+      "observed": 260.0,
+      "passed": true
+    }
+  ],
+  "content_sha256": "be0a3e0a365e1af4e6c24f834564965b41555e015bbaaba633df62d5d9675625",
+  "evaluation_id": "ralphthon-local-demo-p002-eval",
+  "evaluator_name": "synthetic_aggregate_evaluator/1.0.0",
+  "evaluator_source_sha256": "930f78adc0c3e49478f3b3af41e4fae5aa7827efb560059e8a6a3959291760ae",
+  "execution_id": "ralphthon-local-demo-p002-exec",
+  "input_prediction_artifacts": [
+    "iteration-002:predictions.json",
+    "iteration-002:predictions_rerun.json"
+  ],
+  "legality_result_sha256": "a61ae76cd80538f7745e2279bf3fef17581c23d6c6bb188a3bc54aa5d01151e8",
+  "metric_artifacts": [
+    "iteration-002:metrics.json"
+  ],
+  "resource_metrics": {
+    "peak_memory_mb": 260.0,
+    "wall_seconds": 9.0
+  },
+  "schema_version": "1.0.0",
+  "scientific_status": "non_scientific",
+  "uncertainty_notes": "Synthetic fixture metrics: the residual spread comes from a seeded deterministic noise model, so run-to-run uncertainty is zero by construction and these numbers support no scientific claim."
+}

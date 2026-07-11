@@ -1,0 +1,49 @@
+{
+  "content_sha256": "e80af8f4a5b72308c6cdba61108ba0c4ff9e2a65a4c75b903ed94032ae0b4992",
+  "estimated_compute": {
+    "device": "cpu",
+    "estimated_seconds": 30.0,
+    "remote": false
+  },
+  "expected_mechanism": "Iteration iteration-001 accepted a move of learning_rate; a smaller step in the same direction tests whether the improvement continues toward the optimum.",
+  "expected_observables": [
+    {
+      "expected_direction": "decrease",
+      "metric": "synthetic_validation_loss",
+      "rationale": "The mutation is chosen to move the primary metric toward the objective's success criterion."
+    }
+  ],
+  "falsification_condition": "If the further move on learning_rate does not improve the metric, the optimum lies between the two accepted values and the direction is exhausted.",
+  "hypothesis": "The accepted direction on learning_rate in iteration-001 has not been exhausted; a bounded nearby value should yield a further, smaller improvement.",
+  "objective_id": "ralphthon-local-demo",
+  "parent_iteration_id": "iteration-001",
+  "proposal_id": "ralphthon-local-demo-p002",
+  "proposal_policy_version": "proposal-policy/1.0.0",
+  "proposed_mutations": [
+    {
+      "allowed_range": {
+        "choices": null,
+        "maximum": 0.1,
+        "minimum": 1e-06,
+        "value_type": "float"
+      },
+      "content_sha256": "8532c4c3d9694370f2d3482b91f0372b62ed5b7372c6fbc5a8f6e75c12902630",
+      "engineering_effect": "Half-sized multiplicative step on the accepted knob.",
+      "new_value": 0.002,
+      "old_value": 0.004,
+      "reversibility": "reversible",
+      "schema_version": "1.0.0",
+      "scientific_effect": "Iteration iteration-001 accepted a move of learning_rate; a smaller step in the same direction tests whether the improvement continues toward the optimum.",
+      "target_key": "learning_rate",
+      "target_path": "config_store/current.json",
+      "target_type": "config"
+    }
+  ],
+  "required_approval": null,
+  "required_skills": [
+    "tea_time_with_reading_poem"
+  ],
+  "risk_class": "low",
+  "schema_version": "1.0.0",
+  "seed": 20260713
+}

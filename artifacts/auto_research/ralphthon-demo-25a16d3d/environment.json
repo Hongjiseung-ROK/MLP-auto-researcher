@@ -1,0 +1,7 @@
+{
+  "adapter": "synthetic_quadratic_finetune_fixture/1.0.0",
+  "evaluator": "synthetic_aggregate_evaluator/1.0.0",
+  "git_commit": "25a16d3d702b74de0b3c4bdfa0dbc18b5890d2dd",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "python": "3.11.15"
+}
