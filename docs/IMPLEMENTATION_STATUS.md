@@ -20,7 +20,7 @@ locally implemented; bounded staging preparation is in progress.
 | Colab CLI security review (google-colab-cli v0.6.0, pinned) | Done — `docs/SKILL_SECURITY_REVIEW.md`, ACCEPT with caveats |
 | Workspace skill `colab_preflight` (full contract + security.md) | Done |
 | Reflection skill `tea_time_with_reading_poem` (full contract, agent-text only) | Done |
-| Colab execution package (`scripts/colab/`, notebook, `configs/colab/preflight.yaml`) | Delegated to subagent, integrating |
+| Colab execution package (`scripts/colab/`, CLI launcher, `configs/colab/preflight.yaml`) | Done — notebooks retired 2026-07-12; `colab_cli_run.sh` is the launcher |
 | Compute test suite (§11 acceptance list, `colab_remote`/`vessl_remote` markers) | Delegated to subagent, integrating |
 | Secret/large-file staging gate (`scripts/check_staged.py`) | Done |
 | GitHub publication to Hongjiseung-ROK/MLP-auto-researcher | Pending final gates |

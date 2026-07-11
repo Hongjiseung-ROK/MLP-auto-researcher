@@ -34,7 +34,7 @@ Last updated: 2026-07-11.
 | WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | not_started |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | not_started |
 | WP7 | Multi-round controller + stopping rules | `research/` controller, round state schema | WP4–WP6 | — | not_started |
-| WP8 | `bounded_research_pilot` policy + Colab research runner | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/{run_research.py,bootstrap_research.sh}`, `notebooks/colab_phase2_research.ipynb` | WP7 | **H3** before real run | not_started |
+| WP8 | `bounded_research_pilot` policy + Colab research runner | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/{run_research.py,bootstrap_research.sh,colab_cli_run.sh}` | WP7 | **H3** before real run | not_started |
 | WP9 | Claim classes, evidence bundle, pilot report, VESSL spec | `schemas/claims.py` extension, `docs/research/{human_gates,colab_pilot_runbook,vessl_replication_spec}.md` | all | H5 for claim release | in_progress (claim classes/evidence tiers implemented; remaining bundle/report/spec deferred) |
 
 ## Acceptance tests per WP (from plan_phase_2.md §10, §20)
