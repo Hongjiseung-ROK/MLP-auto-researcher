@@ -1,0 +1,115 @@
+{
+  "dataset": "mlearn Cu (Zuo et al. 2019, arXiv:1906.08888)",
+  "source_repo": {
+    "canonical_citation_url": "https://github.com/materialsvirtuallab/mlearn",
+    "current_url": "https://github.com/materialyzeai/mlearn",
+    "note": "repo transferred from materialsvirtuallab to materialyzeai; GitHub redirects both API and raw URLs",
+    "default_branch": "master",
+    "status": "archived/deprecated in favor of materialsvirtuallab/maml"
+  },
+  "pinned_commit": "10c427a5480c6281c15c64efaf869b03be04818f",
+  "pinned_commit_date_utc": "2022-02-22T04:04:46Z",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/data/Cu/training.json",
+      "path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/training.json",
+      "sha256": "9a427b8e21c10d410bc139e98a5bf69c10ca1cdb208d383819cebf4f4be0992f",
+      "size_bytes": 5246466
+    },
+    {
+      "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/data/Cu/test.json",
+      "path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/test.json",
+      "sha256": "1805a315ce8d0ce4a18bb761df4c4f619909ce114d598d426015d0071edc98c2",
+      "size_bytes": 608400
+    },
+    {
+      "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/LICENSE",
+      "path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/LICENSE",
+      "sha256": "f82460fc65e8e5dc3d00bfee0ce2a656f8c9d5af0dfc5511e9875e88051a55e9",
+      "size_bytes": 1529
+    },
+    {
+      "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/README.md",
+      "path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/README.md",
+      "sha256": "551282de9ee6e88df624d2aa47a552f5f662a8d5dcd545d059d71e243b9f02a7",
+      "size_bytes": 2469
+    }
+  ],
+  "license_spdx": "BSD-3-Clause",
+  "license_copyright": "Copyright (c) 2019, Materials Virtual Lab",
+  "redistribution_allowed": true,
+  "redistribution_conditions": "retain copyright notice, condition list, and disclaimer; no endorsement use of the Materials Virtual Lab name; cite Zuo et al. 2019",
+  "n_configurations": {
+    "training": 262,
+    "test": 31,
+    "total": 293
+  },
+  "atoms_per_config": {
+    "training": {"min": 6, "max": 108},
+    "test": {"min": 20, "max": 108}
+  },
+  "species": ["Cu"],
+  "label_fields": ["energy", "forces", "virial_stress"],
+  "label_units": {
+    "energy": "eV (paper convention, physically consistent)",
+    "forces": "eV/angstrom (paper convention, physically consistent)",
+    "virial_stress": "kbar, 6-component Voigt (inferred from magnitudes vs Cu elastic constants; not explicitly documented -- H1 open item)"
+  },
+  "labels_all_finite": true,
+  "periodic": "all configurations carry a full pymatgen lattice matrix; surfaces are periodic slabs with vacuum",
+  "energy_per_atom_eV": {"min": -4.1012, "max": -3.5155},
+  "force_magnitude_eV_per_A": {"min": 0.0, "max": 11.8195},
+  "groups": [
+    {"name": "Elastic", "count": 121, "training": 108, "test": 13, "detail": "6 strain modes x 20 strains (-10%..+10%, 1% steps) + 1 ground state crystal; 108-atom 3x3x3 fcc cells"},
+    {"name": "AIMD-NVT", "count": 120, "training": 108, "test": 12, "detail": "40 snapshots each at 300 K, 1000 K, 3000 K; 108-atom bulk; 0.1 ps interval"},
+    {"name": "Vacancy", "count": 40, "training": 36, "test": 4, "detail": "20 snapshots each at 300 K, 3000 K; 107-atom single-vacancy cells"},
+    {"name": "Surface", "count": 12, "training": 10, "test": 2, "detail": "slabs from Crystalium/mp-30, Miller indices (100)..(332); 6-48 atoms"}
+  ],
+  "fine_grained_groups": [
+    {"name": "Elastic", "count": 121},
+    {"name": "AIMD-NVT @ 300 K", "count": 40},
+    {"name": "AIMD-NVT @ 1000 K", "count": 40},
+    {"name": "AIMD-NVT @ 3000 K", "count": 40},
+    {"name": "Vacancy @ 300 K", "count": 20},
+    {"name": "Vacancy @ 3000 K", "count": 20},
+    {"name": "Surface", "count": 12}
+  ],
+  "dft": {
+    "code": "VASP 5.4.1 (paper-stated, not verifiable from data)",
+    "method": "PAW (paper-stated)",
+    "xc_functional": "PBE / GGA (paper-stated)",
+    "planewave_cutoff_eV": 520,
+    "kpoints": "4x4x4 for Cu supercells; Gamma-only for AIMD (paper-stated)",
+    "convergence": "electronic 1e-5 eV; forces 0.02 eV/A (paper-stated)",
+    "smearing": "unknown (not stated in retrieved text)",
+    "potcar_variant": "unknown",
+    "verification_status": "all DFT settings are paper statements; JSONs carry no INCAR/KPOINTS/POTCAR metadata"
+  },
+  "overlap_risk": {
+    "verdict": "low direct overlap with MPTrj; moderate distributional familiarity for foundation-model baselines",
+    "rationale": "custom 2019 strain/AIMD/vacancy/surface configurations, not MP relaxation trajectories; MPTrj (2023) contains only bulk MP task trajectories. Equilibrium fcc Cu (mp-30) and its relaxation frames ARE in MPTrj, so the ground-state/small-strain region is familiar to MACE-MP-0; surface slabs derive geometrically from mp-30 but slab frames are not MPTrj members."
+  },
+  "suitability": {
+    "verdict": "suitable for Phase 2 vertical slice with constraints",
+    "split_arithmetic": {
+      "total": 293,
+      "frozen_test": 59,
+      "validation": 30,
+      "initial_set": 32,
+      "acquisition_pool": 172,
+      "pool_within_required_128_512": true
+    },
+    "constraints": [
+      "mlearn's own 31-config test set is only 10.6% -- a project re-split is required to reach >=20% frozen test",
+      "acquisition pool capped at ~172 (low end of 128-512)",
+      "Surface group has only 12 configs; per-group Surface metrics will be weak",
+      "AIMD snapshots are temporally correlated within only 5 trajectories; use time-block splitting and preregister the policy"
+    ]
+  },
+  "discrepancies_paper_vs_data": [
+    "paper says 20 AIMD / 40 vacancy snapshots; data has 40 AIMD / 20 vacancy",
+    "paper says 2% strain intervals; Cu data has 1% intervals",
+    "paper describes AIMD temps as multiples of melting point; Cu data uses literal 300/1000/3000 K"
+  ],
+  "generated_utc": "2026-07-11T10:09:08Z"
+}

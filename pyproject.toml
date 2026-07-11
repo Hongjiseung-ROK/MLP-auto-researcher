@@ -71,7 +71,7 @@ files = ["src"]
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["ase.*", "torch", "torch.*"]
+module = ["ase.*", "torch", "torch.*", "mp_api.*", "pymatgen.*", "emmet.*", "mace.*", "e3nn.*"]
 ignore_missing_imports = true
 
 # ASE ships partial annotations; calls into its untyped surface are expected

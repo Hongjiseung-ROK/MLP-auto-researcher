@@ -40,6 +40,11 @@ checkpoints/
 *.pth
 *.onnx
 
+# Full normalized datasets and training exports stay out of git; only their
+# manifests/cards/hashes are committed (plan_phase_2.md §4.3).
+data_registry/**/normalized_dataset.json
+data_registry/**/*.extxyz
+
 # Generated scientific artifacts (small manifests/fixtures/reports that
 # demonstrate the repo are committed explicitly, e.g. artifacts/bootstrap/)
 artifacts/runs/
