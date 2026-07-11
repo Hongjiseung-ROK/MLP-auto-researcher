@@ -1,0 +1,112 @@
+# Phase 2 Cu MACE active-learning pilot — machine-readable preregistration.
+# DRAFT until every "TBD" is pinned and the H2 approval (hash of this exact
+# content) is recorded in docs/research/approvals.jsonl. A result-producing
+# run refuses to start otherwise (Preregistration.assert_result_run_allowed).
+preregistration:
+  schema_version: "2.0.0"
+  campaign_name: cu-mace-al-phase2-pilot
+  scientific_status: pilot_only
+  research_question: >-
+    Under a fixed target-label budget, does uncertainty-plus-diversity
+    acquisition reduce force error on held-out fcc Cu configurations more
+    efficiently than random acquisition when adapting a pinned MACE
+    foundation model?
+  primary_endpoint: force_mae_ev_per_angstrom_on_frozen_test
+  secondary_endpoints:
+    - energy_mae_ev_per_atom
+    - force_rmse_ev_per_angstrom
+    - force_error_p95_ev_per_angstrom
+    - fraction_over_force_threshold
+    - spearman_disagreement_vs_error
+    - learning_curve_auc_normalized
+    - train_wall_time_seconds
+    - peak_gpu_memory_mb
+  dataset:
+    dataset_id: cu_phase2
+    candidate_source: >-
+      Zuo et al. 2019 (arXiv:1906.08888) mlearn benchmark, Cu subset
+    qualified_manifest_sha256: ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3
+    license_spdx: BSD-3-Clause
+    level_of_theory: VASP-5.4.1_PBE_PAW_520eV (paper-stated, arXiv:1906.08888)
+    overlap_risk_statement: >-
+      Low direct overlap with MPTrj, but moderate distributional familiarity
+      near equilibrium fcc Cu; zero-shot results are contextual only.
+  split:
+    grouping_rule: >-
+      WP1 group_id: entire temperature-specific AIMD and vacancy trajectories,
+      complete elastic strain modes, and individual surface slabs; no broader
+      physical/source family crosses a partition
+    split_seed: 20260711
+    initial_labeled_count: 32
+    pool_min: 128
+    pool_max: 512
+    validation_fraction_min: 0.10
+    test_fraction_min: 0.20
+    split_manifest_sha256: 80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e
+  model_section:
+    family: mace
+    mace_torch_version: "0.3.16"
+    torch_version: TBD
+    checkpoint_id: TBD
+    checkpoint_sha256: TBD
+    checkpoint_license: TBD
+    eval_dtype: float64
+    train_dtype: float32
+    e0_policy: >-
+      inherit foundation-model atomic reference energies; run the pre-training
+      energy-offset diagnostic; escalate (never average silently) if the
+      initial per-atom offset indicates an incompatible reference
+  finetune:
+    protocol: naive
+    max_epochs: 50
+    early_stopping_patience: 10
+    gradient_clip: 10.0
+    optimizer: TBD
+    learning_rate: TBD
+    base_seed: 42
+  matrix:
+    arms:
+      - name: zero_shot
+        initial_labels: 0
+        added_label_budget: 0
+        acquisition_rounds: 0
+        acquisition_policy: none
+        finetune: false
+        selection_seed: 0
+      - name: static_finetune
+        initial_labels: 32
+        added_label_budget: 0
+        acquisition_rounds: 0
+        acquisition_policy: none
+        finetune: true
+        selection_seed: 0
+      - name: random
+        initial_labels: 32
+        added_label_budget: 32
+        acquisition_rounds: 3
+        acquisition_policy: random
+        finetune: true
+        selection_seed: 1042
+      - name: hybrid
+        initial_labels: 32
+        added_label_budget: 32
+        acquisition_rounds: 3
+        acquisition_policy: hybrid_uncertainty_diversity
+        finetune: true
+        selection_seed: 2042
+    ensemble_seeds: [42, 43, 44]
+    acquisition_batch_min: 8
+    acquisition_batch_max: 16
+  stopping:
+    max_rounds: 3
+    relative_improvement_floor: 0.02
+    stagnant_rounds_to_stop: 2
+  compute:
+    workload_class: bounded_research_pilot
+    requested_gpu: nvidia-l4
+    oom_fallback_gpu: nvidia-a100-40gb
+    max_runtime_minutes: 60
+    max_gpus: 1
+output_root: artifacts/research
+data_registry_root: data_registry/datasets
+approvals_file: docs/research/approvals.jsonl

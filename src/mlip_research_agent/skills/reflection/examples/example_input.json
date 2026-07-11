@@ -1,5 +1,13 @@
 {
-  "focus_question": "Why does the mean-baseline MAE barely move when we double the label budget?",
-  "data_path": "steps/labeling/labels.json",
+  "focus_question": "Are we hardening a reusable research pipeline or optimizing only for Cu?",
+  "trigger": "local_state_recovery",
+  "stage_objective": "Move from a local real-model boundary toward bounded Colab staging.",
+  "benchmark_role": "Cu is a bounded pipeline-hardening scaffold, not the final topic.",
+  "reusable_components": [
+    "artifact registry",
+    "model-agnostic evaluator",
+    "typed compute policy"
+  ],
+  "benchmark_specific_components": ["Cu fixture", "mlearn split"],
   "n_provocations": 4
 }

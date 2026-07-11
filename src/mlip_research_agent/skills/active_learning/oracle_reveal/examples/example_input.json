@@ -1,0 +1,12 @@
+{
+  "dataset_path": "inputs/normalized_dataset.json",
+  "qualified_manifest_path": "inputs/normalized_manifest.json",
+  "split_manifest_path": "inputs/split_manifest.json",
+  "expected_split_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "candidate_ids": ["cu_phase2-example-a", "cu_phase2-example-b"],
+  "campaign_id": "cu-mace-pilot-random",
+  "round_id": "round-001",
+  "total_budget": 32,
+  "round_budgets": {"round-001": 16},
+  "previous_state_path": null
+}

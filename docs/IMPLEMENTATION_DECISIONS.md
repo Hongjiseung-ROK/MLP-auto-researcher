@@ -113,12 +113,12 @@ ids by design — compute skills are infrastructure and are excluded from
 byte-reproducibility-gated scientific DAGs.
 
 ## D-16: tea_time_with_reading_poem is agent-text by construction
-The reflection skill (owner-requested creative-break capability) is
-deterministic (seeded poem/technique selection, numpy-recomputed alternative
-views) and registers `reflection` artifacts but never claims — enforced by an
-in-code invariant raising `UNSUPPORTED_CLAIM` and by tests. It is registered
-in the skill registry but deliberately not wired into the default compiled
-campaign DAG; a campaign flag can opt in later.
+The reflection skill is deterministic and registers `reflection` artifacts
+but never claims. Phase 2 extends it into a pause-and-review boundary that
+summarizes the current purpose, audits benchmark lock-in, compares bounded
+alternatives, and drafts owner questions. It accepts no data-artifact path,
+so hidden labels, detailed test metrics, and secrets cannot enter. The claim
+verifier continues to reject reflection artifacts as evidence.
 
 ## D-12: Skill tests live inside each skill package
 Per the SKILL contract (`skills/<name>/tests/`), with cross-cutting tests

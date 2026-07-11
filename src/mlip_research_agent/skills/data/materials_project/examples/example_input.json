@@ -1,0 +1,7 @@
+{
+  "operation": "summary_search",
+  "chemsys": "Cu",
+  "fields": ["material_id", "formula_pretty", "energy_above_hull", "symmetry"],
+  "max_results": 50,
+  "use_cache": true
+}

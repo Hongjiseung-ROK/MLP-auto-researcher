@@ -10,7 +10,7 @@ from typing import Any, ClassVar, TypeVar
 from pydantic import BaseModel
 
 from mlip_research_agent.artifacts.registry import ArtifactRegistry
-from mlip_research_agent.schemas.claims import Claim
+from mlip_research_agent.schemas.claims import MINTABLE_CLAIM_CLASSES, Claim
 from mlip_research_agent.schemas.failure import FailureClass, RecoveryDecision, Severity
 
 M = TypeVar("M", bound=BaseModel)
@@ -59,6 +59,14 @@ class SkillContext:
         return d
 
     def register_claim(self, claim: Claim) -> None:
+        if claim.claim_class not in MINTABLE_CLAIM_CLASSES:
+            raise SkillError(
+                f"Phase 2 cannot mint {claim.claim_class.value}; elevated claims require "
+                "replication and human release outside the run",
+                failure_class=FailureClass.UNSUPPORTED_CLAIM,
+                severity=Severity.HIGH,
+                retryable=False,
+            )
         self.claims.append(claim)
 
 
@@ -117,7 +125,9 @@ def _ensure_builtin_skills_loaded() -> None:
         active_learning,
         atomistics,
         compute,
+        data,
         dft,
+        evaluation,
         literature,
         mlip,
         reflection,

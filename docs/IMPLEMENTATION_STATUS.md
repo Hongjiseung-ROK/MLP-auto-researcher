@@ -1,6 +1,11 @@
 # Implementation Status
 
-Last updated: 2026-07-11 (compute-provider milestone).
+Last updated: 2026-07-11 (Phase 2 local real-model boundary).
+
+Phase 1 below remains the deterministic regression baseline. Current Phase 2
+truth is tracked in `docs/PHASE2_IMPLEMENTATION_STATUS.md`: qualified data,
+leakage-safe split/oracle, claim tiers, and pinned real MACE CPU inference are
+locally implemented; bounded staging preparation is in progress.
 
 ## Milestone 2 — compute providers and publication: **in final validation**
 
@@ -55,9 +60,10 @@ env -u PYTHONPATH conda run -n mlip-research-agent python -m mypy src
 (`env -u PYTHONPATH` guards against this host's global chemsmart PYTHONPATH;
 on clean machines plain `conda run` works.)
 
-## Not implemented (deliberately)
+## Not implemented (deliberately or still in Phase 2)
 
-- Any real MLIP backend, DFT execution, LLM call, network access, GPU code.
+- Real MACE fine-tuning, independent production metrics, DFT execution, an
+  LLM-driven numerical loop, or a completed GPU research pilot.
 - Multi-iteration AL loop / decision gate (D-11).
 - OpenHands runtime integration (OQ-8), MLflow/DVC/RO-Crate adapters (OQ-9).
 - Committee mode, UQ beyond the mock proxy, molecular branch.
@@ -77,9 +83,9 @@ on clean machines plain `conda run` works.)
 | MLflow/DVC/RO-Crate | Local provenance bundle instead | OQ-9 |
 | Vessel Cloud CI (nightly GPU) | Not started | OQ-6, OQ-11 |
 
-## Next proposed step
+## Next Phase 2 sequence
 
-Implement the first real SKILL behind an optional extra: **MACE fine-tuning
-adapter** (`skills/mlip`, `mace` extra) with CPU smoke-test mode, pending
-OQ-3/OQ-4 approval. Rationale: it exercises the executor against a real tool
-without licenses or credentials, and unblocks the AL loop design.
+Complete checkpoint/E0 due diligence, then independent evaluation (WP5), then
+the resumable MACE fine-tuning boundary (WP4), followed by the already
+authorized bounded Colab staging gate. H2 remains unfrozen and a full pilot
+still requires H3.

@@ -1,9 +1,9 @@
-"""tea-time-with-reading-poem: a bounded, deterministic creative break.
+"""Tea Time: a bounded, deterministic pause-and-review layer.
 
-The skill re-presents the *same* inputs through deliberately estranging
-lenses — a public-domain poem, a seeded set of reframing techniques, and
-alternative numerical views of the same data — so the next reasoning pass
-starts with fresh eyes instead of yesterday's assumptions.
+The skill combines a lightweight creative reset with a structured audit of
+benchmark lock-in, bounded alternative paths, and pending owner questions.
+It intentionally has no data-artifact input, so hidden labels, detailed test
+metrics, and secrets cannot enter this reflection boundary.
 
 Everything here is agent-text class under the provenance policy: the skill
 registers artifacts but never claims, and its output may inspire a hypothesis
@@ -13,17 +13,21 @@ but can never serve as evidence for one.
 from __future__ import annotations
 
 import json
-from typing import Any
 
 import numpy as np
 from pydantic import BaseModel, ConfigDict
 
 from mlip_research_agent.skills.base import Skill, SkillContext, expect_inputs, register_skill
 from mlip_research_agent.skills.reflection.poems import POEM_CORPUS, Poem
-from mlip_research_agent.skills.reflection.schema import TeaTimeInput, TeaTimeOutput
+from mlip_research_agent.skills.reflection.schema import (
+    AlternativePath,
+    OwnerQuestionDraft,
+    TeaTimeInput,
+    TeaTimeOutput,
+)
 from mlip_research_agent.skills.reflection.validators import (
-    assert_no_claims_registered,
-    load_data,
+    assert_claim_count_unchanged,
+    assert_no_sensitive_payload,
     validate_poem_key,
 )
 
@@ -95,35 +99,31 @@ TECHNIQUE_CATALOG: list[Technique] = [
 ]
 
 
-def _extract_series(data: dict[str, Any]) -> list[float]:
-    """Pull a numeric series out of a labels- or metrics-shaped artifact."""
-    if isinstance(data.get("labels"), list):
-        return [
-            float(rec["energy"])
-            for rec in data["labels"]
-            if isinstance(rec, dict) and isinstance(rec.get("energy"), int | float)
-        ]
-    return [float(v) for v in data.values() if isinstance(v, int | float)]
-
-
-def _alternative_views(series: list[float]) -> dict[str, Any]:
-    """The same numbers, summarized every way except the habitual one."""
-    arr = np.asarray(series, dtype=float)
-    median = float(np.median(arr))
-    deviations = np.abs(arr - median)
-    order = np.argsort(arr, kind="stable")
+def _benchmark_audit(params: TeaTimeInput) -> dict[str, object]:
+    """Return a deterministic, intentionally conservative lock-in audit."""
+    reusable = sorted(set(params.reusable_components))
+    benchmark_specific = sorted(set(params.benchmark_specific_components))
+    if benchmark_specific and not reusable:
+        risk = "high"
+    elif benchmark_specific and len(benchmark_specific) >= len(reusable):
+        risk = "medium"
+    else:
+        risk = "low"
     return {
-        "n_values": int(arr.size),
-        "mean": round(float(arr.mean()), 10),
-        "median": round(median, 10),
-        "mean_minus_median": round(float(arr.mean()) - median, 10),
-        "min": round(float(arr.min()), 10),
-        "max": round(float(arr.max()), 10),
-        "spread_std": round(float(arr.std()), 10),
-        "strangest_index": int(np.argmax(deviations)),
-        "strangest_value": round(float(arr[int(np.argmax(deviations))]), 10),
-        "rank_bottom3_indices": [int(i) for i in order[:3]],
-        "rank_top3_indices": [int(i) for i in order[-3:][::-1]],
+        "risk": risk,
+        "benchmark_role": params.benchmark_role,
+        "reusable_components": reusable,
+        "benchmark_specific_components": benchmark_specific,
+        "audit_rule": (
+            "high when only benchmark-specific components are named; medium when they "
+            "equal or outnumber reusable components; low otherwise"
+        ),
+        "controls": [
+            "controller, domain skill, and execution backend remain decoupled",
+            "benchmark-specific identifiers stay in configuration and fixtures",
+            "no hidden labels or detailed test metrics enter this reflection",
+            "reflection artifacts cannot support claims",
+        ],
     }
 
 
@@ -138,7 +138,7 @@ class TeaTimeWithReadingPoemSkill(Skill):
     def run(self, inputs: BaseModel, ctx: SkillContext) -> BaseModel:
         params = expect_inputs(inputs, TeaTimeInput)
         validate_poem_key(params.poem_key)
-        data = load_data(ctx.run_dir, params.data_path)
+        claims_before = len(ctx.claims)
 
         rng = np.random.default_rng([ctx.seed, 99])
         poem_keys = sorted(POEM_CORPUS)
@@ -157,20 +157,47 @@ class TeaTimeWithReadingPoemSkill(Skill):
             }
             for tech in techniques
         ]
-        series = _extract_series(data) if data is not None else []
-        views = _alternative_views(series) if len(series) >= 2 else None
+        audit = _benchmark_audit(params)
+        owner_packet = {
+            "status": (
+                "questions_pending"
+                if params.open_owner_questions
+                else "no_consequential_questions"
+            ),
+            "questions": [
+                question.model_dump(mode="json") for question in params.open_owner_questions
+            ],
+        }
 
         reframings = {
+            "schema_version": "2.0.0",
+            "trigger": params.trigger.value,
             "focus_question": params.focus_question,
+            "current_stage_purpose": params.stage_objective,
+            "benchmark_overfitting_audit": audit,
+            "alternative_paths": [
+                alternative.model_dump(mode="json") for alternative in params.alternatives
+            ],
+            "owner_question_packet_draft": owner_packet,
             "poem": poem.model_dump(),
             "provocations": provocations,
-            "alternative_data_views": views,
             "evidence_class": "agent_text",
+            "claim_eligible": False,
         }
+        assert_no_sensitive_payload(reframings)
         reframings_path = ctx.step_dir / REFRAMINGS_FILENAME
         reframings_path.write_text(json.dumps(reframings, indent=2, sort_keys=True) + "\n")
         report_path = ctx.step_dir / REPORT_FILENAME
-        report_path.write_text(_render_report(params.focus_question, poem, provocations, views))
+        report_path.write_text(
+            _render_report(
+                params,
+                poem,
+                provocations,
+                audit,
+                params.alternatives,
+                params.open_owner_questions,
+            )
+        )
 
         reframings_artifact = ctx.registry.register(
             reframings_path, kind="reflection", step_id=ctx.step_id
@@ -178,7 +205,7 @@ class TeaTimeWithReadingPoemSkill(Skill):
         report_artifact = ctx.registry.register(
             report_path, kind="reflection", step_id=ctx.step_id
         )
-        assert_no_claims_registered(len(ctx.claims))
+        assert_claim_count_unchanged(claims_before, len(ctx.claims))
         return TeaTimeOutput(
             report_artifact=report_artifact.artifact_id,
             report_path=report_artifact.relative_path,
@@ -187,14 +214,21 @@ class TeaTimeWithReadingPoemSkill(Skill):
             poem_key=poem.key,
             techniques=[t.technique_id for t in techniques],
             n_provocations=len(provocations),
+            trigger=params.trigger,
+            purpose_summary=params.stage_objective,
+            benchmark_overfitting_risk=str(audit["risk"]),
+            alternative_path_ids=[path.path_id for path in params.alternatives],
+            n_owner_questions=len(params.open_owner_questions),
         )
 
 
 def _render_report(
-    question: str,
+    params: TeaTimeInput,
     poem: Poem,
     provocations: list[dict[str, str]],
-    views: dict[str, Any] | None,
+    audit: dict[str, object],
+    alternatives: list[AlternativePath],
+    owner_questions: list[OwnerQuestionDraft],
 ) -> str:
     lines = [
         "# Tea time",
@@ -202,16 +236,37 @@ def _render_report(
         "> This report is agent-text class: it may inspire the next experiment,",
         "> but it is never evidence and registers no claims.",
         "",
-        f"Put the question down for a moment: *{question}*",
+        f"Trigger: `{params.trigger.value}`",
         "",
-        f"## The poem — {poem.title}",
+        "## 1. Current-stage purpose",
+        "",
+        params.stage_objective,
+        "",
+        f"Put the question down for a moment: *{params.focus_question}*",
+        "",
+        "## 2. Benchmark-overfitting audit",
+        "",
+        f"Risk: **{audit['risk']}**",
+        "",
+        f"Benchmark role: {params.benchmark_role}",
+        "",
+        "Reusable components: "
+        + (", ".join(sorted(set(params.reusable_components))) or "none declared"),
+        "",
+        "Benchmark-specific components: "
+        + (
+            ", ".join(sorted(set(params.benchmark_specific_components)))
+            or "none declared"
+        ),
+        "",
+        f"## Creative reset — {poem.title}",
         f"*{poem.author}*",
         "",
         *[f"> {line}" for line in poem.lines],
         "",
         f"Why this poem now: {poem.why_it_helps}.",
         "",
-        "## Provocations",
+        "## Provocations for self-critique",
         "",
     ]
     for i, item in enumerate(provocations, 1):
@@ -223,23 +278,44 @@ def _render_report(
             f"*(hold this next to: “{item['poem_line']}”)*",
             "",
         ]
-    if views is not None:
+    lines += [
+        "## 3. Bounded alternative paths",
+        "",
+    ]
+    for alternative in alternatives:
         lines += [
-            "## The same boring data, re-viewed",
+            f"### {alternative.path_id}",
             "",
-            "| view | value |",
-            "|---|---|",
-            *[f"| {k} | {v} |" for k, v in views.items()],
+            alternative.summary,
             "",
-            "If the mean and the median disagree, the story you tell depends on",
-            "which one you befriended first.",
+            f"Cost: {alternative.cost}. Risk: {alternative.risk}",
+            "",
+        ]
+    lines += ["## 4. Owner question packet draft", ""]
+    if owner_questions:
+        for question in owner_questions:
+            lines += [
+                f"### {question.question_id}: {question.question}",
+                "",
+                f"Why: {question.why_needed}",
+                "",
+                f"Evidence: {question.current_evidence}",
+                "",
+                f"Recommended default: {question.recommended_default}",
+                "",
+                *[f"- {choice}" for choice in question.choices],
+                "",
+            ]
+    else:
+        lines += [
+            "No new consequential owner question was identified at this pause point.",
             "",
         ]
     lines += [
         "## Back to work",
         "",
-        "Pick the one provocation that annoyed you most — annoyance is usually",
-        "a prior defending itself — and spend ten minutes taking it seriously.",
+        "Proceed only with the reversible path supported by the current approvals;",
+        "pause again before the next irreversible or human-gated action.",
         "",
     ]
     return "\n".join(lines)

@@ -1,0 +1,74 @@
+{
+  "checks": [
+    {
+      "detail": "unexpected species: []",
+      "name": "species_allowlisted",
+      "passed": true
+    },
+    {
+      "detail": "non-finite labels in: []",
+      "name": "labels_finite",
+      "passed": true
+    },
+    {
+      "detail": "near-singular cells: []",
+      "name": "cells_nonsingular",
+      "passed": true
+    },
+    {
+      "detail": "non-periodic configs: []",
+      "name": "fully_periodic",
+      "passed": true
+    },
+    {
+      "detail": "observed [-4.1012, -3.5155] eV/atom vs window [-4.5, -3.0]",
+      "name": "energy_per_atom_in_window",
+      "passed": true
+    },
+    {
+      "detail": "max |F| = 11.8195 eV/A vs bound 50.0",
+      "name": "force_magnitude_bounded",
+      "passed": true
+    },
+    {
+      "detail": "0 exact duplicate records",
+      "name": "no_exact_duplicates",
+      "passed": true
+    },
+    {
+      "detail": "0 near-duplicates beyond exact duplicates (informational)",
+      "name": "near_duplicates_reported",
+      "passed": true
+    },
+    {
+      "detail": "parsed 293 vs due-diligence count 293",
+      "name": "expected_total_count",
+      "passed": true
+    },
+    {
+      "detail": "parsed {'AIMD-NVT': 120, 'Elastic': 121, 'Surface': 12, 'Vacancy': 40} vs expected {'Elastic': 121, 'AIMD-NVT': 120, 'Vacancy': 40, 'Surface': 12}",
+      "name": "expected_group_histogram",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "units_and_level_of_theory_declared",
+      "passed": true
+    }
+  ],
+  "dataset_id": "cu_phase2",
+  "energy_per_atom_max": -3.5154572437962965,
+  "energy_per_atom_min": -4.101246713888889,
+  "exact_duplicate_count": 0,
+  "force_magnitude_max": 11.819485616701423,
+  "group_histogram": {
+    "AIMD-NVT": 120,
+    "Elastic": 121,
+    "Surface": 12,
+    "Vacancy": 40
+  },
+  "n_configurations": 293,
+  "near_duplicate_count": 0,
+  "passed": true,
+  "split_unit_count": 39
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "local_path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/training.json",
+    "sha256": "9a427b8e21c10d410bc139e98a5bf69c10ca1cdb208d383819cebf4f4be0992f",
+    "size_bytes": 5246466,
+    "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/data/Cu/training.json"
+  },
+  {
+    "local_path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/test.json",
+    "sha256": "1805a315ce8d0ce4a18bb761df4c4f619909ce114d598d426015d0071edc98c2",
+    "size_bytes": 608400,
+    "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/data/Cu/test.json"
+  },
+  {
+    "local_path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/LICENSE",
+    "sha256": "f82460fc65e8e5dc3d00bfee0ce2a656f8c9d5af0dfc5511e9875e88051a55e9",
+    "size_bytes": 1529,
+    "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/LICENSE"
+  },
+  {
+    "local_path": "data/raw/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/README.md",
+    "sha256": "551282de9ee6e88df624d2aa47a552f5f662a8d5dcd545d059d71e243b9f02a7",
+    "size_bytes": 2469,
+    "url": "https://raw.githubusercontent.com/materialyzeai/mlearn/10c427a5480c6281c15c64efaf869b03be04818f/README.md"
+  }
+]

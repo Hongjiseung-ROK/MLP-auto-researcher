@@ -24,3 +24,7 @@ class VerificationOutput(BaseModel):
     n_claims: int = Field(ge=0)
     n_verified: int = Field(ge=0)
     n_rejected: int = Field(ge=0)
+    counts_by_claim_class: dict[str, int]
+    counts_by_evidence_tier: dict[str, int]
+    counts_by_verification_status: dict[str, int]
+    rejection_reason_categories: dict[str, int]

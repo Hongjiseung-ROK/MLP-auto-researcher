@@ -1,4 +1,6 @@
 # Secrets and credentials — never committed
+api.env
+*.env
 .env
 .env.*
 !.env.example
@@ -8,6 +10,9 @@ credentials*
 secrets*
 token*
 cookies*
+# …but the typed secret *loader* is source code, not a secret (D-P2-2).
+!src/mlip_research_agent/secrets/
+!src/mlip_research_agent/secrets/**
 
 # Python build/tooling caches
 __pycache__/
@@ -35,9 +40,15 @@ checkpoints/
 *.pth
 *.onnx
 
+# Full normalized datasets and training exports stay out of git; only their
+# manifests/cards/hashes are committed (plan_phase_2.md §4.3).
+data_registry/**/normalized_dataset.json
+data_registry/**/*.extxyz
+
 # Generated scientific artifacts (small manifests/fixtures/reports that
 # demonstrate the repo are committed explicitly, e.g. artifacts/bootstrap/)
 artifacts/runs/
+artifacts/research/
 artifacts/colab/private/
 artifacts/vessl/private/
 artifacts/compute/

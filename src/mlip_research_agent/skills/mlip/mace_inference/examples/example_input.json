@@ -1,0 +1,11 @@
+{
+  "structures_path": "steps/structures/structures.json",
+  "checkpoint_manifest_path": "configs/models/mace_mp_0_small_candidate.json",
+  "checkpoint_path": "data/cache/models/2023-12-10-mace-128-L0_energy_epoch-249.model",
+  "dataset_id": "cu_phase2",
+  "dataset_content_sha256": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48",
+  "split_semantic_sha256": "replace-with-split-semantic-hash",
+  "record_ids": ["replace-with-record-id-in-structure-order"],
+  "device": "cpu",
+  "default_dtype": "float64"
+}

@@ -7,6 +7,7 @@ artifact exists in the run manifest and its on-disk sha256 still matches.
 from __future__ import annotations
 
 import json
+from collections import Counter
 
 from pydantic import BaseModel
 
@@ -24,6 +25,35 @@ from mlip_research_agent.skills.verification.validators import load_claims
 
 REPORT_FILENAME = "verification_report.json"
 VERIFIED_CLAIMS_FILENAME = "verified_claims.json"
+
+# Narrative/agent-text artifacts may explain a result but can never verify a
+# numerical claim (plan.md data-provenance policy).
+FORBIDDEN_EVIDENCE_KINDS = frozenset({"agent_text", "reflection", "report", "run_report"})
+
+
+def _metric_binding_error(claim: Claim, ctx: SkillContext) -> str | None:
+    binding = claim.metric_value_binding
+    if binding is None:
+        return None
+    artifact = ctx.registry.get(binding.metric_artifact_reference)
+    if artifact is None or not ctx.registry.verify(binding.metric_artifact_reference):
+        return None  # Missing/corrupted evidence is categorized by the outer audit.
+    if artifact.kind != "mlip_metrics":
+        return f"bound artifact kind is {artifact.kind!r}, expected 'mlip_metrics'"
+    try:
+        value: object = json.loads((ctx.run_dir / artifact.relative_path).read_text())
+        for token in binding.json_pointer.removeprefix("/").split("/"):
+            if not isinstance(value, dict) or token not in value:
+                return f"metric JSON pointer does not exist: {binding.json_pointer}"
+            value = value[token]
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"metric binding artifact is unreadable: {exc}"
+    if value != claim.value:
+        return (
+            f"claim value {claim.value!r} does not match metric field "
+            f"{binding.json_pointer}={value!r}"
+        )
+    return None
 
 
 @register_skill
@@ -45,23 +75,78 @@ class ClaimVerificationSkill(Skill):
                 for ref in claim.artifact_references
                 if ctx.registry.get(ref) is not None and not ctx.registry.verify(ref)
             ]
-            if missing or corrupted:
+            prose = [
+                ref
+                for ref in claim.artifact_references
+                if (artifact := ctx.registry.get(ref)) is not None
+                and artifact.kind in FORBIDDEN_EVIDENCE_KINDS
+            ]
+            binding_error = _metric_binding_error(claim, ctx)
+            if missing or corrupted or prose or binding_error:
+                if missing:
+                    category = "unregistered_artifact"
+                elif corrupted:
+                    category = "corrupted_artifact"
+                elif prose:
+                    category = "agent_prose_as_evidence"
+                else:
+                    category = "metric_value_binding_mismatch"
                 audited.append(
                     claim.model_copy(
                         update={
                             "status": ClaimStatus.REJECTED,
                             "rejection_reason": (
                                 f"unregistered artifacts: {missing}; "
-                                f"corrupted artifacts: {corrupted}"
+                                f"corrupted artifacts: {corrupted}; "
+                                f"forbidden agent prose artifacts: {prose}; "
+                                f"metric binding error: {binding_error}"
                             ),
+                            "rejection_reason_category": category,
+                            "rejection_evidence": [
+                                *[f"unregistered:{ref}" for ref in missing],
+                                *[f"corrupted:{ref}" for ref in corrupted],
+                                *[f"agent_prose:{ref}" for ref in prose],
+                                *(
+                                    [f"metric_binding:{binding_error}"]
+                                    if binding_error is not None
+                                    else []
+                                ),
+                            ],
                         }
                     )
                 )
             else:
-                audited.append(claim.model_copy(update={"status": ClaimStatus.VERIFIED}))
+                audited.append(
+                    claim.model_copy(
+                        update={
+                            "status": ClaimStatus.VERIFIED,
+                            "rejection_reason": None,
+                            "rejection_reason_category": None,
+                            "rejection_evidence": [],
+                        }
+                    )
+                )
 
         n_verified = sum(1 for c in audited if c.status is ClaimStatus.VERIFIED)
         n_rejected = sum(1 for c in audited if c.status is ClaimStatus.REJECTED)
+        counts_by_claim_class = dict(
+            sorted(Counter(c.claim_class.value for c in audited).items())
+        )
+        counts_by_evidence_tier = dict(
+            sorted(Counter(c.scientific_evidence_tier.value for c in audited).items())
+        )
+        counts_by_verification_status = dict(
+            sorted(Counter(c.status.value for c in audited).items())
+        )
+        rejection_reason_categories = dict(
+            sorted(
+                Counter(
+                    c.rejection_reason_category or "unspecified"
+                    for c in audited
+                    if c.status is ClaimStatus.REJECTED
+                ).items()
+            )
+        )
 
         verified_path = ctx.step_dir / VERIFIED_CLAIMS_FILENAME
         verified_path.write_text(
@@ -75,6 +160,14 @@ class ClaimVerificationSkill(Skill):
                     "n_claims": len(audited),
                     "n_verified": n_verified,
                     "n_rejected": n_rejected,
+                    "artifact_integrity": {
+                        "verified": n_verified,
+                        "rejected": n_rejected,
+                    },
+                    "counts_by_claim_class": counts_by_claim_class,
+                    "counts_by_evidence_tier": counts_by_evidence_tier,
+                    "counts_by_verification_status": counts_by_verification_status,
+                    "rejection_reason_categories": rejection_reason_categories,
                     "rejected_claim_ids": sorted(
                         c.claim_id for c in audited if c.status is ClaimStatus.REJECTED
                     ),
@@ -113,4 +206,8 @@ class ClaimVerificationSkill(Skill):
             n_claims=len(audited),
             n_verified=n_verified,
             n_rejected=n_rejected,
+            counts_by_claim_class=counts_by_claim_class,
+            counts_by_evidence_tier=counts_by_evidence_tier,
+            counts_by_verification_status=counts_by_verification_status,
+            rejection_reason_categories=rejection_reason_categories,
         )
