@@ -1,11 +1,14 @@
 # Implementation Status
 
-Last updated: 2026-07-11 (Phase 2 local real-model boundary).
+Last updated: 2026-07-12 (Phase 2 Level 4 — bounded Colab staging verified;
+PR #2 merged to main as `cb5b927`).
 
 Phase 1 below remains the deterministic regression baseline. Current Phase 2
 truth is tracked in `docs/PHASE2_IMPLEMENTATION_STATUS.md`: qualified data,
-leakage-safe split/oracle, claim tiers, and pinned real MACE CPU inference are
-locally implemented; bounded staging preparation is in progress.
+leakage-safe split/oracle, claim tiers, pinned real MACE inference, the real
+fine-tuning boundary, and the independent aggregate evaluator are implemented;
+the bounded Colab staging run passed on an attested L4 (commit `467ad6a`,
+`staging_only`). H2/H3/H5 remain open owner gates.
 
 ## Milestone 2 — compute providers and publication: **in final validation**
 
