@@ -1,0 +1,20 @@
+objective:
+  objective_id: "obj-ralphthon-demo"
+  research_goal: "Demonstrate local agentic Auto Research loop without GPU"
+  scientific_domain: "mlip"
+  benchmark_adapter: "mace_mock"
+  success_criteria: "Complete two iterations and record lesson"
+  maximum_iterations: 2
+  budgets:
+    total_compute_minutes: 10
+  protected_constants:
+    - "dataset.dataset_id"
+    - "dataset.qualified_manifest_sha256"
+  allowed_mutation_classes:
+    - "finetune_hyperparameters"
+  evaluator_identity: "trace_grader_v1"
+  stopping_rules:
+    max_rounds: 2
+  approval_requirements:
+    - "H2_PREREGISTRATION"
+  scientific_status_ceiling: "pilot_only"

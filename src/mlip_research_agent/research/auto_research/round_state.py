@@ -1,0 +1,22 @@
+"""Round state schema for the controller."""
+
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class RoundState(StrEnum):
+    INITIALIZED = "INITIALIZED"
+    PROPOSAL_READY = "PROPOSAL_READY"
+    TEA_TIME_REVIEWED = "TEA_TIME_REVIEWED"
+    LEGALITY_APPROVED = "LEGALITY_APPROVED"
+    EXECUTING = "EXECUTING"
+    EXECUTED = "EXECUTED"
+    EVALUATED = "EVALUATED"
+    DECIDED = "DECIDED"
+    LESSON_RECORDED = "LESSON_RECORDED"
+    NEXT_PROPOSAL_READY = "NEXT_PROPOSAL_READY"
+    COMPLETE = "COMPLETE"
+    PARTIAL = "PARTIAL"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"

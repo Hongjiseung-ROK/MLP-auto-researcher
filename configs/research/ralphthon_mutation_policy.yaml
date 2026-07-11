@@ -1,0 +1,20 @@
+rules:
+  # RALPHTON exact bounds for first local demo
+  "finetune.learning_rate": "mutable"
+  "finetune.gradient_clip": "mutable"
+  "finetune.batch_size": "mutable"
+  "finetune.scheduler_patience": "mutable"
+  "finetune.force_loss_weight": "mutable"
+  "finetune.energy_loss_weight": "mutable"
+  "finetune.trainable_layer_policy": "mutable"
+
+  # Immutable boundaries (must never be changed by the agent)
+  "dataset.dataset_id": "immutable"
+  "dataset.qualified_manifest_sha256": "immutable"
+  "split.split_manifest_sha256": "immutable"
+  "split.initial_labeled_count": "immutable"
+  "primary_endpoint": "immutable"
+  "model_section.family": "immutable"
+  "model_section.checkpoint_id": "immutable"
+  "model_section.checkpoint_sha256": "immutable"
+  "scientific_status": "immutable"
