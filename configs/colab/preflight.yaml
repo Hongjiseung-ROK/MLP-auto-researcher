@@ -1,0 +1,27 @@
+# Colab preflight configuration, read by scripts/colab/preflight.py --config.
+# requested_accelerator mirrors the colab section of configs/compute_policy.yaml;
+# unrecognized values fall back to nvidia-l4.
+requested_accelerator: nvidia-l4
+
+# CLI --allow-cpu always overrides this to true; this default keeps a bare
+# `preflight.py` invocation honest about requiring a real GPU.
+allow_cpu: false
+
+timeout_minutes: 30
+
+# Per-check enable flags. "skip" always skips regardless of runtime
+# capability; false is equivalent for the always-on checks. mlip_inference
+# and train_step are skipped unconditionally until docs/OPEN_QUESTIONS.md
+# gates a real MLIP backend / GPU training path.
+checks:
+  gpu_attestation_and_policy: true
+  import_checks: true
+  cuda_tensor_op: true
+  deterministic_seed: true
+  tiny_structure_load: true
+  mlip_inference: skip
+  train_step: skip
+  checkpoint_roundtrip: true
+  artifact_hashing: true
+  provenance_generation: true
+  failure_recovery: true

@@ -23,6 +23,37 @@ OQ-12 (approval thresholds).
   (exercises the real parser/failure triage either way), and decide
   cluster-embedding vs adding QE before the first production AL campaign.
 
+## Group E — Remote compute activation (added 2026-07-11)
+
+GPU families L4 / A100-40GB / A100-80GB are **already authorized** by the
+owner (configs/compute_policy.yaml); these questions cover only budgets,
+accounts, and fallback behavior needed before real remote execution.
+
+**OQ-14. Colab account tier and budget.**
+- Which tier (Free / Pay As You Go / Pro / Pro+), and what is the maximum
+  session duration / compute-unit consumption per preflight?
+- Recommended default: treat as Pay-As-You-Go, cap preflights at 30 min.
+
+**OQ-15. VESSL organization, project, and per-job limits.**
+- Which org/project/workspace receives production jobs, and what maximum
+  cost or runtime per job? Recommended default: cap 4 GPU-hours/job until
+  raised explicitly (matches OQ-12 draft).
+
+**OQ-16. Remote artifact persistence.**
+- Where should Colab/VESSL artifacts persist (Drive mount, object storage,
+  pull-to-local)? Recommended default: pull small manifests/logs to the run
+  directory; large checkpoints stay provider-side until OQ-9 is settled.
+
+**OQ-17. A100 40GB acceptability.**
+- When A100 80GB is unavailable, may jobs run on A100 40GB automatically?
+  Recommended default: yes (both are allowlisted; preference order already
+  encodes 80GB-first).
+
+**OQ-18. Failed L4 preflight fallback.**
+- Should a failed L4 preflight retry on A100 automatically or require
+  approval? Recommended default: automatic single retry on A100-40GB only
+  when the failure class is resource-related (OOM), otherwise escalate.
+
 ---
 
 ## Group A — Scientific target and scope

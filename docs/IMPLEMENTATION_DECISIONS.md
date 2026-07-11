@@ -94,6 +94,32 @@ architectural reference, not a runtime dependency** (OQ-7/8). Consequence:
 the `agent` extra will carry `openai`; ORCA's lack of periodic boundary
 conditions vs the periodic benchmark is tracked as OQ-13.
 
+## D-14: Compute policy file deviations from the owner's template
+`configs/compute_policy.yaml` follows the owner-provided policy verbatim with
+two additions: `colab.max_runtime_minutes: 120` (makes "development_training
+on Colab only when bounded" enforceable) and `preflight.max_age_hours: 168`
+(defines "non-stale"). One semantic fix: the full-campaign denial does not
+apply to the routing-designated primary provider (otherwise VESSL would deny
+its own production workloads, since the template sets `allow_full_campaign`
+nowhere for vessl).
+
+## D-15: Remote providers are transport-pluggable; only mocks ship in v0
+`RemoteProviderBase` owns lifecycle/attestation/policy; a `RemoteTransport`
+does raw session ops. `MockRemoteTransport` is first-party and deterministic;
+the real Colab transport will wrap the security-reviewed `google-colab-cli`
+v0.6.0 (docs/SKILL_SECURITY_REVIEW.md) once the owner's budget/auth answers
+land, and VESSL likewise. Attestation artifacts contain timestamps and run
+ids by design — compute skills are infrastructure and are excluded from
+byte-reproducibility-gated scientific DAGs.
+
+## D-16: tea_time_with_reading_poem is agent-text by construction
+The reflection skill (owner-requested creative-break capability) is
+deterministic (seeded poem/technique selection, numpy-recomputed alternative
+views) and registers `reflection` artifacts but never claims — enforced by an
+in-code invariant raising `UNSUPPORTED_CLAIM` and by tests. It is registered
+in the skill registry but deliberately not wired into the default compiled
+campaign DAG; a campaign flag can opt in later.
+
 ## D-12: Skill tests live inside each skill package
 Per the SKILL contract (`skills/<name>/tests/`), with cross-cutting tests
 (executor, schemas, end-to-end) under top-level `tests/`. `pytest` testpaths

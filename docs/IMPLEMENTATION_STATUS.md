@@ -1,6 +1,27 @@
 # Implementation Status
 
-Last updated: 2026-07-10 (bootstrap milestone complete).
+Last updated: 2026-07-11 (compute-provider milestone).
+
+## Milestone 2 — compute providers and publication: **in final validation**
+
+| Deliverable | Status |
+|---|---|
+| Provider-neutral compute interface (`compute/base.py` Protocol) | Done |
+| GPU policy, alias normalization, fail-closed evaluation (`compute/policy.py`, `configs/compute_policy.yaml`) | Done — L4/A100-40/A100-80 allowlist per owner authorization |
+| Runtime attestation, immutable records (`compute/attestation.py`) | Done |
+| Preflight store + staleness gate (`compute/preflight.py`) | Done |
+| Router with audit log, override control, VESSL preflight gate (`compute/router.py`) | Done |
+| Local/Colab/VESSL adapters + mock transports (`local.py`, `_remote.py`, `colab.py`, `vessl.py`) | Done (mock transports; real transports gated on auth/budget answers) |
+| Colab CLI security review (google-colab-cli v0.6.0, pinned) | Done — `docs/SKILL_SECURITY_REVIEW.md`, ACCEPT with caveats |
+| Workspace skill `colab_preflight` (full contract + security.md) | Done |
+| Reflection skill `tea_time_with_reading_poem` (full contract, agent-text only) | Done |
+| Colab execution package (`scripts/colab/`, notebook, `configs/colab/preflight.yaml`) | Delegated to subagent, integrating |
+| Compute test suite (§11 acceptance list, `colab_remote`/`vessl_remote` markers) | Delegated to subagent, integrating |
+| Secret/large-file staging gate (`scripts/check_staged.py`) | Done |
+| GitHub publication to Hongjiseung-ROK/MLP-auto-researcher | Pending final gates |
+| Real Colab preflight / real VESSL run | **Not run** — blocked on owner budget/auth answers (by design) |
+
+## Milestone 1 — mock vertical slice: **complete** (2026-07-10)
 
 ## Milestone 1 — mock vertical slice: **complete**
 
