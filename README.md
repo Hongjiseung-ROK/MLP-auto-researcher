@@ -4,21 +4,16 @@ Autonomous, evidence-grounded AI researcher for ML interatomic potentials.
 Architectural sources of truth: [`plan.md`](plan.md) and
 [`plan_phase_2.md`](plan_phase_2.md).
 
-The repository preserves a fully deterministic Phase 1 mock campaign while Phase 2
-has crossed the local real-model boundary and is preparing bounded Colab staging:
+The repository preserves a fully deterministic Phase 1 mock campaign. Phase 2 has reached Level 4 infrastructure capability: bounded Colab CLI staging has passed.
 
-```text
-research goal → preregistration + human gates → typed skills → artifact registry
-→ leakage-safe data/oracle boundary → real-model/evaluation boundaries
-→ verification → bounded remote staging → evidence-grounded report
-```
+Not yet achieved:
+- H2-frozen protocol
+- full scientific pilot
+- autonomous acquisition loop
+- VESSL replication
+- publication claim
 
-Locally verified Phase 2 capabilities include a qualified Cu energy/force benchmark,
-a whole-group split, a hidden-label simulated oracle, scientific evidence tiers,
-and pinned MACE CPU inference. Cu is a bounded pipeline-hardening scaffold rather
-than the final research topic. Fine-tuning, independent evaluation, and Colab
-CPU/GPU parity are still in progress; no full pilot or publication-grade claim has
-been completed.
+Locally verified Phase 2 capabilities include a qualified Cu energy/force benchmark, a whole-group split, a hidden-label simulated oracle, scientific evidence tiers, pinned MACE CPU inference, WP4 boundary training, and WP5 independent aggregate evaluation. Cu is a bounded pipeline-hardening scaffold rather than the final research topic.
 
 ## Setup
 

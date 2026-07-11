@@ -7,9 +7,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 An autonomous, evidence-grounded AI researcher for ML interatomic potentials.
 `plan.md` defines the long-term architecture; `plan_phase_2.md` defines the current
 real-model and bounded-Colab contract. Do not rewrite either without owner approval.
-Phase 1 remains a deterministic mock vertical slice. Phase 2 is at the local
-real-model boundary and is preparing bounded staging; it is not a completed Cu
-study, production research system, or publication-claim pipeline.
+Phase 1 remains a deterministic mock vertical slice. Phase 2 has reached Level 4 infrastructure capability: bounded Colab CLI staging has passed. Not yet achieved: H2-frozen protocol, full scientific pilot, autonomous acquisition loop, VESSL replication, publication claim.
 
 The mlearn Cu/MACE path is a pipeline-hardening scaffold. Keep reusable controller,
 evaluation, provenance, and compute interfaces model- and benchmark-agnostic.
