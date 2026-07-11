@@ -25,19 +25,24 @@ preregistration:
     dataset_id: cu_phase2
     candidate_source: >-
       Zuo et al. 2019 (arXiv:1906.08888) mlearn benchmark, Cu subset
-    qualified_manifest_sha256: TBD
-    license_spdx: TBD
-    level_of_theory: TBD
-    overlap_risk_statement: TBD
+    qualified_manifest_sha256: ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3
+    license_spdx: BSD-3-Clause
+    level_of_theory: VASP-5.4.1_PBE_PAW_520eV (paper-stated, arXiv:1906.08888)
+    overlap_risk_statement: >-
+      Low direct overlap with MPTrj, but moderate distributional familiarity
+      near equilibrium fcc Cu; zero-shot results are contextual only.
   split:
-    grouping_rule: TBD
+    grouping_rule: >-
+      WP1 group_id: entire temperature-specific AIMD and vacancy trajectories,
+      complete elastic strain modes, and individual surface slabs; no broader
+      physical/source family crosses a partition
     split_seed: 20260711
     initial_labeled_count: 32
     pool_min: 128
     pool_max: 512
     validation_fraction_min: 0.10
     test_fraction_min: 0.20
-    split_manifest_sha256: TBD
+    split_manifest_sha256: 80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e
   model_section:
     family: mace
     mace_torch_version: "0.3.16"

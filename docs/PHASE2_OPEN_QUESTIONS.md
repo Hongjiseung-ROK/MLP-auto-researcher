@@ -9,14 +9,21 @@ Approve the qualified Cu dataset: source, license/redistribution terms,
 units, level of theory, quality metrics, leakage-risk assessment, and the
 qualified manifest hash. Presented after WP1 produces
 `data_registry/datasets/cu_phase2/qualification_report.json`.
-Status: **open — due diligence in progress.**
+Status: **open — due diligence and local qualification complete; owner H1
+approval pending.** Review subject: qualified dataset content SHA-256
+`bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48`,
+normalized-manifest file SHA-256
+`ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3`,
+and whole-family split-manifest SHA-256
+`80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e`.
 
 **P2-Q2 (Gate H2). Preregistration.**
 Approve `docs/research/phase2_preregistration.md` (research question, primary
 endpoint = force MAE eV/Å on frozen test set, four arms, budgets, split rule,
 checkpoint, seed schedule, stopping rules). The preregistration hash must be
 recorded before the first result-producing run.
-Status: **open — draft written, values pending WP1/WP3 due diligence.**
+Status: **open — draft written; WP1/WP2 fields are pinned locally, remaining
+values depend on WP3/WP4 due diligence.**
 
 **P2-Q3 (Gate H3). First remote execution.**
 Approve exact commit, `bounded_research_pilot` workload, requested GPU (L4),
@@ -49,4 +56,5 @@ configurations) are committed for tests; the full dataset is always fetched
 by the downloader with checksum verification, never committed. If the license
 is unclear, fixtures become synthetically perturbed derivatives and the
 downloader remains the only acquisition path.
-Status: **open — resolved by WP1 license review.**
+Status: **resolved — BSD-3-Clause permits the committed four-record fixture
+with notice retention; full data remain fetched and gitignored.**

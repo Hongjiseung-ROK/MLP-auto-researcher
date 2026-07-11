@@ -45,7 +45,11 @@ def classify_record(group: str, description: str) -> tuple[str, str]:
         if not m:
             raise MlearnParseError(f"unrecognized AIMD description: {description!r}")
         snapshot, temp = int(m.group(1)), int(m.group(2))
-        block = (snapshot - 1) // AIMD_TIME_BLOCK
+        # mlearn numbers bulk AIMD snapshots from 0 (unlike the vacancy
+        # trajectories, which start at 1).  Using ``snapshot - 1`` here
+        # creates a singleton block -1 and can separate frame 0 from its
+        # temporally adjacent frames at a protected split boundary.
+        block = snapshot // AIMD_TIME_BLOCK
         return f"aimd_nvt_{temp}k", f"aimd_nvt_{temp}k_block{block}"
     if group == "Vacancy":
         m = _VACANCY_RE.match(description)

@@ -420,7 +420,7 @@
    "group_id": "aimd_nvt_300k",
    "n_atoms": 108,
    "source_id": "training.json[46]",
-   "split_unit_id": "aimd_nvt_300k_block1",
+   "split_unit_id": "aimd_nvt_300k_block2",
    "top_group": "AIMD-NVT"
   },
   {
@@ -582,7 +582,7 @@
    "group_id": "aimd_nvt_1000k",
    "n_atoms": 108,
    "source_id": "training.json[64]",
-   "split_unit_id": "aimd_nvt_1000k_block1",
+   "split_unit_id": "aimd_nvt_1000k_block2",
    "top_group": "AIMD-NVT"
   },
   {
@@ -636,7 +636,7 @@
    "group_id": "aimd_nvt_3000k",
    "n_atoms": 108,
    "source_id": "training.json[70]",
-   "split_unit_id": "aimd_nvt_3000k_block2",
+   "split_unit_id": "aimd_nvt_3000k_block3",
    "top_group": "AIMD-NVT"
   },
   {
@@ -762,7 +762,7 @@
    "group_id": "aimd_nvt_300k",
    "n_atoms": 108,
    "source_id": "training.json[84]",
-   "split_unit_id": "aimd_nvt_300k_block2",
+   "split_unit_id": "aimd_nvt_300k_block3",
    "top_group": "AIMD-NVT"
   },
   {
@@ -843,7 +843,7 @@
    "group_id": "aimd_nvt_3000k",
    "n_atoms": 108,
    "source_id": "training.json[93]",
-   "split_unit_id": "aimd_nvt_3000k_block1",
+   "split_unit_id": "aimd_nvt_3000k_block2",
    "top_group": "AIMD-NVT"
   },
   {
@@ -879,7 +879,7 @@
    "group_id": "aimd_nvt_3000k",
    "n_atoms": 108,
    "source_id": "training.json[97]",
-   "split_unit_id": "aimd_nvt_3000k_block-1",
+   "split_unit_id": "aimd_nvt_3000k_block0",
    "top_group": "AIMD-NVT"
   },
   {
@@ -906,7 +906,7 @@
    "group_id": "aimd_nvt_1000k",
    "n_atoms": 108,
    "source_id": "training.json[100]",
-   "split_unit_id": "aimd_nvt_1000k_block2",
+   "split_unit_id": "aimd_nvt_1000k_block3",
    "top_group": "AIMD-NVT"
   },
   {
@@ -996,7 +996,7 @@
    "group_id": "aimd_nvt_3000k",
    "n_atoms": 108,
    "source_id": "training.json[110]",
-   "split_unit_id": "aimd_nvt_3000k_block0",
+   "split_unit_id": "aimd_nvt_3000k_block1",
    "top_group": "AIMD-NVT"
   },
   {
@@ -1095,7 +1095,7 @@
    "group_id": "aimd_nvt_300k",
    "n_atoms": 108,
    "source_id": "training.json[121]",
-   "split_unit_id": "aimd_nvt_300k_block-1",
+   "split_unit_id": "aimd_nvt_300k_block0",
    "top_group": "AIMD-NVT"
   },
   {
@@ -1113,7 +1113,7 @@
    "group_id": "aimd_nvt_1000k",
    "n_atoms": 108,
    "source_id": "training.json[123]",
-   "split_unit_id": "aimd_nvt_1000k_block-1",
+   "split_unit_id": "aimd_nvt_1000k_block0",
    "top_group": "AIMD-NVT"
   },
   {
@@ -1221,7 +1221,7 @@
    "group_id": "aimd_nvt_1000k",
    "n_atoms": 108,
    "source_id": "training.json[135]",
-   "split_unit_id": "aimd_nvt_1000k_block0",
+   "split_unit_id": "aimd_nvt_1000k_block1",
    "top_group": "AIMD-NVT"
   },
   {
@@ -1383,7 +1383,7 @@
    "group_id": "aimd_nvt_300k",
    "n_atoms": 108,
    "source_id": "training.json[153]",
-   "split_unit_id": "aimd_nvt_300k_block0",
+   "split_unit_id": "aimd_nvt_300k_block1",
    "top_group": "AIMD-NVT"
   },
   {
@@ -2638,8 +2638,8 @@
    "top_group": "Elastic"
   }
  ],
- "dataset_content_sha256": "cff3ea7a346d4f07d6f349d734021395bb72ee1ac36ec0deff0f103528600433",
- "dataset_file_sha256": "cd7f4f846864fad82e97068ea2c0bcb2f93e0bfda336c8e95981ca5036404d31",
+ "dataset_content_sha256": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48",
+ "dataset_file_sha256": "6c0fc583ead5e028ed72227ab864ea88fb8a9942a84d03d0558a890f5b4dba8f",
  "dataset_id": "cu_phase2",
  "format_version": "2.0",
  "level_of_theory": "VASP-5.4.1_PBE_PAW_520eV (paper-stated, arXiv:1906.08888)",

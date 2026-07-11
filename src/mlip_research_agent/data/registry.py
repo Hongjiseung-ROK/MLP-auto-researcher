@@ -187,6 +187,15 @@ def load_qualified_dataset(
     dataset = NormalizedDataset.load(dataset_path)
     if dataset.content_hash() != manifest.dataset_content_sha256:
         raise DatasetNotQualifiedError("dataset content hash mismatch vs manifest")
+    # The content hash above validates the dataset, but WP2 trusts the
+    # manifest's grouping lineage.  Re-derive the complete manifest so a
+    # stale or tampered split_unit_id cannot pass merely because the dataset
+    # bytes themselves remain intact.
+    derived_manifest = NormalizedManifest.from_dataset(dataset, actual_file_hash)
+    if derived_manifest != manifest:
+        raise DatasetNotQualifiedError(
+            "normalized manifest lineage does not match the qualified dataset"
+        )
 
     require_approval(HumanGate.H1_DATASET_PROMOTION, manifest.dataset_content_sha256, approvals)
     return dataset

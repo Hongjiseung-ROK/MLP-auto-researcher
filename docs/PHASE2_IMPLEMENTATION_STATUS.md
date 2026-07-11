@@ -24,17 +24,17 @@ Last updated: 2026-07-11.
 
 | WP | Scope | Target files | Depends on | Human gate | Status |
 |---|---|---|---|---|---|
-| WP0 | Preregistration schema, experiment matrix, pilot config | `src/mlip_research_agent/research/{preregistration,experiment_matrix,pilot_status}.py`, `configs/research/cu_mace_al_pilot.yaml`, `docs/research/phase2_preregistration.md` | — | H2 before results | not_started |
-| WPS | Secure `api.env` loader + Materials Project SKILL | `src/mlip_research_agent/secrets/api_env.py`, `skills/data/materials_project/` | — | — | not_started |
-| WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1** | not_started |
-| WP2 | Leakage-safe grouped split + simulated oracle | `data/{split,oracle}.py`, `skills/active_learning/oracle_reveal/` | WP1 | — | not_started |
+| WP0 | Preregistration schema, experiment matrix, pilot config | `src/mlip_research_agent/research/{preregistration,experiment_matrix,pilot_status}.py`, `configs/research/cu_mace_al_pilot.yaml`, `docs/research/phase2_preregistration.md` | — | H2 before results | in_progress (WP1/WP2 values pinned; WP3/WP4 TBD) |
+| WPS | Secure `api.env` loader + Materials Project SKILL | `src/mlip_research_agent/secrets/api_env.py`, `skills/data/materials_project/` | — | — | implemented locally (synthetic-key tests only; no live API call) |
+| WP1 | Dataset due diligence, registry, qualification (Zuo 2019 Cu candidate) | `src/mlip_research_agent/data/{registry,manifests,qualification}.py`, `scripts/data/fetch_cu_benchmark.py`, `data_registry/datasets/cu_phase2/` | WPS (recon only) | **H1** | implemented locally; 11 checks pass; blocked on H1 promotion |
+| WP2 | Leakage-safe grouped split + simulated oracle | `data/{split,oracle}.py`, `skills/active_learning/oracle_reveal/` | WP1 | — | implemented locally (full suite 204 passed; independent final follow-up pending) |
 | WP3 | Pinned MACE inference | `skills/mlip/mace_inference/`, `mace` extra pins | WP1 fixture | — | not_started |
 | WP5 | Independent evaluation suite | `skills/evaluation/mlip_metrics/` (+ learning_curve, calibration) | WP2, WP3 | — | not_started |
 | WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | not_started |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | not_started |
 | WP7 | Multi-round controller + stopping rules | `research/` controller, round state schema | WP4–WP6 | — | not_started |
 | WP8 | `bounded_research_pilot` policy + Colab research runner | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/{run_research.py,bootstrap_research.sh}`, `notebooks/colab_phase2_research.ipynb` | WP7 | **H3** before real run | not_started |
-| WP9 | Claim classes, evidence bundle, pilot report, VESSL spec | `schemas/claims.py` extension, `docs/research/{human_gates,colab_pilot_runbook,vessl_replication_spec}.md` | all | H5 for claim release | not_started |
+| WP9 | Claim classes, evidence bundle, pilot report, VESSL spec | `schemas/claims.py` extension, `docs/research/{human_gates,colab_pilot_runbook,vessl_replication_spec}.md` | all | H5 for claim release | in_progress (claim classes/evidence tiers implemented; remaining bundle/report/spec deferred) |
 
 ## Acceptance tests per WP (from plan_phase_2.md §10, §20)
 
@@ -72,7 +72,7 @@ Last updated: 2026-07-11.
 
 | Gate | Meaning | Status |
 |---|---|---|
-| H1 | Dataset promotion | not reached |
+| H1 | Dataset promotion | awaiting owner approval of qualified hashes and time-block limitation |
 | H2 | Preregistration approval | not reached (draft exists) |
 | H3 | Remote execution approval | not reached |
 | H4 | Scientific pivot | n/a |
@@ -84,4 +84,9 @@ mock-only → real-inference capable → real-fine-tuning capable →
 Colab-staging capable → Colab-pilot complete → VESSL-replicated →
 publication-claim eligible
 
-**Current: mock-only.**
+**Current: WP2 locally complete; no real inference or remote scientific
+execution has occurred.**
+
+Local gate evidence (2026-07-11): `pytest` 204 passed / 2 remote-resource
+tests deselected; `ruff check .` clean; `mypy src` clean. Remote testing:
+not run. Scientific approval: H1/H2 remain open.

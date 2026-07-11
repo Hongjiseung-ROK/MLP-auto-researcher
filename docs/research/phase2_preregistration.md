@@ -39,27 +39,36 @@ model?
 - **Candidate:** fcc Cu portion of Zuo et al. 2019
   ("A Performance and Cost Assessment of Machine Learning Interatomic
   Potentials", arXiv:1906.08888; "mlearn" benchmark).
-- Dataset ID: `cu_phase2`. Version/hashes: `TBD(WP1 qualification report)`.
-- License: `TBD(WP1)`. DFT provenance (code, XC, cutoffs, k-points,
-  smearing): `TBD(WP1)`.
-- Pretraining-overlap risk vs the selected MACE checkpoint:
-  `TBD(WP1 overlap assessment)` — recorded as a limitation either way.
+- Dataset ID: `cu_phase2`. Qualified dataset content SHA-256:
+  `bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48`;
+  committed normalized-manifest file SHA-256:
+  `ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3`.
+- License: BSD-3-Clause. DFT provenance: VASP 5.4.1, PAW/PBE,
+  520 eV, 4×4×4 (Γ-only AIMD), paper-stated; smearing/POTCAR variant unknown.
+- Pretraining-overlap risk: low direct overlap with MPTrj, moderate
+  distributional familiarity near equilibrium fcc Cu. Zero-shot performance
+  is contextual, not independent proof.
 - MPTrj is **not** an eligible independent test source for a MACE-MP
   checkpoint (pretraining overlap).
 
 ## 5. Partitioning (leakage-safe)
 
-- Grouping rule priority: original trajectory/generation batch → structural
-  prototype/defect class → strain family → fingerprint cluster → raw-file
-  provenance group. Exact rule for the qualified dataset:
-  `TBD(WP2, from WP1 grouping metadata)`.
+- Grouping rule: WP1 `group_id` — each complete temperature-specific AIMD or
+  vacancy trajectory, complete elastic strain mode, and individual surface
+  slab is indivisible. No broader physical/source family crosses a partition.
+  The finer 39 `split_unit_id` values remain lineage metadata but are not used
+  to weaken whole-trajectory protection.
 - Targets: initial labeled set D₀ = 32; acquisition pool 128–512; validation
   ≥10%; frozen test ≥20%; counts scale down proportionally if the qualified
   Cu subset is small, with the actual numbers frozen here before H2.
 - No source group crosses a protected boundary. Test labels are reachable
   only through the evaluation interface, which returns metrics, never
   ranked examples.
-- Split seed: 20260711. Split manifest SHA-256 recorded at freeze.
+- Requested targets: D₀ 32, acquisition pool 172, validation 30, frozen test
+  59. Whole-group actual counts: D₀ 32, pool 161, validation 40, frozen test 60,
+  stress test 0. Split seed: 20260711. Deterministic split-manifest file
+  SHA-256: `80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e`.
+  This is not H2-frozen while other preregistration fields remain pending.
 
 ## 6. Model
 

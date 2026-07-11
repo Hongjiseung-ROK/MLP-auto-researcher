@@ -45,9 +45,14 @@ The Phase 2 pilot is driven by `configs/research/cu_mace_al_pilot.yaml`
 Rationale: keeps the verified Phase 1 end-to-end test untouched while the
 real stack matures; merging the two entry points is a recorded follow-up.
 
-**D-P2-6. Claim schema gains `claim_class` and `scientific_status` with
+**D-P2-6. Claim schema gains `claim_class` and `scientific_evidence_tier` with
 backward-compatible defaults.**
-Existing Phase 1 claims validate unchanged (`infrastructure_claim` default).
+Existing Phase 1 claims validate unchanged (`infrastructure_claim` plus
+`non_scientific` defaults). Artifact `VERIFIED` status remains integrity-only
+and cannot upgrade scientific maturity. Numerical scientific claims require
+metric artifacts and applicable dataset/split/model manifests; replicated
+and publication classes require multiple runs, with H5 approval additionally
+required for publication eligibility.
 Phase 2 may emit `infrastructure_claim` and `pilot_scientific_claim` only;
 `replicated_scientific_claim` and `publication_claim` are defined but
 unmintable in Phase 2 (enforced in code, not convention).
@@ -86,3 +91,28 @@ truth.** Its correlation with observed error is a *reported measurement*
 (Spearman, post-reveal), never an assumption. Diversity (farthest-point
 sampling on descriptors) is applied after the uncertainty window to prevent
 near-duplicate batches.
+
+**D-P2-12. WP2 protects whole physical/source families before finer split
+units.** Bulk AIMD source numbering is zero-based, so the WP1 time-block
+formula is `snapshot // 10`; vacancy numbering is one-based and remains
+`(snapshot - 1) // 5`. This correction removes three invalid `block-1`
+lineage units. For actual partitioning, `group_id` has priority: complete
+temperature-specific AIMD/vacancy trajectories, elastic strain modes, and
+individual slabs never cross boundaries. The splitter derives its tie-break
+seed from the qualified-manifest hash, canonical spec, declared seed,
+grouping field, and algorithm version. Group indivisibility changes requested
+32/172/30/59/0 targets to actual 32/161/40/60/0 counts; both are recorded.
+Record-to-group membership is revalidated against the qualified manifest, so
+a self-consistent but forged test-to-pool reassignment fails.
+
+**D-P2-13. Oracle reveals are immutable atomic transactions, not mutable
+budget counters.** Selectors receive a label-free `AcquisitionView`; only the
+oracle receives the normalized labels. Each `(campaign_id, round_id)` has one
+canonical request, and request/decision/batch/ledger/lineage/state artifacts
+are committed by a single atomic directory rename. A resumed identical
+request reuses the transaction without charging again; a conflict, protected
+ID, unknown ID, or budget excess fails before any label-bearing state commit.
+Separate campaign IDs isolate random and hybrid arm budgets. Within one
+campaign, every new reveal must name the unique registered prior-state head.
+State commits use a file lock plus compare-and-swap hash, so stale writers
+cannot overwrite a newer budget ledger.

@@ -41,9 +41,9 @@ def test_fixture_parses_with_expected_groups() -> None:
     by_group = {c.top_group: c for c in configs}
     assert by_group["Elastic"].group_id == "elastic_mode_2"
     assert by_group["Elastic"].split_unit_id == "elastic_mode_2"
-    # Snapshot 20 with block size 10 -> zero-based block 1.
+    # Bulk AIMD numbering is zero-based: snapshot 20 starts block 2.
     assert by_group["AIMD-NVT"].group_id == "aimd_nvt_300k"
-    assert by_group["AIMD-NVT"].split_unit_id == "aimd_nvt_300k_block1"
+    assert by_group["AIMD-NVT"].split_unit_id == "aimd_nvt_300k_block2"
     # Snapshot 1 with block size 5 -> block 0.
     assert by_group["Vacancy"].split_unit_id == "vacancy_300k_block0"
     assert by_group["Surface"].split_unit_id == "surface_1_1_0"
@@ -60,6 +60,18 @@ def test_classify_rejects_unknown_group_and_bad_descriptions() -> None:
         classify_record("AIMD-NVT", "Snapshot ??? garbled")
     with pytest.raises(MlearnParseError, match="unrecognized Surface"):
         classify_record("Surface", "no miller indices here")
+
+
+def test_aimd_zero_frame_stays_with_first_temporal_block() -> None:
+    assert classify_record(
+        "AIMD-NVT", "Snapshot 0 of 40 of AIMD NVT simulation at 300 K"
+    ) == ("aimd_nvt_300k", "aimd_nvt_300k_block0")
+    assert classify_record(
+        "AIMD-NVT", "Snapshot 9 of 40 of AIMD NVT simulation at 300 K"
+    ) == ("aimd_nvt_300k", "aimd_nvt_300k_block0")
+    assert classify_record(
+        "AIMD-NVT", "Snapshot 10 of 40 of AIMD NVT simulation at 300 K"
+    ) == ("aimd_nvt_300k", "aimd_nvt_300k_block1")
 
 
 def test_malformed_record_rejected(tmp_path: Path) -> None:
@@ -193,6 +205,16 @@ def test_qualified_registry_round_trip_requires_h1(tmp_path: Path) -> None:
     )
     loaded = load_qualified_dataset(dataset_dir, [approval])
     assert loaded.content_hash() == dataset.content_hash()
+
+    # Dataset bytes still match, but altered grouping lineage must fail: WP2
+    # relies on the manifest, not just the physical dataset hash.
+    manifest_path = dataset_dir / NORMALIZED_MANIFEST_NAME
+    manifest_payload = json.loads(manifest_path.read_text())
+    manifest_payload["configurations"][0]["split_unit_id"] = "tampered-group"
+    manifest_path.write_text(json.dumps(manifest_payload))
+    with pytest.raises(DatasetNotQualifiedError, match="lineage"):
+        load_qualified_dataset(dataset_dir, [approval])
+    NormalizedManifest.from_dataset(dataset, file_sha).save(manifest_path)
 
     # Tampered dataset bytes -> refused even with approval.
     dataset_path = dataset_dir / NORMALIZED_DATASET_NAME

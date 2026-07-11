@@ -44,8 +44,10 @@ def test_pilot_config_loads_and_hash_is_deterministic() -> None:
 def test_draft_preregistration_reports_pending_fields() -> None:
     prereg = load_pilot_config(PILOT_CONFIG).preregistration
     pending = prereg.pending_fields()
-    assert "preregistration.dataset.qualified_manifest_sha256" in pending
+    assert "preregistration.dataset.qualified_manifest_sha256" not in pending
+    assert "preregistration.split.split_manifest_sha256" not in pending
     assert "preregistration.model_section.checkpoint_sha256" in pending
+    assert "preregistration.finetune.optimizer" in pending
     assert not prereg.is_frozen_candidate
 
 
