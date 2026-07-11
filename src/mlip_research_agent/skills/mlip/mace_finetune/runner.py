@@ -195,8 +195,10 @@ def run_controlled_training(
         patience_count = 0
         records: list[dict[str, float | int | str]] = []
         if resume_checkpoint_path is not None:
+            # Always deserialize to CPU: RNG states must stay CPU ByteTensors,
+            # and load_state_dict moves model/optimizer state to the live device.
             state: dict[str, Any] = torch.load(
-                resume_checkpoint_path, map_location=device, weights_only=False
+                resume_checkpoint_path, map_location="cpu", weights_only=False
             )
             if state.get("schema_version") != "1.0.0":
                 raise ValueError("unsupported controlled MACE checkpoint schema")
