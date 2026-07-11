@@ -117,6 +117,7 @@ def _ensure_builtin_skills_loaded() -> None:
         active_learning,
         atomistics,
         compute,
+        data,
         dft,
         literature,
         mlip,
