@@ -29,6 +29,17 @@ GPU families L4 / A100-40GB / A100-80GB are **already authorized** by the
 owner (configs/compute_policy.yaml); these questions cover only budgets,
 accounts, and fallback behavior needed before real remote execution.
 
+> **Resolved 2026-07-11 (owner Q&A):** OQ-14 — Colab **Pro/Pro+** (session
+> bound relaxed to 60 min for preflights, unit accounting in the audit log);
+> OQ-15 — VESSL org/project to be provided later; until then mock-only, and
+> real jobs cap at **4 GPU-hours** each; OQ-16 — pull small
+> manifests/logs/metrics back to the local run directory (gitignored),
+> checkpoints stay provider-side pending OQ-9; OQ-17 — **A100-40GB is an
+> acceptable automatic substitute** when 80GB is unavailable; OQ-18 — a
+> failed L4 preflight **auto-retries once on A100-40GB only for
+> resource-class failures (OOM)**, anything else escalates.
+> Remaining prerequisite for real VESSL runs: the org/project name.
+
 **OQ-14. Colab account tier and budget.**
 - Which tier (Free / Pay As You Go / Pro / Pro+), and what is the maximum
   session duration / compute-unit consumption per preflight?

@@ -7,7 +7,8 @@ requested_accelerator: nvidia-l4
 # `preflight.py` invocation honest about requiring a real GPU.
 allow_cpu: false
 
-timeout_minutes: 30
+# Owner runs Colab Pro/Pro+ (OQ-14): preflight sessions bounded to 60 min.
+timeout_minutes: 60
 
 # Per-check enable flags. "skip" always skips regardless of runtime
 # capability; false is equivalent for the always-on checks. mlip_inference
