@@ -1,0 +1,29 @@
+{
+  "pool_candidate_ids": ["cand-0001", "cand-0002", "cand-0003", "cand-0004"],
+  "metadata": {
+    "cand-0001": {"source_group": "group-a", "n_atoms": 8, "formula": "Cu8"},
+    "cand-0002": {"source_group": "group-a", "n_atoms": 8, "formula": "Cu8"},
+    "cand-0003": {"source_group": "group-b", "n_atoms": 16, "formula": "Cu16"},
+    "cand-0004": {"source_group": "group-b", "n_atoms": 16, "formula": "Cu16"}
+  },
+  "signals": [
+    {"candidate_id": "cand-0001", "force_disagreement": 0.30, "invalid": false},
+    {"candidate_id": "cand-0002", "force_disagreement": 0.28, "invalid": false},
+    {"candidate_id": "cand-0003", "force_disagreement": 0.05, "invalid": false},
+    {"candidate_id": "cand-0004", "force_disagreement": 0.00, "invalid": true}
+  ],
+  "descriptors": {
+    "source": "fixture",
+    "dimension": 2,
+    "vectors": {
+      "cand-0001": [0.0, 0.1],
+      "cand-0002": [0.1, 0.0],
+      "cand-0003": [5.0, 5.0],
+      "cand-0004": [9.0, 9.0]
+    }
+  },
+  "budget": 2,
+  "uncertainty_window_fraction": 0.75,
+  "campaign_id": "demo-campaign",
+  "round_id": "round-1"
+}
