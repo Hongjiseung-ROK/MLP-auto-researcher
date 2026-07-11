@@ -1,0 +1,39 @@
+{
+  "branch": "main",
+  "commit_timestamp_utc": "2026-07-11T14:00:49+09:00",
+  "committed_demonstration_artifacts": [
+    "artifacts/bootstrap/environment-report.json",
+    "artifacts/bootstrap/github-publication.json"
+  ],
+  "intentionally_excluded_artifact_classes": [
+    "campaign run outputs (artifacts/runs/)",
+    "compute/attestation run records (artifacts/compute/)",
+    "private Colab/VESSL artifacts (artifacts/colab/private/, artifacts/vessl/private/)",
+    "model checkpoints (*.ckpt, *.pt, *.pth, *.onnx, checkpoints/)",
+    "raw/cached datasets (data/raw/, data/cache/)",
+    "experiment-tracker state (wandb/, mlruns/)",
+    "credentials and environment files (.env*, *.pem, *.key, token*, cookies*, secrets*)"
+  ],
+  "local_commit_sha": "d8f5ff6dc2ab5c1a7895b17c83e0234c9bb2b04c",
+  "push_mode": "direct to main (fresh empty repository, no branch protection encountered)",
+  "repository_url": "https://github.com/Hongjiseung-ROK/MLP-auto-researcher.git",
+  "schema_version": "0.1.0",
+  "secret_scan": {
+    "credential_files_verified_absent": [
+      ".env",
+      "*.pem",
+      "*.key",
+      "token.json",
+      "cookies"
+    ],
+    "result": "clean on every commit; one true-positive-shaped finding was fake redaction-test fixtures, confirmed synthetic and allowlist-marked",
+    "tool": "scripts/check_staged.py (pattern scan + size gate, 1 MiB)"
+  },
+  "tests_executed_before_publication": [
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m pytest  # 119 passed, 2 deselected (opt-in remote markers)",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m ruff check .  # All checks passed",
+    "env -u PYTHONPATH conda run -n mlip-research-agent python -m mypy src  # Success: no issues in 89 source files"
+  ],
+  "verification_method": "git ls-remote origin refs/heads/main compared to git rev-parse HEAD",
+  "verified_remote_commit_sha": "d8f5ff6dc2ab5c1a7895b17c83e0234c9bb2b04c"
+}
