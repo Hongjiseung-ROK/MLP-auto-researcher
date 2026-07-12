@@ -132,15 +132,30 @@ def viability_summary(
             for record in scores.values()
         ]
     )
-    rounded = np.round(values / 1.0e-12).astype(np.int64)
+    ordered = np.sort(values)[::-1]
+    shortlist = ordered[:36]
+    rounded = np.round(shortlist / 1.0e-12).astype(np.int64)
     counts = np.unique(rounded, return_counts=True)[1]
-    tied_fraction = float(counts[counts > 1].sum() / len(values)) if len(values) else 1.0
+    tied_fraction = (
+        float(counts[counts > 1].sum() / len(shortlist)) if len(shortlist) else 1.0
+    )
     threshold = max(10.0 * numerical_floor, 1.0e-6)
     median = float(np.median(values))
+    eligible_count = int(np.sum(values > threshold))
+    shortlist_minimum = float(shortlist[-1]) if len(shortlist) == 36 else 0.0
     return {
         "median_disagreement_ev_per_a": median,
         "required_minimum_ev_per_a": threshold,
-        "fraction_in_score_ties_at_1e-12": tied_fraction,
+        "legacy_all_pool_median_gate_passed": median > threshold,
+        "candidates_above_viability_threshold": eligible_count,
+        "required_viable_candidates": 36,
+        "top_36_minimum_disagreement_ev_per_a": shortlist_minimum,
+        "top_36_fraction_in_score_ties_at_1e-12": tied_fraction,
         "maximum_tied_fraction": 0.2,
-        "passed": median > threshold and tied_fraction <= 0.2,
+        "pivot_policy": "selection_window_viability/1.0.0",
+        "passed": (
+            eligible_count >= 36
+            and shortlist_minimum > threshold
+            and tied_fraction <= 0.2
+        ),
     }

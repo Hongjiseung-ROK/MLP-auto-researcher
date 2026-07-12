@@ -1,0 +1,2 @@
+{"event":"colab_baseline","source_commit":"50d09184021074e10985eee4c85951ab25e3ba9c","provider":"Google Colab","gpu":"NVIDIA L4","status":"stopped_at_original_d0_gate","pool_labels_revealed":0,"frozen_test_accessed":false}
+{"event":"label_free_gate_audit","decision":"replace_all_pool_median_with_top_36_selection_window_gate","candidate_count_above_viability_threshold":61,"top_36_minimum_ev_per_a":0.006854111555129643,"pool_labels_revealed":0,"status":"recorded_pivot"}

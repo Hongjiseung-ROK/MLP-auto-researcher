@@ -1,0 +1,42 @@
+{
+  "approval_status": "approved_by_frozen_pivot_rule",
+  "campaign_id": "cu-tail-risk-ralph-20260712",
+  "changed_field": "outcome-blind D0 committee viability aggregation only",
+  "decision": "replace an all-pool median gate with a top-36 selection-window gate",
+  "evidence": {
+    "calibration_sha256": "27179f9a90000064a7bfb25ed707f7faa411f1448db319c8c14c03ad0c5e7d35",
+    "candidate_count_above_viability_threshold": 61,
+    "d0_scores_sha256": "52c9a97592575c5501d579a7604e011dd8513bbc8b34d4221d2b6b7900dff18e",
+    "failed_viability_sha256": "60fc5938e62c60ca8da953388820a90b594c317a3529232f63b60889ccf45221",
+    "legacy_median_disagreement_ev_per_a": 4.823076118148632e-07,
+    "measured_numerical_drift_ev_per_a": 3.178683982696384e-07,
+    "viability_threshold_ev_per_a": 3.178683982696384e-06,
+    "pool_group_audit": {
+      "aimd_nvt_1000k_above_viability_threshold": 40,
+      "elastic_modes_2_through_5_above_viability_threshold": 0,
+      "surface_above_viability_threshold": 1,
+      "vacancy_3000k_above_viability_threshold": 20
+    },
+    "top_36_minimum_disagreement_ev_per_a": 0.006854111555129643
+  },
+  "falsified_assumption": "The heterogeneous pool-wide median was assumed to measure committee collapse, but 80 low-force elastic configurations legitimately dominate that median while 61 candidates remain far above measured numerical drift.",
+  "frozen_after_label_access": false,
+  "new_gate": {
+    "maximum_top_36_tied_fraction_at_1e-12": 0.2,
+    "minimum_candidates_above_viability_threshold": 36,
+    "minimum_top_36_score": "strictly above max(10 times measured numerical drift, 1e-6 eV/angstrom)"
+  },
+  "oracle_labels_revealed_before_pivot": 0,
+  "preserved_fields": [
+    "research question",
+    "hypothesis and null",
+    "all arms",
+    "all label budgets",
+    "all training settings",
+    "all validation and frozen-test metrics",
+    "all acceptance criteria"
+  ],
+  "reason_allowed": "The frozen protocol permits a pivot before pool-label reveal when a methodological assumption is falsified.",
+  "schema_version": "1.0.0",
+  "source_attempt_commit": "50d09184021074e10985eee4c85951ab25e3ba9c"
+}

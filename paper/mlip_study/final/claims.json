@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "allowed_claims": [
+    "On one 40-frame AIMD-300 K Cu validation trajectory, the final fixed-epoch adapted models degraded force accuracy for all three optimizer seeds.",
+    "The adapted mean-prediction ensemble increased force-component MAE by 86.11 percent and force-vector P95 by 88.88 percent relative to zero shot.",
+    "The original pool-wide median disagreement gate was misaligned with the top-36 selection window in this heterogeneous pool.",
+    "The gate amendment was recorded before any pool label reveal."
+  ],
+  "prohibited_claims": [
+    "Any active-learning arm improved or degraded performance.",
+    "The tail-risk policy is superior or inferior.",
+    "The preregistered hypothesis was accepted or rejected.",
+    "A frozen-test, stress-test, VESSL, or cross-provider result exists.",
+    "The finding generalizes to copper, MACE, or foundation MLIPs as a population.",
+    "The campaign is complete."
+  ]
+}

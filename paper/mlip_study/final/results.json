@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "scientific_status": "preliminary_real_gpu_pilot",
+  "campaign_id": "cu-tail-risk-ralph-20260712",
+  "source_commit": "50d09184021074e10985eee4c85951ab25e3ba9c",
+  "hardware": {
+    "gpu": "NVIDIA L4",
+    "gpu_count": 1,
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8"
+  },
+  "validation": {
+    "group": "aimd_nvt_300k",
+    "n_structures": 40,
+    "n_atoms": 4320,
+    "zero_shot": {
+      "energy_mae_ev_per_atom": 0.003741189198296414,
+      "force_component_mae_ev_per_a": 0.07298000828145236,
+      "force_component_rmse_ev_per_a": 0.09065242457759727,
+      "force_vector_error_p95_ev_per_a": 0.2513239915740356,
+      "force_softening_beta": 0.8031056544272526,
+      "median_force_magnitude_bias_ev_per_a": -0.1367391693289879
+    },
+    "adapted_mean_prediction_ensemble": {
+      "energy_mae_ev_per_atom": 0.006313366153055132,
+      "force_component_mae_ev_per_a": 0.13582003302460086,
+      "force_component_rmse_ev_per_a": 0.16927742609745958,
+      "force_vector_error_p95_ev_per_a": 0.4747031402543435,
+      "force_softening_beta": 0.6238071939084824,
+      "median_force_magnitude_bias_ev_per_a": -0.258636058636069
+    },
+    "relative_change_percent": {
+      "energy_mae": 68.75,
+      "force_component_mae": 86.11,
+      "force_component_rmse": 86.73,
+      "force_vector_p95": 88.88
+    },
+    "adapted_seeds": [
+      {"seed": 42, "force_mae": 0.13566125787280373, "force_vector_p95": 0.4739021088173428, "beta": 0.6242611213447455},
+      {"seed": 43, "force_mae": 0.13846727576014511, "force_vector_p95": 0.4836327930302853, "beta": 0.6163937492926032},
+      {"seed": 44, "force_mae": 0.13333340344564037, "force_vector_p95": 0.4659521002754966, "beta": 0.6307667110880986}
+    ]
+  },
+  "numerical_calibration": {
+    "same_calculator_max_force_component_difference_ev_per_a": 3.178683982696384e-7,
+    "model_reload_max_force_component_difference_ev_per_a": 2.9476200325007085e-7
+  },
+  "original_committee_gate": {
+    "passed": false,
+    "threshold_ev_per_a": 3.178683982696384e-6,
+    "pool_median_ev_per_a": 4.823076118148632e-7,
+    "pool_size": 141
+  },
+  "pre_label_audit": {
+    "candidates_above_threshold": 61,
+    "top_36_minimum_ev_per_a": 0.006854111555129643,
+    "pool_minimum_ev_per_a": 2.806827076359713e-7,
+    "pool_maximum_ev_per_a": 0.008562903798036274,
+    "pool_labels_revealed": 0
+  },
+  "unavailable": [
+    "active_learning_rounds",
+    "frozen_test",
+    "stress_test",
+    "VESSL_replication",
+    "cross_provider_confirmation"
+  ]
+}

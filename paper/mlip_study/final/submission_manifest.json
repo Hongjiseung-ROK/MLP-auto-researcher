@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "bundle_status": "format_valid_preliminary_pilot_article",
+  "scientific_completion": false,
+  "paper": {
+    "path": "paper/mlip_study/final/paper.pdf",
+    "sha256": "3d3b22f6f7dfd3ffe01c063dfcc6223ad399d3332302a1f95ca8671d90830765",
+    "main_body_pages": 3,
+    "total_pages": 4
+  },
+  "appendix": {
+    "path": "paper/mlip_study/final/appendix.pdf",
+    "sha256": "030f26f445e6af36948c06a010240d28d367ce3dc65ee428ed8f4d874fd294c7",
+    "pages": 1,
+    "also_included_in_combined_paper": true
+  },
+  "research_spec_sha256": "9dea3391d6285a2ab7590a3cf18ad0f76992585d31d047eca892e63fb97a92d3",
+  "checks": {
+    "official_icml_2026_style": true,
+    "ralphthon_four_page_body_limit": true,
+    "anonymous": true,
+    "fonts_embedded_type_1": true,
+    "citations_resolved": true,
+    "visual_qa_passed": true,
+    "claim_audit_passed_at_pilot_scope": true
+  },
+  "not_claimed_complete": [
+    "full Ralph active-learning campaign",
+    "VESSL execution",
+    "frozen-test confirmation",
+    "cross-provider replication"
+  ]
+}

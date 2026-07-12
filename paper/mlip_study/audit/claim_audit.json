@@ -1,0 +1,8 @@
+{
+  "status": "pass_at_preliminary_pilot_scope",
+  "paper_claims_source": "paper/mlip_study/final/claims.json",
+  "evidence_map": "paper/mlip_study/final/evidence_map.json",
+  "unsupported_claims": [],
+  "required_scope_label": "preliminary real-GPU validation pilot",
+  "prohibited_completion_claim": "completed active-learning campaign"
+}

@@ -15,6 +15,7 @@ from mlip_research_agent.research.novel_mlip.metrics import (
 from mlip_research_agent.research.novel_mlip.selection import (
     committee_scores,
     select_candidates,
+    viability_summary,
 )
 
 
@@ -159,3 +160,21 @@ def test_tail_proxy_ranking_differs_from_disagreement_when_force_magnitude_is_la
         scores["high-magnitude"]["force_tail_proxy_ev_per_a"]
         > scores["low-magnitude"]["force_tail_proxy_ev_per_a"]
     )
+
+
+def test_viability_uses_the_selection_window_for_a_heterogeneous_pool() -> None:
+    low_scores = [5.0e-7 + index * 1.0e-12 for index in range(80)]
+    high_scores = [1.0e-3 + index * 1.0e-6 for index in range(61)]
+    scores = {
+        f"candidate-{index:03d}": {
+            "mean_population_vector_disagreement_ev_per_a": value
+        }
+        for index, value in enumerate([*low_scores, *high_scores])
+    }
+    summary = viability_summary(scores, numerical_floor=3.178683982696384e-7)
+    assert summary["legacy_all_pool_median_gate_passed"] is False
+    assert summary["candidates_above_viability_threshold"] == 61
+    assert summary["top_36_minimum_disagreement_ev_per_a"] > summary[
+        "required_minimum_ev_per_a"
+    ]
+    assert summary["passed"] is True

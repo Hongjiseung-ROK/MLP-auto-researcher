@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "review_scope": "independent read-only story and claim-evidence reviews",
+  "resolved": [
+    "Changed the title to past tense to avoid population-wide generalization.",
+    "Classified the result as a single-session pilot.",
+    "Stated that optimizer seeds are not independent data or policy replicates.",
+    "Described the top-36 rule as a post-failure, pre-label amendment.",
+    "Added explicit non-claims for acquisition, frozen tests, stress tests, and VESSL replication."
+  ],
+  "remaining_recommendation": "Do not upgrade the paper's evidence class until acquisition rounds and protected confirmation are complete."
+}

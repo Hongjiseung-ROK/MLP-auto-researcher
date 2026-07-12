@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "verdict": "ready_as_preliminary_pilot_article",
+  "checks": {
+    "headline_values_recomputed": "pass",
+    "claims_bound_to_hashes": "pass",
+    "negative_result_preserved": "pass",
+    "frozen_test_leakage": "none",
+    "seed_values_visible": "pass",
+    "physical_units_on_axes": "pass",
+    "unavailable_results_disclosed": "pass",
+    "generalization_overclaim": "none detected"
+  },
+  "blocking_for_full_campaign_paper": [
+    "No active-learning round has completed.",
+    "No protected frozen-test or stress-test result exists.",
+    "No VESSL or cross-provider confirmation exists."
+  ]
+}
