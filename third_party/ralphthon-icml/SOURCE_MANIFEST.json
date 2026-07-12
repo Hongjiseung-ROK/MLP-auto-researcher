@@ -1,0 +1,293 @@
+{
+  "commit": "a9f4f2583648ef4ca54f980f951ae393d153473f",
+  "files": [
+    {
+      "path": ".codex-plugin/plugin.json",
+      "provenance": "copied_verbatim",
+      "sha256": "8b2d900f04c60cbbdc515f4719454d3c2c69c5827e720aa8b17aadc935331270",
+      "source_path": ".codex-plugin/plugin.json"
+    },
+    {
+      "path": "LICENSE",
+      "provenance": "copied_verbatim",
+      "sha256": "d5543ea3a4193060da3984dbf64963cf5fb4dbf5ad8190c89a88db827568df01",
+      "source_path": "LICENSE"
+    },
+    {
+      "path": "README.md",
+      "provenance": "copied_verbatim",
+      "sha256": "c199c0c09a3bad962afd5b71cdb9aa3e0808b348b5567f5dce30b2128a27d21f",
+      "source_path": "README.md"
+    },
+    {
+      "path": "scripts/validate_plugin.py",
+      "provenance": "copied_verbatim",
+      "sha256": "c18f9b43f6924e779902a07ec5edf4a3b50f72b1603dc128571268b36064174f",
+      "source_path": "scripts/validate_plugin.py"
+    },
+    {
+      "path": "skills/auto-research/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "9f91e7040144b33adbc7ed33c8097b00a88310b74ebbfc15599c71cf4fd1474b",
+      "source_path": "skills/auto-research/SKILL.md"
+    },
+    {
+      "path": "skills/auto-research/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "95ee1cb01f61c31f1fa18389bfb7d1f3e99610c9d69d52a9519927a5e396e06b",
+      "source_path": "skills/auto-research/agents/openai.yaml"
+    },
+    {
+      "path": "skills/auto-research/assets/AUTORESEARCH.md",
+      "provenance": "copied_verbatim",
+      "sha256": "036b6051e57273eadcc2b9080951952a7e02e5d77dc64a573bbc007a6cdb9c69",
+      "source_path": "skills/auto-research/assets/AUTORESEARCH.md"
+    },
+    {
+      "path": "skills/auto-research/assets/experiment-ledger.md",
+      "provenance": "copied_verbatim",
+      "sha256": "0b4b8296d0ad2cbdf6d49bd2d8db57748fe8a6a536e5ca0bc8cc216cae51f949",
+      "source_path": "skills/auto-research/assets/experiment-ledger.md"
+    },
+    {
+      "path": "skills/auto-research/assets/track-1-submission-template.md",
+      "provenance": "copied_verbatim",
+      "sha256": "302bb1fc5aa91ffb7d28ce0d2d08783540c427d33baa503e7a3ca172796ded01",
+      "source_path": "skills/auto-research/assets/track-1-submission-template.md"
+    },
+    {
+      "path": "skills/auto-research/assets/track-2-agent-template.md",
+      "provenance": "copied_verbatim",
+      "sha256": "67e87b902be1803e3456dae492e4eaf50b5cdad736ddd031372fb9507d91b851",
+      "source_path": "skills/auto-research/assets/track-2-agent-template.md"
+    },
+    {
+      "path": "skills/auto-research/assets/track-2-review-template.md",
+      "provenance": "copied_verbatim",
+      "sha256": "cc9a9a4a9570e3abbdf0291d50b4d5826821de3bffb4e369f5e59d86f88ba772",
+      "source_path": "skills/auto-research/assets/track-2-review-template.md"
+    },
+    {
+      "path": "skills/auto-research/assets/vessl-a100-run-card.md",
+      "provenance": "copied_verbatim",
+      "sha256": "80d8ace25fce9e7abd976529b74236f8997bd046da130750830a23d4d1d302db",
+      "source_path": "skills/auto-research/assets/vessl-a100-run-card.md"
+    },
+    {
+      "path": "skills/auto-research/references/vessl-autoresearch-runbook.md",
+      "provenance": "copied_verbatim",
+      "sha256": "6edd3bdca04a34c0ffdc4c5bc42f8d008a4d2d02860acf921dacdf4f21c42db5",
+      "source_path": "skills/auto-research/references/vessl-autoresearch-runbook.md"
+    },
+    {
+      "path": "skills/auto-research/references/workflow.md",
+      "provenance": "copied_verbatim",
+      "sha256": "1742c00ad10094ea99bb15f03a4b98d2d33080459459a360b917d3b4a82f652d",
+      "source_path": "skills/auto-research/references/workflow.md"
+    },
+    {
+      "path": "skills/auto-research/scripts/record_experiment.py",
+      "provenance": "copied_verbatim",
+      "sha256": "2e750cd490d878900287e71ea3843adfd3eab70b4c9a9a5d95222e7db2cb6da6",
+      "source_path": "skills/auto-research/scripts/record_experiment.py"
+    },
+    {
+      "path": "skills/hello-ralphthon-icml/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "2295ce02be03218ba98c39edeee66d2846ef061c8514f76ce6297c6f7550b59b",
+      "source_path": "skills/hello-ralphthon-icml/SKILL.md"
+    },
+    {
+      "path": "skills/vessl-cloud-onboarding/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "fe5c858a11652498fecf6cae1c63fc62b399c49943e3c2954ca547c60901f8d1",
+      "source_path": "skills/vessl-cloud-onboarding/SKILL.md"
+    },
+    {
+      "path": "skills/vessl-cloud-onboarding/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "14f8eaa530005de4b420941cf1fc43f04fb51f5c1013976421b5749a348a724d",
+      "source_path": "skills/vessl-cloud-onboarding/agents/openai.yaml"
+    },
+    {
+      "path": "skills/vessl-cloud-onboarding/assets/workspace-cost-card.md",
+      "provenance": "copied_verbatim",
+      "sha256": "4ef01e6971b22b7743994081ec520d8ab6371ce897facade15cdb3a60fb94c57",
+      "source_path": "skills/vessl-cloud-onboarding/assets/workspace-cost-card.md"
+    },
+    {
+      "path": "skills/vessl-cloud-onboarding/references/official-repositories.md",
+      "provenance": "copied_verbatim",
+      "sha256": "0e4111d0587553182bbb9292ff8cd32be78f94ac2f0d4781d2d3a0b5658f7569",
+      "source_path": "skills/vessl-cloud-onboarding/references/official-repositories.md"
+    },
+    {
+      "path": "skills/vessl-cloud-onboarding/references/official-workflow.md",
+      "provenance": "copied_verbatim",
+      "sha256": "07e8d1fd0f32ea34f1f5dba737273f2216cde879b290111697aa71fe835e9d04",
+      "source_path": "skills/vessl-cloud-onboarding/references/official-workflow.md"
+    },
+    {
+      "path": "skills/wandb/hands-on/handson_models.ipynb",
+      "provenance": "copied_verbatim",
+      "sha256": "01598bb0c1ffff88499dc0e69953f517a20a59b5d7b486f6613024ada5cc7304",
+      "source_path": "skills/wandb/hands-on/handson_models.ipynb"
+    },
+    {
+      "path": "skills/wandb/hands-on/handson_weave.ipynb",
+      "provenance": "copied_verbatim",
+      "sha256": "08f930e83d3d059fabb25111b008250678ef91dbec3868c61a6910904d777a7b",
+      "source_path": "skills/wandb/hands-on/handson_weave.ipynb"
+    },
+    {
+      "path": "skills/wandb/wandb-project-analyst/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "e4a4e3f6484a7a3b3a6977bd86fe5a125e521105d3d769252c87041fdeaa7c4b",
+      "source_path": "skills/wandb/wandb-project-analyst/SKILL.md"
+    },
+    {
+      "path": "skills/wandb/wandb-project-analyst/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "9254cc7f9533e7bff26061302deb9a680f4def5a0fa1f70606e91f294bcae4c8",
+      "source_path": "skills/wandb/wandb-project-analyst/agents/openai.yaml"
+    },
+    {
+      "path": "skills/wandb/wandb-project-analyst/references/mcp-analysis-workflows.md",
+      "provenance": "copied_verbatim",
+      "sha256": "ffc5bb085e4e2d68943a332b27ca97ffa3b58e2b8a3e560190002b6c1991f445",
+      "source_path": "skills/wandb/wandb-project-analyst/references/mcp-analysis-workflows.md"
+    },
+    {
+      "path": "skills/wandb/wandb-track-experiment/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "7cd681008cca42723206a8ad52381d39391d71c121c66e2ac99a5adb460f1097",
+      "source_path": "skills/wandb/wandb-track-experiment/SKILL.md"
+    },
+    {
+      "path": "skills/wandb/wandb-track-experiment/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "47b83c78e133bb2bd91fe5f3f515ac604ceba173a8cf27627a149e3fbac3a230",
+      "source_path": "skills/wandb/wandb-track-experiment/agents/openai.yaml"
+    },
+    {
+      "path": "skills/wandb/wandb-track-experiment/references/experiment-tracking-patterns.md",
+      "provenance": "copied_verbatim",
+      "sha256": "aea0dce43177dc60b8cfa12dd6e0fae530c33416eda0f892176ada882c65ff93",
+      "source_path": "skills/wandb/wandb-track-experiment/references/experiment-tracking-patterns.md"
+    },
+    {
+      "path": "skills/wandb/weave-add-tracing/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "2834486e73b60b9429e1285b99eae5e2278da2259ae88e3b13331a21a61e117a",
+      "source_path": "skills/wandb/weave-add-tracing/SKILL.md"
+    },
+    {
+      "path": "skills/wandb/weave-add-tracing/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "301b81c5cf308b01560a619191f3cf95216cefb1484d1655f28e500d36b266b2",
+      "source_path": "skills/wandb/weave-add-tracing/agents/openai.yaml"
+    },
+    {
+      "path": "skills/wandb/weave-add-tracing/references/codebase-analysis.md",
+      "provenance": "copied_verbatim",
+      "sha256": "6e4ca15935d8fd3c744df1d752911ad7b9647165baf8ce21692910ee464dd147",
+      "source_path": "skills/wandb/weave-add-tracing/references/codebase-analysis.md"
+    },
+    {
+      "path": "skills/wandb/weave-add-tracing/references/trace-patterns.md",
+      "provenance": "copied_verbatim",
+      "sha256": "9bb6f5bf90e25055adf1ede0f68ed28cb403acb813a7976e88402c9b0feb288a",
+      "source_path": "skills/wandb/weave-add-tracing/references/trace-patterns.md"
+    },
+    {
+      "path": "skills/wandb-onboarding/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "4cd4712e6cb480fdd910f05387c87b8ff2829b03214e32bad4bdba89734666ff",
+      "source_path": "skills/wandb-onboarding/SKILL.md"
+    },
+    {
+      "path": "skills/wandb-onboarding/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "7604f0d4f005253363333a7246b0ab37fcfbd39b9461f1b462e50117efcf1f25",
+      "source_path": "skills/wandb-onboarding/agents/openai.yaml"
+    },
+    {
+      "path": "skills/wandb-onboarding/assets/wandb-quickstart.py",
+      "provenance": "copied_verbatim",
+      "sha256": "70945c1bcc5f3afa31256588d128ad3ce39037e256f6a396265e25b38bb88f1f",
+      "source_path": "skills/wandb-onboarding/assets/wandb-quickstart.py"
+    },
+    {
+      "path": "skills/wandb-onboarding/references/official-ecosystem.md",
+      "provenance": "copied_verbatim",
+      "sha256": "957b5c7a7fcd06a01827ca32cdfe499812bda25532b70ef57c3a2f555839051e",
+      "source_path": "skills/wandb-onboarding/references/official-ecosystem.md"
+    },
+    {
+      "path": "skills/wandb-onboarding/references/official-workflow.md",
+      "provenance": "copied_verbatim",
+      "sha256": "a21e8a8d76af77af7ff34edf0ffe03120a0fe3b779acbd69ecfbcdab927a8883",
+      "source_path": "skills/wandb-onboarding/references/official-workflow.md"
+    },
+    {
+      "path": "skills/world-model-ideation/SKILL.md",
+      "provenance": "copied_verbatim",
+      "sha256": "9ad67443a5a15c118368c3c3d81f9244aac32b0df16d0afa4a2492d083426323",
+      "source_path": "skills/world-model-ideation/SKILL.md"
+    },
+    {
+      "path": "skills/world-model-ideation/agents/openai.yaml",
+      "provenance": "copied_verbatim",
+      "sha256": "325ddf315fefb7d7f61df80f279ccca39f73dc4a394135e7c88a8405487ad385",
+      "source_path": "skills/world-model-ideation/agents/openai.yaml"
+    },
+    {
+      "path": "skills/world-model-ideation/assets/research-spec-template.md",
+      "provenance": "copied_verbatim",
+      "sha256": "68eb27e05d8cd74783fc7a8b9178811871f2c7e19218ceee10962ff8846a4e4f",
+      "source_path": "skills/world-model-ideation/assets/research-spec-template.md"
+    },
+    {
+      "path": "skills/world-model-ideation/references/evaluation-and-claims.md",
+      "provenance": "copied_verbatim",
+      "sha256": "cb05b2b543c02f9a1dc3ea7439259b5cb7644e77ee9c3c0761d21a33d1ea368e",
+      "source_path": "skills/world-model-ideation/references/evaluation-and-claims.md"
+    },
+    {
+      "path": "tests/scenarios/auto-research.md",
+      "provenance": "copied_verbatim",
+      "sha256": "58bfcfc60d7e39145d15f2b6bd7f900356e112f2e6ba9ec3db4f313416b43b7d",
+      "source_path": "tests/scenarios/auto-research.md"
+    },
+    {
+      "path": "tests/scenarios/vessl-cloud-onboarding.md",
+      "provenance": "copied_verbatim",
+      "sha256": "ad1ff5234214035034d7e0e5306f55a2dbd46efac97949689c7e0b5ebd37369c",
+      "source_path": "tests/scenarios/vessl-cloud-onboarding.md"
+    },
+    {
+      "path": "tests/scenarios/wandb-onboarding.md",
+      "provenance": "copied_verbatim",
+      "sha256": "d0f5aee629d7c107dd3a56fc31a4e56b751bcfbf82eb8fba49e0d37fbe5c70c2",
+      "source_path": "tests/scenarios/wandb-onboarding.md"
+    },
+    {
+      "path": "tests/scenarios/world-model-ideation.md",
+      "provenance": "copied_verbatim",
+      "sha256": "7a0559198ef8fbdf42f5eb40d9235cd7c6f070935a3e5140115191283720013d",
+      "source_path": "tests/scenarios/world-model-ideation.md"
+    },
+    {
+      "path": "tests/test_repository_contract.py",
+      "provenance": "copied_verbatim",
+      "sha256": "ea22929d3b48458b305e1b17dc31815cf29b6f7108fa9491cf1ae246111d028e",
+      "source_path": "tests/test_repository_contract.py"
+    }
+  ],
+  "license": "MIT",
+  "plugin_version": "0.5.0",
+  "repository": "https://github.com/team-attention/ralphthon-icml.git",
+  "retrieval_date": "2026-07-12",
+  "schema_version": "1.0.0",
+  "source_path": "/"
+}

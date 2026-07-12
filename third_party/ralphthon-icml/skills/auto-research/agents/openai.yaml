@@ -1,0 +1,4 @@
+interface:
+  display_name: "Auto Research"
+  short_description: "Build evidence-bound Track 1/2 research"
+  default_prompt: "Use $auto-research: choose the official VESSL Cloud Cookbook on an approved A100 with local W&B tracking, a general Track 1 workflow, or a frozen-paper Track 2 Review Agent."

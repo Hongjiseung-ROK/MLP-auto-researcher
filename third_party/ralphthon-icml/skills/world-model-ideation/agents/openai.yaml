@@ -1,0 +1,4 @@
+interface:
+  display_name: "World Model Ideation"
+  short_description: "Shape world-model ideas into research questions"
+  default_prompt: "Use $world-model-ideation to compare three testable world-model research questions."
