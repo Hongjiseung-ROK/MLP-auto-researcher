@@ -137,6 +137,12 @@ def _configure_trainable_layers(model: Any, policy: str) -> tuple[tuple[str, ...
     named = list(model.named_parameters())
     if not named:
         raise ValueError("MACE model exposes no named parameters")
+    supported = {"all", "readout_only", "last_interaction_and_readout"}
+    if policy not in supported:
+        raise ValueError(
+            f"unsupported trainable layer policy {policy!r}; expected one of "
+            f"{sorted(supported)}"
+        )
     if policy == "all":
         selected = {name for name, _ in named}
     else:
@@ -201,14 +207,12 @@ def run_controlled_training(
     force_loss_weight: float = 100.0,
     trainable_layer_policy: str = "all",
 ) -> ControlledTrainingResult:
-    """Train only at full-epoch boundaries and checkpoint the complete continuation state."""
+    """Run bounded optimizer steps and checkpoint the complete continuation state."""
     require_supported_mace()
     import torch
     from mace.modules.loss import WeightedEnergyForcesLoss
     from mace.tools.train import evaluate, take_step
 
-    if batch_size < len(train_records):
-        raise ValueError("controlled boundary runner requires one full training batch per epoch")
     if device_name == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA was requested but torch.cuda.is_available() is false")
     device = torch.device(device_name)
@@ -281,14 +285,14 @@ def run_controlled_training(
             if optimizer_steps >= max_optimizer_steps:
                 break
             model.train()
-            batches = list(train_loader)
-            if len(batches) != 1:
-                raise ValueError("controlled runner expected exactly one training batch")
+            batch = next(iter(train_loader), None)
+            if batch is None:
+                raise ValueError("controlled runner received an empty training loader")
             # mace annotates take_step as returning float, but it returns a tensor.
             loss: Any = take_step(
                 model,
                 loss_fn,
-                batches[0],
+                batch,
                 optimizer,
                 None,
                 output_args,

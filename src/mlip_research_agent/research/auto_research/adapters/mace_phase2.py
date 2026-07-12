@@ -344,8 +344,14 @@ class MACEPhase2Adapter:
             operation_receipt_path = operation.completed_path
         predictions_path = workdir / "predictions.json"
         rerun_path = workdir / "predictions_rerun.json"
-        self._predict(view, manifest, model_path, predictions_path, workdir)
-        self._predict(view, manifest, model_path, rerun_path, workdir)
+        self._predict_pair(
+            view,
+            manifest,
+            model_path,
+            predictions_path,
+            rerun_path,
+            workdir,
+        )
         peak_mb = 0.0
         try:
             import torch
@@ -394,6 +400,21 @@ class MACEPhase2Adapter:
             ],
         )
 
+    def _predict_pair(
+        self,
+        view: BoundedLabelView,
+        manifest: MACECheckpointManifest,
+        model_path: Path,
+        predictions_path: Path,
+        rerun_path: Path,
+        workdir: Path,
+    ) -> None:
+        calculator = _make_calculator(model_path, "cuda", "float64")
+        self._predict(
+            view, manifest, model_path, predictions_path, workdir, calculator
+        )
+        self._predict(view, manifest, model_path, rerun_path, workdir, calculator)
+
     def _predict(
         self,
         view: BoundedLabelView,
@@ -401,8 +422,8 @@ class MACEPhase2Adapter:
         model_path: Path,
         output_path: Path,
         workdir: Path,
+        calculator: Any,
     ) -> None:
-        calculator = _make_calculator(model_path, "cuda", "float64")
         predictions: list[dict[str, object]] = []
         structures: list[dict[str, object]] = []
         for record in view.validation:

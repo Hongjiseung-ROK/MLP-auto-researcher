@@ -312,10 +312,15 @@ def test_training_subset_cannot_cross_protected_partitions(tmp_path: Path) -> No
         MACEFineTuneSkill().run(fixture.params(), fixture.context(tmp_path / "leaky"))
 
 
-def test_batch_below_training_subset_is_rejected(tmp_path: Path) -> None:
+def test_policy_legal_batch_below_training_subset_is_forwarded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    install_fake_runner(monkeypatch)
     fixture = Fixture(tmp_path)
-    with pytest.raises(SkillError, match="batch_size >= the training subset"):
-        MACEFineTuneSkill().run(fixture.params(batch_size=1), fixture.context(tmp_path))
+    output = MACEFineTuneSkill().run(
+        fixture.params(batch_size=1), fixture.context(tmp_path)
+    )
+    assert isinstance(output, MACEFineTuneOutput)
 
 
 def test_checkpoint_hash_mismatch_aborts(tmp_path: Path) -> None:
