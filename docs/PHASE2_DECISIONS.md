@@ -226,3 +226,17 @@ candidate-only foundation checkpoint, and carry `infrastructure_only` /
 `claim_eligible: false`. Scientific execution has no transport retry; an
 ambiguous timeout fails closed. A100 fallback, notebooks, DFT, checkpoint
 promotion, protected labels, and claim release remain forbidden.
+
+**D-P2-22. Exact-commit real-MACE Auto Research replay completed as rejected
+infrastructure evidence (2026-07-12).** Commit `ec2d804` ran on one attested
+NVIDIA L4 for 435.8 seconds. The controller evaluated the foundation baseline,
+executed one legal one-step learning-rate mutation, paused for aggregate-only
+MLIP/active-learning/auditor reviews, sealed a second evidence-linked proposal,
+and resumed the same session for one more legal step. WP5 rejected iteration 1
+for sub-threshold primary improvement and failed exact rerun equality; it
+rejected iteration 2 because exact rerun equality still failed despite the
+primary aggregate threshold passing. Those rejections are preserved and are
+not scientific findings. The complete trace passed the independent grader,
+78 pulled-back files were covered by the strict artifact manifest, and the
+session was confirmed absent. H2, H3, and H5 remain open; no checkpoint was
+selected or promoted.

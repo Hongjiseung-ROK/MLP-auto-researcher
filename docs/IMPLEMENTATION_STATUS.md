@@ -11,8 +11,10 @@ fine-tuning boundary, and the independent aggregate evaluator are implemented;
 the bounded Colab staging run passed on an attested L4 (commit `467ad6a`,
 `staging_only`). WP6 contracts and the resumable WP7 controller are implemented,
 locally tested, and exercised by an independently graded connected two-iteration
-synthetic trace. The current target is the bounded remote real-MACE replay;
-H2/H3/H5 remain open owner gates.
+synthetic trace. The bounded remote real-MACE replay completed at exact commit
+`ec2d804` on one L4: two connected independently rejected iterations, host
+specialist review between them, passing trace grade, hash-verified pull-back,
+and stable cleanup. This is infrastructure evidence only; H2/H3/H5 remain open.
 
 ## Milestone 2 — compute providers and publication: **in final validation**
 

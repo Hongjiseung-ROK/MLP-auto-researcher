@@ -17,8 +17,10 @@ policy-attested NVIDIA L4 at commit `467ad6a` via the colab CLI driver, with
 hash-verified artifact pull-back (`artifacts/colab_staging/pullback-467ad6ab/`,
 scientific status `staging_only`, synthetic fixtures only). It is not a
 completed Cu study, full pilot, production research system, or
-publication-claim pipeline. The current target is a single-session,
-exact-commit, infrastructure-only real-data/real-MACE replay on Colab L4.
+publication-claim pipeline. A single-session, exact-commit,
+infrastructure-only real-data/real-MACE replay completed on Colab L4 at
+`ec2d804` with two connected rejected iterations, a host review pause,
+hash-verified pull-back, passing trace grade, and stable session cleanup.
 H2, H3, and H5 remain open.
 
 The mlearn Cu/MACE path is a pipeline-hardening scaffold. Keep reusable controller,

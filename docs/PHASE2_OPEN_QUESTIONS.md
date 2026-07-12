@@ -72,10 +72,11 @@ first iteration for three aggregate-only specialist reviews. A100 fallback,
 notebooks, protected partitions, acquisition-pool labels, checkpoint promotion,
 and claim-bearing output are forbidden. This authorization is distinct from H3
 and does not authorize a full active-learning pilot.
-Status: **authorized once by the owner for the exact implementation commit
-produced on `phase3/remote-mlip-loop`; not yet consumed.** A transport-only
-reconnect may target the same live session only when it is proven not to repeat
-scientific execution.
+Status: **resolved and consumed by the completed exact-commit replay at
+`ec2d804` on 2026-07-12.** One NVIDIA L4 session completed two connected
+iterations in 435.8 seconds, the host trace grade passed, all pulled artifacts
+hash-verified, and three stable absence polls plus a final CLI query confirmed
+cleanup. No second run, A100 fallback, or scientific retry is authorized.
 
 **P2-Q6. Dataset redistribution.**
 If mlearn's license permits redistribution, tiny fixtures (≤ a few

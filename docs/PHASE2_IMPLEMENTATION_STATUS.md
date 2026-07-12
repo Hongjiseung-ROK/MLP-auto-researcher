@@ -37,7 +37,7 @@ Last updated: 2026-07-12.
 | WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | implemented locally + Colab-staged (full SKILL contract; boundary test: one real optimizer step changes 26 tensors; checkpoint round-trip resumes at epoch boundary on CPU and L4; NaN→LR/OOM→batch repair taxonomy tested) |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{random_select,ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | implemented and locally tested; merged in PR #3 |
 | WP7 | Multi-round controller + stopping rules | `research/auto_research/` controller, round state schema | WP4–WP6 | — | implemented and independently trace-graded over two connected synthetic iterations; merged in PR #3 |
-| WP8 | Exact-commit infrastructure replay + later bounded pilot | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/` | WP7 | replay authorization is separate; **H3** still gates a pilot | in_progress (remote real-MACE replay is the current target) |
+| WP8 | Exact-commit infrastructure replay + later bounded pilot | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/` | WP7 | replay authorization is separate; **H3** still gates a pilot | infrastructure replay verified at `ec2d804`; full pilot remains blocked on H3 |
 | WP9 | Claim classes, evidence bundle, pilot report, VESSL spec | `schemas/claims.py` extension, `docs/research/{human_gates,colab_pilot_runbook,vessl_replication_spec}.md` | all | H5 for claim release | in_progress (claim classes/evidence tiers implemented; remaining bundle/report/spec deferred) |
 
 ## Acceptance tests per WP (from plan_phase_2.md §10, §20)
@@ -89,12 +89,15 @@ mock-only → real-inference capable → real-fine-tuning capable →
 Colab-staging capable → Colab-pilot complete → VESSL-replicated →
 publication-claim eligible
 
-**Current: Level 4.5 — bounded Colab staging plus local synthetic Auto Research
-verified.** Real pinned MACE
+**Current: Level 4.5 plus a verified remote real-MACE Auto Research
+infrastructure replay.** Real pinned MACE
 inference and one controlled fine-tuning optimizer step (with checkpoint
 round-trip) have run on a policy-attested NVIDIA L4 via the colab CLI
 driver, with hash-verified artifact pull-back. The WP6/WP7 synthetic loop has
-also completed two connected, independently graded local iterations. No full pilot, scientific
+also completed two connected, independently graded local iterations. The
+exact-commit `ec2d804` replay completed two connected real-MACE iterations on
+one L4 with aggregate-only specialist review between them; both independent
+decisions were REJECT and support no model or scientific claim. No full pilot, scientific
 fine-tuning result, or publication-eligible claim has occurred; boundary
 runs use synthetic fixtures, never the protected Cu partitions.
 

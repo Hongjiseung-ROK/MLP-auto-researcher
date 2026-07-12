@@ -21,8 +21,10 @@ evaluator. PR #3 merged the typed WP6 contracts and resumable WP7 controller to
 `main` at `99a7a724`; the happy-path synthetic loop and its recovery path are
 independently trace-graded. A bounded Colab staging run passed on a policy-attested NVIDIA L4
 (commit `467ad6a`, CLI-driven, hash-verified pull-back, synthetic fixtures,
-scientific status `staging_only`). The current target is an exact-commit,
-infrastructure-only real-data/real-MACE replay on one Colab L4. Cu is a bounded pipeline-hardening scaffold
+scientific status `staging_only`). An exact-commit, infrastructure-only
+real-data/real-MACE replay subsequently completed two connected iterations on
+one Colab L4 at `ec2d804`, including a host review pause, resume, independent
+grading, hash-verified pull-back, and confirmed cleanup. Cu is a bounded pipeline-hardening scaffold
 rather than the final research topic. No full pilot, scientific fine-tuning
 result, or publication-grade claim has been completed; H2 (preregistration),
 H3 (pilot authorization), and H5 (claim release) remain open owner gates.
