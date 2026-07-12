@@ -16,9 +16,9 @@ from mlip_research_agent.compute.schemas import GpuObservation, ProviderName
 __all__ = ["VesslProvider", "mock_a100_80gb_observation"]
 
 VESSL_AUTH_GUIDANCE = (
-    "Authenticate the VESSL CLI with `vessl configure` (interactive browser flow) "
-    "or set VESSL_ACCESS_TOKEN in the environment/secret manager, then select the "
-    "organization and project. Never paste tokens into chat, files, or shell history."
+    "Install the current `vesslctl` CLI after explicit approval, then authenticate with "
+    "`vesslctl auth login` using its browser flow. Current Cloud uses organization/team; "
+    "never use the legacy `vessl` CLI or read token/config files."
 )
 
 
