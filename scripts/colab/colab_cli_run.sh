@@ -8,7 +8,7 @@
 # pulls the artifact bundle back, verifies its SHA-256 manifest locally, and
 # always releases the VM.
 #
-# Usage: colab_cli_run.sh <preflight|staging> <COMMIT_SHA> [GPU]
+# Usage: colab_cli_run.sh <preflight|staging|ralphthon_mace_replay> <COMMIT_SHA> [GPU]
 #   COMMIT_SHA  Exact commit reachable from HEAD (never a branch name).
 #   GPU         Colab accelerator (default L4). For staging, A100 is valid
 #               only as the single human-approved retry after a verified OOM
@@ -34,8 +34,24 @@ case "$TASK" in
     TASK_CMD="scripts/colab/staging_mace_boundary.py"
     ARTIFACT_ROOT=artifacts/colab_staging
     ;;
+  ralphthon_mace_replay)
+    if [ "$GPU" != "L4" ]; then
+      echo "error: ralphthon_mace_replay permits only L4" >&2
+      exit 2
+    fi
+    if ! [[ "$COMMIT_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+      echo "error: replay requires a full 40-character commit SHA" >&2
+      exit 2
+    fi
+    if [ -n "$(git -C "$REPO_ROOT" status --porcelain --untracked-files=all)" ]; then
+      echo "error: replay requires a completely clean worktree" >&2
+      exit 2
+    fi
+    echo "error: invoke scripts/colab/run_ralphthon_mace_replay.py with explicit label-view, review-bundle, and output paths" >&2
+    exit 2
+    ;;
   *)
-    echo "usage: colab_cli_run.sh <preflight|staging> <COMMIT_SHA> [GPU]" >&2
+    echo "usage: colab_cli_run.sh <preflight|staging|ralphthon_mace_replay> <COMMIT_SHA> [GPU]" >&2
     exit 2
     ;;
 esac

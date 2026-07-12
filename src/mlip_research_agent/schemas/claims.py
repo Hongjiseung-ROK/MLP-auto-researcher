@@ -35,6 +35,7 @@ class ScientificEvidenceTier(StrEnum):
     """Maturity is separate from artifact integrity/ClaimStatus."""
 
     NON_SCIENTIFIC = "non_scientific"
+    INFRASTRUCTURE_ONLY = "infrastructure_only"
     PILOT_ONLY = "pilot_only"
     REPLICATED = "replicated"
     PUBLICATION_ELIGIBLE = "publication_eligible"

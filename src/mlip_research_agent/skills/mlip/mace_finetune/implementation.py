@@ -65,6 +65,9 @@ def _resume_contract(
         "early_stopping_patience": params.early_stopping_patience,
         "monitor": MONITOR,
         "e0_policy": params.e0_policy,
+        "energy_loss_weight": params.energy_loss_weight,
+        "force_loss_weight": params.force_loss_weight,
+        "trainable_layer_policy": params.trainable_layer_policy,
         "device": params.device,
         "default_dtype": params.default_dtype,
         "base_checkpoint_sha256": base_checkpoint_sha256,
@@ -135,9 +138,7 @@ def _record_failure(
         )
         + "\n"
     )
-    evidence = ctx.registry.register(
-        failure_path, "mace_fine_tune_failure", ctx.step_id
-    )
+    evidence = ctx.registry.register(failure_path, "mace_fine_tune_failure", ctx.step_id)
     raise SkillError(
         f"MACE fine-tuning failed; evidence: {evidence.artifact_id}",
         failure_class=failure_class,
@@ -194,9 +195,7 @@ class MACEFineTuneSkill(Skill):
                 ctx.registry, params.resume_state_artifact, "mace_training_state"
             )
             try:
-                resume_state = FineTuneResumeState.model_validate_json(
-                    state_path.read_text()
-                )
+                resume_state = FineTuneResumeState.model_validate_json(state_path.read_text())
             except (OSError, ValueError) as exc:
                 raise validation_error(f"fine-tune resume state is invalid: {exc}") from exc
             if resume_state.resume_contract_sha256 != contract_sha:
@@ -215,9 +214,7 @@ class MACEFineTuneSkill(Skill):
 
         transaction_parent = ctx.step_dir / ".transactions"
         transaction_parent.mkdir(parents=True, exist_ok=True)
-        stage_dir = Path(
-            tempfile.mkdtemp(prefix="mace-fine-tune-", dir=transaction_parent)
-        )
+        stage_dir = Path(tempfile.mkdtemp(prefix="mace-fine-tune-", dir=transaction_parent))
         suffix = f"attempt-{ctx.attempt:03d}"
         try:
             checkpoint_path = stage_dir / f"controlled-checkpoint-{suffix}.pt"
@@ -242,6 +239,9 @@ class MACEFineTuneSkill(Skill):
                 device_name=params.device,
                 default_dtype=params.default_dtype,
                 max_wall_seconds=params.max_wall_seconds,
+                energy_loss_weight=params.energy_loss_weight,
+                force_loss_weight=params.force_loss_weight,
+                trainable_layer_policy=params.trainable_layer_policy,
             )
             config_path = stage_dir / f"fine-tune-config-{suffix}.json"
             config_path.write_text(
@@ -290,9 +290,7 @@ class MACEFineTuneSkill(Skill):
             checkpoint_path = final_dir / checkpoint_path.name
             config_path = final_dir / config_path.name
             metrics_path = final_dir / metrics_path.name
-            model_artifact = ctx.registry.register(
-                model_path, "fine_tuned_mace_model", ctx.step_id
-            )
+            model_artifact = ctx.registry.register(model_path, "fine_tuned_mace_model", ctx.step_id)
             checkpoint_artifact = ctx.registry.register(
                 checkpoint_path, "mace_training_checkpoint", ctx.step_id
             )
@@ -318,9 +316,7 @@ class MACEFineTuneSkill(Skill):
                         "dataset_content_sha256": bundle.dataset.content_hash(),
                         "split_semantic_sha256": bundle.split.semantic_hash(),
                         "training_lineage_artifact": params.training_lineage_artifact,
-                        "train_subset_manifest_artifact": (
-                            params.train_subset_manifest_artifact
-                        ),
+                        "train_subset_manifest_artifact": (params.train_subset_manifest_artifact),
                         "validation_subset_manifest_artifact": (
                             params.validation_subset_manifest_artifact
                         ),
@@ -332,6 +328,11 @@ class MACEFineTuneSkill(Skill):
                         "optimizer_steps": result.optimizer_steps,
                         "changed_parameter_tensors": result.changed_parameter_tensors,
                         "max_abs_parameter_change": result.max_abs_parameter_change,
+                        "trainable_parameter_names": result.trainable_parameter_names,
+                        "frozen_parameter_names": result.frozen_parameter_names,
+                        "changed_frozen_parameter_tensors": (
+                            result.changed_frozen_parameter_tensors
+                        ),
                         "resumed": resume_state is not None,
                     },
                     indent=2,
@@ -348,9 +349,7 @@ class MACEFineTuneSkill(Skill):
                 seed=params.seed,
                 completed_epochs=result.completed_epochs,
                 optimizer_steps=result.optimizer_steps,
-                best_validation_force_mae_ev_per_a=(
-                    result.best_validation_force_mae_ev_per_a
-                ),
+                best_validation_force_mae_ev_per_a=(result.best_validation_force_mae_ev_per_a),
                 patience_count=result.patience_count,
                 checkpoint_artifact=checkpoint_artifact.artifact_id,
                 model_artifact=model_artifact.artifact_id,
@@ -362,9 +361,7 @@ class MACEFineTuneSkill(Skill):
             state_path.write_text(
                 json.dumps(state.model_dump(mode="json"), indent=2, sort_keys=True) + "\n"
             )
-            state_artifact = ctx.registry.register(
-                state_path, "mace_training_state", ctx.step_id
-            )
+            state_artifact = ctx.registry.register(state_path, "mace_training_state", ctx.step_id)
             return MACEFineTuneOutput(
                 model_artifact=model_artifact.artifact_id,
                 model_path=model_artifact.relative_path,
@@ -384,6 +381,9 @@ class MACEFineTuneSkill(Skill):
                 optimizer_steps=result.optimizer_steps,
                 changed_parameter_tensors=result.changed_parameter_tensors,
                 resumed=resume_state is not None,
+                trainable_parameter_names=list(result.trainable_parameter_names),
+                frozen_parameter_names=list(result.frozen_parameter_names),
+                changed_frozen_parameter_tensors=result.changed_frozen_parameter_tensors,
             )
         except SkillError:
             raise

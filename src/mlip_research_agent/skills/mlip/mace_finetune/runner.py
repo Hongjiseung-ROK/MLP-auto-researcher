@@ -32,6 +32,9 @@ class ControlledTrainingResult:
     records: list[dict[str, float | int | str]]
     changed_parameter_tensors: int
     max_abs_parameter_change: float
+    trainable_parameter_names: tuple[str, ...] = ()
+    frozen_parameter_names: tuple[str, ...] = ()
+    changed_frozen_parameter_tensors: int = 0
 
 
 def require_supported_mace() -> None:
@@ -130,6 +133,49 @@ def _parameter_change_stats(base: dict[str, Any], model: Any) -> tuple[int, floa
     return changed, maximum
 
 
+def _configure_trainable_layers(model: Any, policy: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    named = list(model.named_parameters())
+    if not named:
+        raise ValueError("MACE model exposes no named parameters")
+    if policy == "all":
+        selected = {name for name, _ in named}
+    else:
+        readouts = {name for name, _ in named if name.startswith("readouts.")}
+        if not readouts:
+            raise ValueError("unknown MACE topology: no readouts.* parameters")
+        selected = set(readouts)
+        if policy == "last_interaction_and_readout":
+            indices = {
+                int(parts[1])
+                for name, _ in named
+                if name.startswith("interactions.")
+                and len(parts := name.split(".")) > 1
+                and parts[1].isdigit()
+            }
+            if not indices:
+                raise ValueError("unknown MACE topology: no indexed interactions.* parameters")
+            last = max(indices)
+            selected.update(name for name, _ in named if name.startswith(f"interactions.{last}."))
+    if not selected:
+        raise ValueError(f"trainable layer policy {policy!r} selected no parameters")
+    for name, parameter in named:
+        parameter.requires_grad_(name in selected)
+    trainable = tuple(sorted(selected))
+    frozen = tuple(sorted(name for name, _ in named if name not in selected))
+    return trainable, frozen
+
+
+def _changed_frozen_tensors(base: dict[str, Any], model: Any, frozen: tuple[str, ...]) -> int:
+    import torch
+
+    current = dict(model.named_parameters())
+    return sum(
+        not bool(torch.equal(base[name], current[name].detach().cpu()))
+        for name in frozen
+        if name in base and name in current
+    )
+
+
 def run_controlled_training(
     *,
     foundation_path: Path,
@@ -151,6 +197,9 @@ def run_controlled_training(
     device_name: str,
     default_dtype: str,
     max_wall_seconds: int,
+    energy_loss_weight: float = 1.0,
+    force_loss_weight: float = 100.0,
+    trainable_layer_policy: str = "all",
 ) -> ControlledTrainingResult:
     """Train only at full-epoch boundaries and checkpoint the complete continuation state."""
     require_supported_mace()
@@ -159,9 +208,7 @@ def run_controlled_training(
     from mace.tools.train import evaluate, take_step
 
     if batch_size < len(train_records):
-        raise ValueError(
-            "controlled boundary runner requires one full training batch per epoch"
-        )
+        raise ValueError("controlled boundary runner requires one full training batch per epoch")
     if device_name == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA was requested but torch.cuda.is_available() is false")
     device = torch.device(device_name)
@@ -176,12 +223,10 @@ def run_controlled_training(
         model: Any = torch.load(foundation_path, map_location="cpu", weights_only=False)
         model = model.to(device=device, dtype=dtype)
         base_parameters = {
-            name: parameter.detach().cpu().clone()
-            for name, parameter in model.named_parameters()
+            name: parameter.detach().cpu().clone() for name, parameter in model.named_parameters()
         }
-        parameters = [
-            parameter for parameter in model.parameters() if parameter.requires_grad
-        ]
+        trainable_names, frozen_names = _configure_trainable_layers(model, trainable_layer_policy)
+        parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
         optimizer_class = torch.optim.Adam if optimizer_name == "adam" else torch.optim.AdamW
         optimizer = optimizer_class(parameters, lr=learning_rate, amsgrad=True)
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -217,9 +262,7 @@ def run_controlled_training(
             torch.set_rng_state(state["torch_rng_state"])
             generator.set_state(state["loader_generator_state"])
 
-        train_loader = _loader(
-            train_records, model, batch_size, shuffle=True, generator=generator
-        )
+        train_loader = _loader(train_records, model, batch_size, shuffle=True, generator=generator)
         validation_loader = _loader(
             validation_records,
             model,
@@ -227,7 +270,9 @@ def run_controlled_training(
             shuffle=False,
             generator=generator,
         )
-        loss_fn = WeightedEnergyForcesLoss(energy_weight=1.0, forces_weight=100.0)
+        loss_fn = WeightedEnergyForcesLoss(
+            energy_weight=energy_loss_weight, forces_weight=force_loss_weight
+        )
         output_args = {"energy": True, "forces": True, "virials": False, "stress": False}
         started = time.monotonic()
         stopped_early = False
@@ -253,9 +298,7 @@ def run_controlled_training(
             train_loss = float(loss.detach().cpu())
             optimizer_steps += 1
             model.eval()
-            valid_loss_raw, aux = evaluate(
-                model, loss_fn, validation_loader, output_args, device
-            )
+            valid_loss_raw, aux = evaluate(model, loss_fn, validation_loader, output_args, device)
             valid_loss = float(valid_loss_raw)
             force_mae = float(aux["mae_f"])
             if not all(math.isfinite(value) for value in (train_loss, valid_loss, force_mae)):
@@ -306,6 +349,9 @@ def run_controlled_training(
             raise ValueError("fine-tune request performed no optimizer step")
         _atomic_torch_save(torch, model.to("cpu"), model_path)
         changed, maximum = _parameter_change_stats(base_parameters, model)
+        changed_frozen = _changed_frozen_tensors(base_parameters, model, frozen_names)
+        if changed_frozen:
+            raise ValueError(f"fine-tuning changed {changed_frozen} frozen parameter tensors")
     return ControlledTrainingResult(
         completed_epochs=completed_epochs,
         optimizer_steps=optimizer_steps,
@@ -315,4 +361,7 @@ def run_controlled_training(
         records=records,
         changed_parameter_tensors=changed,
         max_abs_parameter_change=maximum,
+        trainable_parameter_names=trainable_names,
+        frozen_parameter_names=frozen_names,
+        changed_frozen_parameter_tensors=changed_frozen,
     )
