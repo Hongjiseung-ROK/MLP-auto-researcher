@@ -181,8 +181,10 @@ def run_replay(args: argparse.Namespace) -> Path:
         raise ReplayContractError("pull-back destination must not already exist")
     if args.review_bundle.exists():
         raise ReplayContractError("review bundle must not preexist the iteration-1 pause")
-    deadline = time.monotonic() + args.max_runtime_minutes * 60
     session_started = time.monotonic()
+    hard_deadline = session_started + args.max_runtime_minutes * 60
+    cleanup_reserve_seconds = min(120, max(15, args.max_runtime_minutes * 15))
+    deadline = hard_deadline - cleanup_reserve_seconds
     session = f"ral-{args.commit[:8]}"
     run_id = f"ralphthon-mace-{args.commit[:8]}"
     cleanup_attempt_required = False
@@ -329,8 +331,7 @@ print('REMOTE_STEP_OK')
                     stop_error = stop.stderr if stop.returncode != 0 else ""
                 except subprocess.TimeoutExpired as exc:
                     stop_error = f"stop command timed out: {exc}"
-                cleanup_deadline = time.monotonic() + 120
-                cleanup_state = _confirm_stopped(session, deadline=cleanup_deadline)
+                cleanup_state = _confirm_stopped(session, deadline=hard_deadline)
                 if stop_error and cleanup_state != "confirmed_absent_stable":
                     raise RuntimeError(f"failed to stop Colab session: {stop_error}")
                 print(f"COLAB_CLEANUP={cleanup_state}:{session}", flush=True)

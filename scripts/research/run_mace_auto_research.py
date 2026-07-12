@@ -204,6 +204,8 @@ def _write_run_verifications(args: argparse.Namespace) -> None:
         "e3nn_version": metadata.version("e3nn"),
         "numpy_version": metadata.version("numpy"),
         "ase_version": metadata.version("ase"),
+        "scipy_version": metadata.version("scipy"),
+        "opt_einsum_version": metadata.version("opt_einsum"),
         "scientific_status": "infrastructure_only",
         "claim_eligible": False,
     }

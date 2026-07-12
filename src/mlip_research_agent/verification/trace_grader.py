@@ -688,6 +688,36 @@ def _find_values_for_key(value: Any, target: str) -> list[Any]:
     return found
 
 
+def _locked_versions_match(lock_path: Path, environment: dict[str, Any]) -> bool:
+    field_by_distribution = {
+        "mace-torch": "mace_torch_version",
+        "torch": "torch_version",
+        "e3nn": "e3nn_version",
+        "numpy": "numpy_version",
+        "ase": "ase_version",
+        "scipy": "scipy_version",
+        "opt_einsum": "opt_einsum_version",
+    }
+    pins: dict[str, str] = {}
+    for line in lock_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.count("==") != 1:
+            return False
+        distribution, version = line.split("==", 1)
+        pins[distribution] = version
+    if set(pins) != set(field_by_distribution):
+        return False
+    for distribution, expected in pins.items():
+        observed = str(environment.get(field_by_distribution[distribution], ""))
+        if distribution == "torch":
+            observed = observed.split("+", 1)[0]
+        if observed != expected:
+            return False
+    return True
+
+
 def grade_trace(run_dir: Path, acceptance: AcceptanceConstraints) -> TraceGradeReport:
     """Grade one Auto Research run directory. Fail-closed."""
     if not run_dir.is_dir():
@@ -820,6 +850,7 @@ def grade_remote_infrastructure_trace(
     if (
         environment.get("dependency_lock_sha256") != sha256_file(dependency_lock)
         or environment.get("pip_freeze_sha256") != sha256_file(run_dir / "pip_freeze.txt")
+        or not _locked_versions_match(dependency_lock, environment)
         or attestation.get("environment_hash") != sha256_file(dependency_lock)
         or attestation.get("config_hash") != sha256_file(replay_config)
         or not str(environment.get("torch_version", "")).startswith("2.11.0")
@@ -827,6 +858,11 @@ def grade_remote_infrastructure_trace(
         or environment.get("e3nn_version") != "0.4.4"
         or environment.get("numpy_version") != "2.0.2"
         or environment.get("ase_version") != "3.29.0"
+        or environment.get("scipy_version") != "1.16.3"
+        or environment.get("opt_einsum_version") != "3.4.0"
+        or attestation.get("torch_version") != "2.11.0+cu128"
+        or str(environment.get("torch_version", "")).split("+", 1)[0]
+        != str(attestation.get("torch_version", "")).split("+", 1)[0]
     ):
         flag("dependency_lock", "environment.json", "dependency lock/freeze identity mismatch")
     baseline_evaluation = json.loads((run_dir / "baseline/evaluation.json").read_text())
@@ -1017,6 +1053,8 @@ def grade_remote_infrastructure_trace(
         if (
             complete.request_sha256 != started.request_sha256
             or complete.request_sha256 != request.content_sha256
+            or request.operation_id != started.operation_id
+            or request.operation_id != complete.operation_id
             or started.status != "started"
             or complete.status != "complete"
         ):

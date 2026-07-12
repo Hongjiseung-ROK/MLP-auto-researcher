@@ -56,12 +56,17 @@ class ExactlyOnceOperation:
             if (
                 not completed.verify_seal()
                 or completed.request_sha256 != self.request.content_sha256
+                or completed.operation_id != self.request.operation_id
             ):
                 raise RuntimeError("completed optimizer receipt conflicts with request")
             return completed
         if self.started_path.is_file():
             started = OptimizerOperationReceipt.model_validate_json(self.started_path.read_text())
-            if not started.verify_seal() or started.request_sha256 != self.request.content_sha256:
+            if (
+                not started.verify_seal()
+                or started.request_sha256 != self.request.content_sha256
+                or started.operation_id != self.request.operation_id
+            ):
                 raise RuntimeError("started optimizer receipt conflicts with request")
             raise RuntimeError(
                 "ambiguous optimizer operation already started; reconnect or "
@@ -85,6 +90,15 @@ class ExactlyOnceOperation:
     def complete(self, *, model_sha256: str, checkpoint_sha256: str) -> OptimizerOperationReceipt:
         if self.completed_path.exists():
             raise RuntimeError("optimizer completion receipt already exists")
+        if not self.started_path.is_file():
+            raise RuntimeError("optimizer completion requires a started receipt")
+        started = OptimizerOperationReceipt.model_validate_json(self.started_path.read_text())
+        if (
+            not started.verify_seal()
+            or started.operation_id != self.request.operation_id
+            or started.request_sha256 != self.request.content_sha256
+        ):
+            raise RuntimeError("optimizer started receipt conflicts with completion request")
         receipt = OptimizerOperationReceipt(
             operation_id=self.request.operation_id,
             request_sha256=self.request.content_sha256,
