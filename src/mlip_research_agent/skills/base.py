@@ -124,6 +124,7 @@ def _ensure_builtin_skills_loaded() -> None:
     from mlip_research_agent.skills import (  # noqa: F401
         active_learning,
         atomistics,
+        competition,
         compute,
         data,
         dft,

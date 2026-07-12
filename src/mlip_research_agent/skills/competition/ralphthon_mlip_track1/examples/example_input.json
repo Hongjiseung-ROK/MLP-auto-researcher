@@ -1,0 +1,15 @@
+{
+  "claim_eligible": false,
+  "competition_path": "general_track_1",
+  "h2_open": true,
+  "h3_open": true,
+  "h5_open": true,
+  "metrics": [
+    "validation_force_component_mae_ev_per_a",
+    "validation_energy_mae_ev_per_atom"
+  ],
+  "research_domain": "mlip_cu_mace",
+  "scientific_status": "infrastructure_only",
+  "use_vessl_compute": false,
+  "wandb_mode": "disabled"
+}
