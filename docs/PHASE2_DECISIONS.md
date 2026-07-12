@@ -205,3 +205,24 @@ fine-tuning complete, Auto Research loop complete, or publication eligible.
 The successful staging run targeted commit `467ad6a`; any remote run at a
 later commit is a new request requiring new explicit owner authorization
 (the P2-Q4 staging authorization is consumed).
+
+**D-P2-20. PR #3 raises the local capability to Level 4.5 without opening
+H2, H3, or H5 (2026-07-12).** PR #3 merged the typed WP6 acquisition and
+decision contracts, resumable WP7 Auto Research controller, Tea Time pause,
+two connected synthetic iterations, and independent trace grader into `main`
+at `99a7a724`. The committed synthetic trace establishes controller and
+recovery infrastructure only. It does not select a MACE checkpoint, freeze a
+preregistration, authorize a pilot, or support a scientific claim.
+
+**D-P2-21. The remote real-MACE milestone is a one-session infrastructure
+replay, not the active-learning pilot.** The replay uses an exact detached
+commit, one NVIDIA L4, one GPU, and at most 60 minutes through the Colab CLI.
+Only the initial 32 labels and aggregate validation over 40 configurations may
+enter the adapter. The controller pauses after iteration one while the same
+session remains alive; three read-only specialist reviews see aggregate
+artifacts only, and a host-sealed synthesis may motivate one legal second
+mutation. Both iterations independently evaluate, start from the same
+candidate-only foundation checkpoint, and carry `infrastructure_only` /
+`claim_eligible: false`. Scientific execution has no transport retry; an
+ambiguous timeout fails closed. A100 fallback, notebooks, DFT, checkpoint
+promotion, protected labels, and claim release remain forbidden.

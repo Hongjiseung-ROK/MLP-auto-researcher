@@ -65,6 +65,18 @@ Status: **resolved. Local installation complete:**
 `mace-torch 0.3.16`, conda-forge `torch 2.12.1`; real CPU inference fixture
 passes. Colab/Linux pins and CPU/GPU parity remain WP3 staging work.
 
+**P2-Q7. Exact-commit Auto Research infrastructure replay.**
+One Colab CLI session may run two connected real-data/real-MACE infrastructure
+iterations on exactly one NVIDIA L4 for at most 60 minutes, pausing after the
+first iteration for three aggregate-only specialist reviews. A100 fallback,
+notebooks, protected partitions, acquisition-pool labels, checkpoint promotion,
+and claim-bearing output are forbidden. This authorization is distinct from H3
+and does not authorize a full active-learning pilot.
+Status: **authorized once by the owner for the exact implementation commit
+produced on `phase3/remote-mlip-loop`; not yet consumed.** A transport-only
+reconnect may target the same live session only when it is proven not to repeat
+scientific execution.
+
 **P2-Q6. Dataset redistribution.**
 If mlearn's license permits redistribution, tiny fixtures (≤ a few
 configurations) are committed for tests; the full dataset is always fetched
