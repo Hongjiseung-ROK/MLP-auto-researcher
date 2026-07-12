@@ -89,6 +89,28 @@ def _append_jsonl(path: Path, payload: Any) -> None:
         os.fsync(handle.fileno())
 
 
+def _write_artifact_manifest(root: Path) -> Path:
+    manifest_path = root / "artifact_manifest.json"
+    entries = [
+        {
+            "relative_path": path.relative_to(root).as_posix(),
+            "sha256": sha256_file(path),
+            "size_bytes": path.stat().st_size,
+        }
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path != manifest_path
+    ]
+    _write_json(
+        manifest_path,
+        {
+            "schema_version": "1.0.0",
+            "research_spec_sha256": SPEC_SHA256,
+            "files": entries,
+        },
+    )
+    return manifest_path
+
+
 def _relative(path: Path, root: Path) -> str:
     return path.resolve().relative_to(root.resolve()).as_posix()
 
@@ -614,6 +636,7 @@ def run_baseline(
     )
     state_path = root / "state.json"
     _write_json(state_path, state.model_dump(mode="json"))
+    _write_artifact_manifest(root)
     return state
 
 
@@ -791,4 +814,5 @@ def run_round(
             "decision": "await_host_scientific_review_before_next_round",
         },
     )
+    _write_artifact_manifest(root)
     return next_state

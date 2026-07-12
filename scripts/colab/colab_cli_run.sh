@@ -8,7 +8,7 @@
 # pulls the artifact bundle back, verifies its SHA-256 manifest locally, and
 # always releases the VM.
 #
-# Usage: colab_cli_run.sh <preflight|staging|ralphthon_mace_replay> <COMMIT_SHA> [GPU]
+# Usage: colab_cli_run.sh <preflight|staging|novel_mlip_baseline|ralphthon_mace_replay> <COMMIT_SHA> [GPU] [DATASET] [CHECKPOINT]
 #   COMMIT_SHA  Exact commit reachable from HEAD (never a branch name).
 #   GPU         Colab accelerator (default L4). For staging, A100 is valid
 #               only as the single human-approved retry after a verified OOM
@@ -22,6 +22,8 @@ set -euo pipefail
 TASK=${1:-}
 COMMIT_SHA=${2:-}
 GPU=${3:-L4}
+DATASET_PATH=${4:-}
+CHECKPOINT_PATH=${5:-}
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 REMOTE_REPO=/content/MLP-auto-researcher
 
@@ -33,6 +35,26 @@ case "$TASK" in
   staging)
     TASK_CMD="scripts/colab/staging_mace_boundary.py"
     ARTIFACT_ROOT=artifacts/colab_staging
+    ;;
+  novel_mlip_baseline)
+    if [ "$GPU" != "L4" ] && [ "$GPU" != "A100" ]; then
+      echo "error: novel_mlip_baseline permits L4 or A100" >&2
+      exit 2
+    fi
+    if [ ! -f "$DATASET_PATH" ] || [ ! -f "$CHECKPOINT_PATH" ]; then
+      echo "error: novel_mlip_baseline requires dataset and checkpoint files" >&2
+      exit 2
+    fi
+    if [ "$(shasum -a 256 "$DATASET_PATH" | awk '{print $1}')" != "6c0fc583ead5e028ed72227ab864ea88fb8a9942a84d03d0558a890f5b4dba8f" ]; then
+      echo "error: novel MLIP dataset SHA-256 mismatch" >&2
+      exit 2
+    fi
+    if [ "$(shasum -a 256 "$CHECKPOINT_PATH" | awk '{print $1}')" != "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736" ]; then
+      echo "error: novel MLIP checkpoint SHA-256 mismatch" >&2
+      exit 2
+    fi
+    TASK_CMD="scripts/research/run_novel_mlip_campaign.py baseline --root artifacts/novel_mlip_campaign/baseline --dataset /content/normalized_dataset.json --split artifacts/research_spec/novel_mlip_ralph_split.json --checkpoint /content/2023-12-10-mace-128-L0_energy_epoch-249.model --checkpoint-manifest configs/models/mace_mp_0_small_candidate.json --spec artifacts/research_spec/novel_mlip_ralph_spec.json --authorization docs/research/novel_mlip_ralph_authorization.json --provider colab"
+    ARTIFACT_ROOT=artifacts/novel_mlip_campaign
     ;;
   ralphthon_mace_replay)
     if [ "$GPU" != "L4" ]; then
@@ -51,7 +73,7 @@ case "$TASK" in
     exit 2
     ;;
   *)
-    echo "usage: colab_cli_run.sh <preflight|staging|ralphthon_mace_replay> <COMMIT_SHA> [GPU]" >&2
+    echo "usage: colab_cli_run.sh <preflight|staging|novel_mlip_baseline|ralphthon_mace_replay> <COMMIT_SHA> [GPU] [DATASET] [CHECKPOINT]" >&2
     exit 2
     ;;
 esac
@@ -113,6 +135,11 @@ colab new -s "$SESSION" --gpu "$GPU"
 
 echo "== uploading commit bundle =="
 colab upload -s "$SESSION" "$WORKDIR/repo.bundle" /content/repo.bundle
+if [ "$TASK" = "novel_mlip_baseline" ]; then
+  echo "== uploading hash-verified campaign inputs =="
+  colab upload -s "$SESSION" "$DATASET_PATH" /content/normalized_dataset.json
+  colab upload -s "$SESSION" "$CHECKPOINT_PATH" /content/2023-12-10-mace-128-L0_energy_epoch-249.model
+fi
 
 echo "== cloning exact commit on the VM =="
 remote_py 300 <<PY
@@ -129,14 +156,18 @@ echo "== installing package + pinned dependencies =="
 remote_py 1800 <<PY
 import subprocess, sys
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-e", "$REMOTE_REPO"], check=True)
-if "$TASK" == "staging":
+if "$TASK" in {"staging", "novel_mlip_baseline"}:
     subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-r",
                     "$REMOTE_REPO/scripts/colab/staging_requirements.txt"], check=True)
 print("STEP_OK installed")
 PY
 
 echo "== running $TASK on the VM =="
-TASK_OUTPUT=$(remote_py 3600 <<PY
+TASK_TIMEOUT=3600
+if [ "$TASK" = "novel_mlip_baseline" ]; then
+  TASK_TIMEOUT=7200
+fi
+TASK_OUTPUT=$(remote_py "$TASK_TIMEOUT" <<PY
 import subprocess, sys
 proc = subprocess.run([sys.executable, *"$TASK_CMD".split()], cwd="$REMOTE_REPO")
 print(f"TASK_EXIT={proc.returncode}")
