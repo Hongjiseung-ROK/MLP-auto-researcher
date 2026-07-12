@@ -52,6 +52,10 @@ artifacts/research/
 artifacts/colab/private/
 artifacts/vessl/private/
 artifacts/compute/
+# Real-MACE Auto Research pull-backs contain generated predictions and model
+# checkpoints. Keep them local; commit only synthetic regression traces and
+# evidence summaries in source documentation.
+artifacts/auto_research/ralphthon-mace-*/
 # Colab staging pull-backs: JSON records/manifests are committed explicitly;
 # model/checkpoint binaries never are.
 artifacts/colab_staging/**/*.model

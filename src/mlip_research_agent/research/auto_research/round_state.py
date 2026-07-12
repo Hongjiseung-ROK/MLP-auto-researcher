@@ -31,6 +31,7 @@ class LoopState(StrEnum):
     ROLLED_BACK = "rolled_back"
     LESSON_RECORDED = "lesson_recorded"
     NEXT_PROPOSAL_READY = "next_proposal_ready"
+    AWAITING_EXTERNAL_REVIEW = "awaiting_external_review"
     COMPLETE = "complete"
     PARTIAL = "partial"
     BLOCKED = "blocked"
@@ -63,10 +64,19 @@ ALLOWED_TRANSITIONS: dict[LoopState, frozenset[LoopState]] = {
     LoopState.ROLLED_BACK: frozenset({LoopState.LESSON_RECORDED}),
     LoopState.LESSON_RECORDED: frozenset(
         # BLOCKED: an escalate decision needs owner input before any new proposal.
-        {LoopState.NEXT_PROPOSAL_READY, LoopState.COMPLETE, LoopState.PARTIAL, LoopState.BLOCKED}
+        {
+            LoopState.NEXT_PROPOSAL_READY,
+            LoopState.AWAITING_EXTERNAL_REVIEW,
+            LoopState.COMPLETE,
+            LoopState.PARTIAL,
+            LoopState.BLOCKED,
+        }
     ),
     LoopState.NEXT_PROPOSAL_READY: frozenset(
         {LoopState.TEA_TIME_REVIEWED, LoopState.BLOCKED, LoopState.FAILED}
+    ),
+    LoopState.AWAITING_EXTERNAL_REVIEW: frozenset(
+        {LoopState.NEXT_PROPOSAL_READY, LoopState.BLOCKED, LoopState.FAILED}
     ),
     LoopState.COMPLETE: frozenset(),
     LoopState.PARTIAL: frozenset(),
@@ -121,9 +131,7 @@ class RoundState(BaseModel):
 
     def save(self, run_dir: Path) -> Path:
         path = run_dir / ROUND_STATE_NAME
-        path.write_text(
-            json.dumps(self.model_dump(mode="json"), indent=2, sort_keys=True) + "\n"
-        )
+        path.write_text(json.dumps(self.model_dump(mode="json"), indent=2, sort_keys=True) + "\n")
         return path
 
     @classmethod
@@ -147,12 +155,11 @@ class CompletionStatus(BaseModel):
     iterations_planned: int = Field(gt=0)
     reason: str = Field(min_length=3, max_length=1000)
     scientific_status: str = "non_scientific"
+    claim_eligible: bool = False
 
     def save(self, run_dir: Path) -> Path:
         if self.status not in TERMINAL_STATES:
             raise ValueError("completion status may only record a terminal state")
         path = run_dir / "completion_status.json"
-        path.write_text(
-            json.dumps(self.model_dump(mode="json"), indent=2, sort_keys=True) + "\n"
-        )
+        path.write_text(json.dumps(self.model_dump(mode="json"), indent=2, sort_keys=True) + "\n")
         return path

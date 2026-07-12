@@ -11,6 +11,7 @@ from pathlib import Path
 from pydantic import BaseModel
 
 from mlip_research_agent.artifacts.registry import Artifact, sha256_file
+from mlip_research_agent.data.bounded_view import BoundedLabelView
 from mlip_research_agent.data.manifests import ENERGY_UNIT, FORCE_UNIT, NormalizedDataset
 from mlip_research_agent.data.registry import NormalizedManifest
 from mlip_research_agent.data.split import (
@@ -27,6 +28,8 @@ from mlip_research_agent.skills.base import (
 )
 from mlip_research_agent.skills.evaluation.mlip_metrics.schema import (
     AggregateMetrics,
+    BoundedValidationMetricsArtifact,
+    BoundedValidationRequest,
     ClaimReferenceMetadata,
     EvaluationAuthorization,
     EvaluationModelManifest,
@@ -62,6 +65,11 @@ class _RecordErrors:
     force_component_errors: tuple[float, ...]
     force_vector_errors: tuple[float, ...]
     structure_force_vector_error: float
+
+
+# Public, aggregate-only boundary reused by the infrastructure replay. The
+# compatibility alias keeps the existing WP5 golden tests stable.
+RecordErrors = _RecordErrors
 
 
 def _linear_percentile(values: list[float], quantile: float) -> float:
@@ -101,6 +109,115 @@ def _aggregate(records: list[_RecordErrors], threshold: float) -> AggregateMetri
             / len(records)
         ),
     )
+
+
+def aggregate_record_errors(
+    records: list[RecordErrors], threshold: float
+) -> AggregateMetrics:
+    """Apply the independently tested WP5 aggregate metric definitions."""
+    return _aggregate(records, threshold)
+
+
+def evaluate_bounded_validation(
+    *,
+    request: BoundedValidationRequest,
+    bounded_view_path: Path,
+    predictions_path: Path,
+    predictions_rerun_path: Path,
+    model_manifest_path: Path,
+    output_path: Path,
+) -> BoundedValidationMetricsArtifact:
+    """Execute the typed WP5 boundary without loading any protected partition."""
+    if sha256_file(bounded_view_path) != request.bounded_view_sha256:
+        raise ValueError("WP5 bounded-view hash mismatch")
+    view = BoundedLabelView.load(bounded_view_path)
+    predictions = PredictionBatch.model_validate_json(predictions_path.read_text())
+    rerun = PredictionBatch.model_validate_json(predictions_rerun_path.read_text())
+    model_manifest = EvaluationModelManifest.model_validate_json(
+        model_manifest_path.read_text()
+    )
+    expected = {record.config_id for record in view.validation}
+    if {record.record_id for record in predictions.predictions} != expected:
+        raise ValueError("WP5 validation prediction coverage mismatch")
+    if {record.record_id for record in rerun.predictions} != expected:
+        raise ValueError("WP5 rerun prediction coverage mismatch")
+    if (
+        predictions.dataset_content_sha256 != request.dataset_content_sha256
+        or predictions.dataset_content_sha256 != view.source_dataset_content_sha256
+        or predictions.split_semantic_sha256 != request.split_semantic_sha256
+        or predictions.split_semantic_sha256 != view.split_semantic_sha256
+    ):
+        raise ValueError("WP5 prediction data/split provenance mismatch")
+    if predictions.energy_unit != ENERGY_UNIT or predictions.force_unit != FORCE_UNIT:
+        raise ValueError("WP5 prediction units must be eV and eV/angstrom")
+    if (
+        predictions.model_manifest_artifact != request.model_manifest_artifact
+        or model_manifest.predictions_artifact != request.predictions_artifact
+        or predictions.model_id != model_manifest.model_id
+        or predictions.checkpoint_sha256 != model_manifest.checkpoint.sha256
+        or predictions.structure_set_sha256 != model_manifest.structure_set_sha256
+    ):
+        raise ValueError("WP5 model/prediction provenance mismatch")
+    if (
+        rerun.dataset_content_sha256 != predictions.dataset_content_sha256
+        or rerun.split_semantic_sha256 != predictions.split_semantic_sha256
+        or rerun.model_id != predictions.model_id
+        or rerun.checkpoint_sha256 != predictions.checkpoint_sha256
+    ):
+        raise ValueError("WP5 rerun provenance mismatch")
+    targets = {record.config_id: record for record in view.validation}
+    evaluated: list[_RecordErrors] = []
+    for prediction in predictions.predictions:
+        target = targets[prediction.record_id]
+        component_errors: list[float] = []
+        vector_errors: list[float] = []
+        for predicted_force, target_force in zip(
+            prediction.forces_ev_per_a, target.forces_ev_per_a, strict=True
+        ):
+            diffs = [a - b for a, b in zip(predicted_force, target_force, strict=True)]
+            component_errors.extend(abs(value) for value in diffs)
+            vector_errors.append(sum(value * value for value in diffs) ** 0.5)
+        evaluated.append(
+            _RecordErrors(
+                group_id=target.top_group,
+                n_atoms=len(target.symbols),
+                energy_error_per_atom=(
+                    abs(prediction.energy_ev - target.energy_ev) / len(target.symbols)
+                ),
+                force_component_errors=tuple(component_errors),
+                force_vector_errors=tuple(vector_errors),
+                structure_force_vector_error=sum(vector_errors) / len(vector_errors),
+            )
+        )
+    aggregate = _aggregate(evaluated, request.high_error_threshold_ev_per_a)
+    artifact = BoundedValidationMetricsArtifact(
+        evaluation_code_sha256=sha256_file(Path(__file__)),
+        bounded_view_sha256=request.bounded_view_sha256,
+        dataset_content_sha256=request.dataset_content_sha256,
+        split_semantic_sha256=request.split_semantic_sha256,
+        model_id=model_manifest.model_id,
+        checkpoint_sha256=model_manifest.checkpoint.sha256,
+        prediction_sha256=sha256_file(predictions_path),
+        prediction_rerun_sha256=sha256_file(predictions_rerun_path),
+        model_manifest_sha256=sha256_file(model_manifest_path),
+        input_artifact_ids=[
+            request.predictions_artifact,
+            request.predictions_rerun_artifact,
+            request.model_manifest_artifact,
+        ],
+        aggregate=aggregate,
+        rerun_metric_delta=(0.0 if predictions.predictions == rerun.predictions else 1.0),
+        units={
+            "energy_mae": "eV/atom",
+            "force_component_mae": FORCE_UNIT,
+            "force_component_rmse": FORCE_UNIT,
+            "force_vector_error_p95": FORCE_UNIT,
+        },
+    )
+    output_path.write_text(
+        json.dumps(artifact.model_dump(mode="json"), indent=2, sort_keys=True) + "\n"
+    )
+    return artifact
 
 
 def _group_aggregates(

@@ -1,0 +1,84 @@
+{
+  "alternative_paths": [
+    {
+      "cost": "low",
+      "path_id": "boundary_first",
+      "risk": "May postpone broader scientific exploration.",
+      "summary": "Keep the benchmark fixed and harden the next reusable boundary."
+    },
+    {
+      "cost": "medium",
+      "path_id": "bounded_comparison",
+      "risk": "Adds evidence work but reduces single-path lock-in.",
+      "summary": "Compare one preregistered alternative before an irreversible choice."
+    }
+  ],
+  "benchmark_overfitting_audit": {
+    "audit_rule": "high when only benchmark-specific components are named; medium when they equal or outnumber reusable components; low otherwise",
+    "benchmark_role": "The fixture/benchmark is a pipeline-hardening scaffold, not the final scientific topic.",
+    "benchmark_specific_components": [
+      "synthetic_quadratic_finetune_fixture/1.0.0"
+    ],
+    "controls": [
+      "controller, domain skill, and execution backend remain decoupled",
+      "benchmark-specific identifiers stay in configuration and fixtures",
+      "no hidden labels or detailed test metrics enter this reflection",
+      "reflection artifacts cannot support claims"
+    ],
+    "reusable_components": [
+      "acceptance policy",
+      "auto_research contracts",
+      "mutation policy",
+      "trace grader"
+    ],
+    "risk": "low"
+  },
+  "claim_eligible": false,
+  "current_stage_purpose": "Bounded Auto Research iteration: propose, review, execute, evaluate and learn without expanding scientific claims.",
+  "evidence_class": "agent_text",
+  "focus_question": "Does mutating learning_rate still serve the objective 'Verify rejected-mutation rollback and connected recovery'?",
+  "owner_question_packet_draft": {
+    "questions": [],
+    "status": "no_consequential_questions"
+  },
+  "poem": {
+    "author": "Walt Whitman",
+    "key": "whitman-learnd-astronomer",
+    "lines": [
+      "When I heard the learn'd astronomer,",
+      "When the proofs, the figures, were ranged in columns before me,",
+      "When I was shown the charts and diagrams, to add, divide, and measure them,",
+      "When I sitting heard the astronomer where he lectured with much applause in the lecture-room,",
+      "How soon unaccountable I became tired and sick,",
+      "Till rising and gliding out I wander'd off by myself,",
+      "In the mystical moist night-air, and from time to time,",
+      "Look'd up in perfect silence at the stars."
+    ],
+    "title": "When I Heard the Learn'd Astronomer",
+    "why_it_helps": "leave the charts for a moment and look at the raw phenomenon"
+  },
+  "provocations": [
+    {
+      "poem_line": "Till rising and gliding out I wander'd off by myself,",
+      "prompt": "Assume the opposite of your current belief about: Does mutating learning_rate still serve the objective 'Verify rejected-mutation rollback and connected recovery'?. What in the data would you now read as support? Whatever you find was invisible a minute ago.",
+      "technique": "inversion"
+    },
+    {
+      "poem_line": "When the proofs, the figures, were ranged in columns before me,",
+      "prompt": "Ignore the average behavior entirely. Start the story of Does mutating learning_rate still serve the objective 'Verify rejected-mutation rollback and connected recovery'? from the single strangest point and work outward.",
+      "technique": "outlier_first"
+    },
+    {
+      "poem_line": "In the mystical moist night-air, and from time to time,",
+      "prompt": "List what is absent from the data about Does mutating learning_rate still serve the objective 'Verify rejected-mutation rollback and connected recovery'?: configurations never sampled, regimes never visited, failures never recorded. The absence has a shape; sketch it.",
+      "technique": "negative_space"
+    },
+    {
+      "poem_line": "Look'd up in perfect silence at the stars.",
+      "prompt": "Write the single measurement that would kill your favorite answer to Does mutating learning_rate still serve the objective 'Verify rejected-mutation rollback and connected recovery'?. If you cannot afford to make it, say so out loud.",
+      "technique": "falsification"
+    }
+  ],
+  "schema_version": "2.0.0",
+  "trigger": "auto_research_first_proposal"
+}

@@ -1,0 +1,121 @@
+{
+  "content_sha256": "a243bbbdc40e85d6fcf879226f1e1ebd378b3583645d3564dd4f710fcc9de75f",
+  "iterations": [
+    {
+      "iteration_id": "iteration-001",
+      "nodes": [
+        {
+          "artifact_id": "iteration-001:proposal.json",
+          "content_sha256": "b0bd6270744ec1873bb36b71dc40082f8ed3f7d4d262320c29f8277a76b73df8",
+          "kind": "proposal",
+          "node_id": "iteration-001:proposal.json"
+        },
+        {
+          "artifact_id": "iteration-001:tea_time.json",
+          "content_sha256": "edaa7c197d0d16943389413b61f0c3dbd720325c94765069debc30600d3e6f94",
+          "kind": "tea_time",
+          "node_id": "iteration-001:tea_time.json"
+        },
+        {
+          "artifact_id": "iteration-001:legality.json",
+          "content_sha256": "c3edcc05d5760dfd3a227be54008f8b4bbfee96bcf963c931b50f6f5171078be",
+          "kind": "legality",
+          "node_id": "iteration-001:legality.json"
+        },
+        {
+          "artifact_id": "iteration-001:mutation_diff.json",
+          "content_sha256": "9b19bfe87fbc53408933f8db13f0acaaabcb15e11bdcd4084c47b127303857ff",
+          "kind": "mutation",
+          "node_id": "iteration-001:mutation_diff.json"
+        },
+        {
+          "artifact_id": "iteration-001:execution.json",
+          "content_sha256": "a0a93591ccaf4bebc94a687e208fa0fcfa328f0830e652a9d3f84e7a513e19fa",
+          "kind": "execution",
+          "node_id": "iteration-001:execution.json"
+        },
+        {
+          "artifact_id": "iteration-001:evaluation.json",
+          "content_sha256": "265a7b3bc90aef0f961f632d960ece9ffd071d16612d313986ffc1a5bad6a351",
+          "kind": "evaluation",
+          "node_id": "iteration-001:evaluation.json"
+        },
+        {
+          "artifact_id": "iteration-001:decision.json",
+          "content_sha256": "a71a7c56c45abf84819ae4261521ca1ccdb8e674a57b1a324e40814850c8bf7a",
+          "kind": "decision",
+          "node_id": "iteration-001:decision.json"
+        },
+        {
+          "artifact_id": "iteration-001:lesson.json",
+          "content_sha256": "da2a219735841875205dd6b8b58f467b0469ce79f1b378b74d8d8dbcebdb1ddc",
+          "kind": "lesson",
+          "node_id": "iteration-001:lesson.json"
+        }
+      ],
+      "parent_iteration_id": null
+    },
+    {
+      "iteration_id": "iteration-002",
+      "nodes": [
+        {
+          "artifact_id": "iteration-002:proposal.json",
+          "content_sha256": "e80af8f4a5b72308c6cdba61108ba0c4ff9e2a65a4c75b903ed94032ae0b4992",
+          "kind": "proposal",
+          "node_id": "iteration-002:proposal.json"
+        },
+        {
+          "artifact_id": "iteration-002:tea_time.json",
+          "content_sha256": "4e3b9dcdb3dadee3d673a7e12a88cdfe5fa5275d40ff57c759f26491c5638395",
+          "kind": "tea_time",
+          "node_id": "iteration-002:tea_time.json"
+        },
+        {
+          "artifact_id": "iteration-002:legality.json",
+          "content_sha256": "a61ae76cd80538f7745e2279bf3fef17581c23d6c6bb188a3bc54aa5d01151e8",
+          "kind": "legality",
+          "node_id": "iteration-002:legality.json"
+        },
+        {
+          "artifact_id": "iteration-002:mutation_diff.json",
+          "content_sha256": "f9795ca95dc27bc0c2988af6b64bcb19803d8beea6c913d822bdf1ea5be9246a",
+          "kind": "mutation",
+          "node_id": "iteration-002:mutation_diff.json"
+        },
+        {
+          "artifact_id": "iteration-002:execution.json",
+          "content_sha256": "56d60200d0583af70d281b7d62a582c3904cbd6d73face21d0223c51e66d091c",
+          "kind": "execution",
+          "node_id": "iteration-002:execution.json"
+        },
+        {
+          "artifact_id": "iteration-002:evaluation.json",
+          "content_sha256": "be0a3e0a365e1af4e6c24f834564965b41555e015bbaaba633df62d5d9675625",
+          "kind": "evaluation",
+          "node_id": "iteration-002:evaluation.json"
+        },
+        {
+          "artifact_id": "iteration-002:decision.json",
+          "content_sha256": "734cbeda84bd0e3e04bf9efc68ad0bf78b60fbb2ff3488b62ea34173e0649637",
+          "kind": "decision",
+          "node_id": "iteration-002:decision.json"
+        },
+        {
+          "artifact_id": "iteration-002:lesson.json",
+          "content_sha256": "89a0ad8db3bf0cecdd941411f1d6f466a70e5f4517b4e671cdb0d7fdc053c9c1",
+          "kind": "lesson",
+          "node_id": "iteration-002:lesson.json"
+        }
+      ],
+      "parent_iteration_id": "iteration-001"
+    }
+  ],
+  "objective_node": {
+    "artifact_id": "run:objective.json",
+    "content_sha256": "c6772ac9edbfcd15ef1b8b3f26d445bfa0e9aff95963668e9b36d362962751ac",
+    "kind": "objective",
+    "node_id": "run:objective.json"
+  },
+  "run_id": "ralphthon-happy-07c24044",
+  "schema_version": "1.0.0"
+}

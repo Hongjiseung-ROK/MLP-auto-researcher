@@ -1,0 +1,72 @@
+schema_version: "1.0.0"
+
+objective:
+  schema_version: "1.0.0"
+  objective_id: ralphthon-mace-replay
+  title: Verify the bounded real-MACE Auto Research infrastructure loop
+  research_question: >-
+    Can one exact-commit L4 session execute two connected, independently
+    evaluated one-step MACE configuration experiments over the approved D0 and
+    validation label view with a host review pause and no protected data?
+  domain: research-infrastructure
+  benchmark_adapter: mace_phase2_infrastructure_replay/1.0.0
+  success_criteria:
+    - criterion_id: validation-force-component-mae
+      metric: force_component_mae_ev_per_a
+      direction: minimize
+      description: Infrastructure-only aggregate validation comparison.
+  budget:
+    max_compute_seconds: 3600.0
+    max_retries_per_iteration: 0
+    max_labels: 0
+    max_remote_jobs: 1
+  maximum_iterations: 2
+  protected_constants:
+    - key: dataset_content_sha256
+      value: bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48
+      reason: H1-approved source dataset identity.
+    - key: normalized_manifest_sha256
+      value: ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3
+      reason: Immutable normalized-manifest bytes.
+    - key: split_manifest_sha256
+      value: 80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e
+      reason: Immutable partition assignment.
+    - key: checkpoint_sha256
+      value: 2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736
+      reason: Candidate-only infrastructure checkpoint.
+    - key: scientific_claim_ceiling
+      value: infrastructure_only
+      reason: The replay may produce no scientific claim.
+  allowed_mutation_classes: [bounded_mutable]
+  required_evaluator: mlip_validation_evaluator/1.0.0
+  stopping_rules:
+    - rule_id: two-iterations
+      description: Stop after two connected iterations.
+    - rule_id: external-review
+      description: Pause after iteration one for three specialized host reviews.
+    - rule_id: no-retry
+      description: Ambiguous optimizer execution escalates without relaunch.
+  approval_requirements: []
+  scientific_status_ceiling: infrastructure_only
+  created_by: bounded-colab-infrastructure-replay
+
+mutation_policy_path: configs/research/ralphthon_mutation_policy.yaml
+base_config:
+  learning_rate: 0.001
+  gradient_clip: 10.0
+  batch_size: 32
+  scheduler_patience: 5
+  force_loss_weight: 100.0
+  energy_loss_weight: 1.0
+  trainable_layer_policy: readout_only
+fixture_seed: 20260712
+output_root: artifacts/auto_research
+acceptance:
+  primary_metric: force_component_mae_ev_per_a
+  minimize: true
+  min_relative_improvement: 0.001
+  tail_metric: force_vector_error_p95_ev_per_a
+  tail_max: 100.0
+  runtime_max_seconds: 1200.0
+  memory_max_mb: 24000.0
+  reproducibility_max_delta: 0.0

@@ -62,6 +62,9 @@ class MACEFineTuneInput(BaseModel):
     batch_size: int = Field(gt=0)
     valid_batch_size: int = Field(gt=0)
     e0_policy: Literal["foundation"] = "foundation"
+    energy_loss_weight: float = Field(default=1.0, gt=0)
+    force_loss_weight: float = Field(default=100.0, gt=0)
+    trainable_layer_policy: Literal["all", "readout_only", "last_interaction_and_readout"] = "all"
     device: Literal["cpu", "cuda"] = "cpu"
     default_dtype: Literal["float32", "float64"] = "float32"
     max_wall_seconds: int = Field(default=3600, gt=0, le=7200)
@@ -100,6 +103,9 @@ class MACEFineTuneOutput(BaseModel):
     optimizer_steps: int = Field(gt=0)
     changed_parameter_tensors: int = Field(gt=0)
     resumed: bool
+    trainable_parameter_names: list[str] = Field(default_factory=list)
+    frozen_parameter_names: list[str] = Field(default_factory=list)
+    changed_frozen_parameter_tensors: int = Field(default=0, ge=0)
 
 
 class FineTuneResumeState(BaseModel):

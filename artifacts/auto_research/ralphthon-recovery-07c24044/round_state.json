@@ -1,0 +1,36 @@
+{
+  "baseline_metrics": {
+    "n_records": 32.0,
+    "rerun_metric_delta": 0.0,
+    "synthetic_p95_residual": 0.487553108039884,
+    "synthetic_validation_loss": 0.449405413500368
+  },
+  "compute_seconds_used": 18.0,
+  "consecutive_failures": 0,
+  "iteration_index": 2,
+  "iterations": [
+    {
+      "accepted_config_index": null,
+      "completed": true,
+      "decision": "reject",
+      "iteration_id": "iteration-001",
+      "proposal_id": "ralphthon-recovery-demo-p001"
+    },
+    {
+      "accepted_config_index": null,
+      "completed": true,
+      "decision": "reject",
+      "iteration_id": "iteration-002",
+      "proposal_id": "ralphthon-recovery-demo-p002"
+    }
+  ],
+  "labels_used": 0,
+  "last_failure_category": null,
+  "mutation_class_streak": null,
+  "mutation_class_streak_length": 0,
+  "objective_sha256": "9dacf99b311aa25020fd5d4707d18ccca29e331c29ad962c2a77cb46255e4d9c",
+  "partial_reason": "",
+  "run_id": "ralphthon-recovery-07c24044",
+  "schema_version": "1.0.0",
+  "state": "complete"
+}

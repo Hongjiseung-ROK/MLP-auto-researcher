@@ -1,14 +1,20 @@
 # Implementation Status
 
-Last updated: 2026-07-12 (Phase 2 Level 4 — bounded Colab staging verified;
-PR #2 merged to main as `cb5b927`).
+Last updated: 2026-07-12 (Phase 2 Level 4.5 — bounded Colab staging and the
+local synthetic Auto Research loop verified; PR #3 merged to `main` as
+`99a7a724`).
 
 Phase 1 below remains the deterministic regression baseline. Current Phase 2
 truth is tracked in `docs/PHASE2_IMPLEMENTATION_STATUS.md`: qualified data,
 leakage-safe split/oracle, claim tiers, pinned real MACE inference, the real
 fine-tuning boundary, and the independent aggregate evaluator are implemented;
 the bounded Colab staging run passed on an attested L4 (commit `467ad6a`,
-`staging_only`). H2/H3/H5 remain open owner gates.
+`staging_only`). WP6 contracts and the resumable WP7 controller are implemented,
+locally tested, and exercised by an independently graded connected two-iteration
+synthetic trace. The bounded remote real-MACE replay completed at exact commit
+`ec2d804` on one L4: two connected independently rejected iterations, host
+specialist review between them, passing trace grade, hash-verified pull-back,
+and stable cleanup. This is infrastructure evidence only; H2/H3/H5 remain open.
 
 ## Milestone 2 — compute providers and publication: **in final validation**
 
@@ -65,9 +71,10 @@ on clean machines plain `conda run` works.)
 
 ## Not implemented (deliberately or still in Phase 2)
 
-- Real MACE fine-tuning, independent production metrics, DFT execution, an
-  LLM-driven numerical loop, or a completed GPU research pilot.
-- Multi-iteration AL loop / decision gate (D-11).
+- A completed real-data remote Auto Research replay, DFT execution, a full
+  active-learning campaign, or a completed GPU research pilot.
+- Claim-bearing model selection or checkpoint promotion; the replay target is
+  infrastructure-only.
 - OpenHands runtime integration (OQ-8), MLflow/DVC/RO-Crate adapters (OQ-9).
 - Committee mode, UQ beyond the mock proxy, molecular branch.
 
@@ -88,7 +95,7 @@ on clean machines plain `conda run` works.)
 
 ## Next Phase 2 sequence
 
-Complete checkpoint/E0 due diligence, then independent evaluation (WP5), then
-the resumable MACE fine-tuning boundary (WP4), followed by the already
-authorized bounded Colab staging gate. H2 remains unfrozen and a full pilot
-still requires H3.
+Validate the exact-commit real-data/real-MACE Auto Research pipeline in one
+Colab L4 session, with a host review pause between two connected iterations,
+then retain the result as infrastructure evidence only. H2 remains unfrozen;
+H3 and H5 remain open.

@@ -1,0 +1,29 @@
+{
+  "applied": true,
+  "base_config_sha256": "a9ad63a7d2b6784cada39b330b2ae76d30eaa7be023edf11e2112638a164d431",
+  "changes": [
+    {
+      "allowed_range": {
+        "choices": null,
+        "maximum": 0.1,
+        "minimum": 1e-06,
+        "value_type": "float"
+      },
+      "content_sha256": "90535d88c4db032e4dd0db8d8c483d4ff43012c5c4453a52579f271ddfd011cd",
+      "engineering_effect": "Smaller update steps; identical memory and runtime profile.",
+      "new_value": 0.004,
+      "old_value": 0.02,
+      "reversibility": "reversible",
+      "schema_version": "1.0.0",
+      "scientific_effect": "A lower learning rate should move optimization toward the loss basin, reducing the synthetic validation loss.",
+      "target_key": "learning_rate",
+      "target_path": "config_store/current.json",
+      "target_type": "config"
+    }
+  ],
+  "content_sha256": "9b19bfe87fbc53408933f8db13f0acaaabcb15e11bdcd4084c47b127303857ff",
+  "proposal_id": "ralphthon-local-demo-p001",
+  "result_config_sha256": "4c05b4468b223809b31edee8381494e8c9b3a08b1dc4964dcbaccbd87eac03b6",
+  "rolled_back": false,
+  "schema_version": "1.0.0"
+}

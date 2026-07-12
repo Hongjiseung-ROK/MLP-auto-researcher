@@ -49,12 +49,20 @@ from mlip_research_agent.research.auto_research.mutation import (
     MutationPolicy,
 )
 from mlip_research_agent.research.auto_research.objective import ResearchObjective
+from mlip_research_agent.research.auto_research.operations import (
+    OptimizerOperationReceipt,
+    OptimizerOperationRequest,
+)
 from mlip_research_agent.research.auto_research.proposal import ExperimentProposal
 from mlip_research_agent.research.auto_research.tea_time_boundary import (
     REQUIRED_TRIGGERS,
     TeaTimeReviewRecord,
 )
-from mlip_research_agent.research.auto_research.validators import ContentAddressedModel
+from mlip_research_agent.research.auto_research.validators import (
+    ContentAddressedModel,
+    canonical_json,
+    sha256_of_text,
+)
 
 #: Payload keys that indicate protected data leaked into the trace.
 FORBIDDEN_TRACE_KEYS = frozenset(
@@ -99,9 +107,16 @@ class TraceGradeReport(BaseModel):
 
 
 class _Grader:
-    def __init__(self, run_dir: Path, acceptance: AcceptanceConstraints) -> None:
+    def __init__(
+        self,
+        run_dir: Path,
+        acceptance: AcceptanceConstraints,
+        *,
+        remote_infrastructure_authorized: bool = False,
+    ) -> None:
         self.run_dir = run_dir
         self.acceptance = acceptance
+        self.remote_infrastructure_authorized = remote_infrastructure_authorized
         self.violations: list[TraceViolation] = []
 
     def flag(self, check: str, location: str, detail: str) -> None:
@@ -171,6 +186,7 @@ class _Grader:
         if objective is not None and policy is not None and lineage is not None:
             assert isinstance(objective, ResearchObjective)
             self._check_lineage_objective(lineage, objective)
+            self._check_lineage_nodes(lineage)
             baseline_metrics = self._baseline_metrics()
             for iteration in lineage.iterations:
                 it_dir = self.run_dir / iteration.iteration_id
@@ -183,8 +199,12 @@ class _Grader:
                 n_graded += 1
             self._check_config_history(objective, policy)
 
+        try:
+            displayed_run_dir = self.run_dir.resolve().relative_to(Path.cwd().resolve()).as_posix()
+        except ValueError:
+            displayed_run_dir = self.run_dir.name
         return TraceGradeReport(
-            run_dir=str(self.run_dir),
+            run_dir=displayed_run_dir,
             passed=not self.violations,
             n_iterations_graded=n_graded,
             violations=self.violations,
@@ -235,6 +255,39 @@ class _Grader:
                 "objective node hash does not match objective.json",
             )
 
+    def _check_lineage_nodes(self, lineage: ExperimentLineage) -> None:
+        completion = self._load_json(self.run_dir / "completion_status.json")
+        if isinstance(completion, dict) and len(lineage.iterations) != completion.get(
+            "iterations_completed"
+        ):
+            self.flag("lineage", "lineage.json", "lineage iteration count mismatches completion")
+        for iteration in lineage.iterations:
+            it_dir = self.run_dir / iteration.iteration_id
+            nodes = {node.kind: node for node in iteration.nodes}
+            expected_kinds = {
+                kind for kind, (filename, _) in NODE_FILES.items() if (it_dir / filename).is_file()
+            }
+            if set(nodes) != expected_kinds:
+                self.flag(
+                    "lineage",
+                    iteration.iteration_id,
+                    "lineage node set differs from on-disk chain",
+                )
+            for kind, node in nodes.items():
+                filename, model_cls = NODE_FILES[kind]
+                model = self._load(it_dir, filename, model_cls)
+                expected_id = f"{iteration.iteration_id}:{filename}"
+                if model is not None and (
+                    node.content_sha256 != model.content_sha256
+                    or node.node_id != expected_id
+                    or node.artifact_id != expected_id
+                ):
+                    self.flag(
+                        "lineage",
+                        iteration.iteration_id,
+                        f"lineage node {kind.value} does not bind the actual artifact",
+                    )
+
     def _baseline_metrics(self) -> dict[str, float]:
         baseline = self._load(
             self.run_dir / "baseline", "evaluation.json", EvaluationOutcome
@@ -283,6 +336,16 @@ class _Grader:
         ):
             if not artifact_rel:
                 self.flag("skill_selection", loc, "tea time skill artifacts missing")
+            else:
+                registry = ArtifactRegistry.load(self.run_dir)
+                artifact = registry.get(artifact_rel)
+                if artifact is None or not registry.verify(artifact_rel):
+                    self.flag(
+                        "skill_selection",
+                        loc,
+                        f"tea time artifact is missing or unregistered: {artifact_rel}",
+                    )
+        self._check_tea_time_event_order(iteration_id)
 
         # Mutation legality and bounds.
         if legality.proposal_id != proposal.proposal_id:
@@ -342,7 +405,10 @@ class _Grader:
             if execution.proposal_artifact_sha256 != proposal.content_sha256:
                 self.flag("lineage", loc, "execution references a different proposal")
             # No unapproved remote execution.
-            if execution.compute_attestation != "local-cpu":
+            if (
+                execution.compute_attestation != "local-cpu"
+                and not self.remote_infrastructure_authorized
+            ):
                 self.flag(
                     "remote_execution",
                     loc,
@@ -379,7 +445,10 @@ class _Grader:
                     loc,
                     "evaluator source hash equals the controller source (identity collision)",
                 )
-            if evaluation.scientific_status not in {"non_scientific", "staging_only"}:
+            allowed_statuses = {"non_scientific", "staging_only"}
+            if self.remote_infrastructure_authorized:
+                allowed_statuses.add("infrastructure_only")
+            if evaluation.scientific_status not in allowed_statuses:
                 self.flag(
                     "unsupported_claims",
                     loc,
@@ -433,6 +502,39 @@ class _Grader:
             return dict(evaluation.aggregate_metrics)
         return baseline_metrics
 
+    def _check_tea_time_event_order(self, iteration_id: str) -> None:
+        path = self.run_dir / "events.jsonl"
+        if not path.is_file():
+            self.flag("tea_time", iteration_id, "event log is absent")
+            return
+        events = [json.loads(line) for line in path.read_text().splitlines() if line]
+        tea_sequences = [
+            event["sequence"]
+            for event in events
+            if event.get("event_type") == "step_started"
+            and event.get("step_id")
+            in {
+                f"{iteration_id}:proposal_ready",
+                f"{iteration_id}:next_proposal_ready",
+            }
+        ]
+        execution_sequences = [
+            event["sequence"]
+            for event in events
+            if event.get("event_type") == "step_started"
+            and event.get("step_id") == f"{iteration_id}:mutation_applied"
+        ]
+        if (
+            len(tea_sequences) != 1
+            or len(execution_sequences) != 1
+            or tea_sequences[0] >= execution_sequences[0]
+        ):
+            self.flag(
+                "tea_time",
+                iteration_id,
+                "Tea Time is not uniquely event-ordered before execution",
+            )
+
     def _load_optional_diff(self, it_dir: Path) -> MutationDiff | None:
         if not (it_dir / "mutation_diff.json").is_file():
             return None
@@ -484,6 +586,7 @@ class _Grader:
             "uses_frozen_test_data",
             "uses_hidden_labels",
             "uses_protected_partitions",
+            "uses_acquisition_pool_labels",
         ):
             if raw.get(flag_name) is not False:
                 self.flag(
@@ -538,7 +641,12 @@ class _Grader:
         raw = self._load_json(self.run_dir / "completion_status.json")
         if raw is None or not isinstance(raw, dict):
             return
-        if raw.get("scientific_status") != "non_scientific":
+        required_status = (
+            "infrastructure_only"
+            if self.remote_infrastructure_authorized
+            else "non_scientific"
+        )
+        if raw.get("scientific_status") != required_status:
             self.flag(
                 "unsupported_claims",
                 "completion_status.json",
@@ -547,7 +655,7 @@ class _Grader:
         report = self.run_dir / "trace_report.md"
         if not report.is_file():
             self.flag("missing_artifact", "trace_report.md", "trace report is absent")
-        elif "non_scientific" not in report.read_text():
+        elif required_status not in report.read_text():
             self.flag(
                 "unsupported_claims",
                 "trace_report.md",
@@ -567,11 +675,54 @@ def _contains_forbidden_key(value: Any) -> bool:
     return False
 
 
+def _find_values_for_key(value: Any, target: str) -> list[Any]:
+    found: list[Any] = []
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key == target:
+                found.append(nested)
+            found.extend(_find_values_for_key(nested, target))
+    elif isinstance(value, list):
+        for nested in value:
+            found.extend(_find_values_for_key(nested, target))
+    return found
+
+
+def _locked_versions_match(lock_path: Path, environment: dict[str, Any]) -> bool:
+    field_by_distribution = {
+        "mace-torch": "mace_torch_version",
+        "torch": "torch_version",
+        "e3nn": "e3nn_version",
+        "numpy": "numpy_version",
+        "ase": "ase_version",
+        "scipy": "scipy_version",
+        "opt_einsum": "opt_einsum_version",
+    }
+    pins: dict[str, str] = {}
+    for line in lock_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.count("==") != 1:
+            return False
+        distribution, version = line.split("==", 1)
+        pins[distribution] = version
+    if set(pins) != set(field_by_distribution):
+        return False
+    for distribution, expected in pins.items():
+        observed = str(environment.get(field_by_distribution[distribution], ""))
+        if distribution == "torch":
+            observed = observed.split("+", 1)[0]
+        if observed != expected:
+            return False
+    return True
+
+
 def grade_trace(run_dir: Path, acceptance: AcceptanceConstraints) -> TraceGradeReport:
     """Grade one Auto Research run directory. Fail-closed."""
     if not run_dir.is_dir():
         return TraceGradeReport(
-            run_dir=str(run_dir),
+            run_dir=run_dir.name,
             passed=False,
             n_iterations_graded=0,
             violations=[
@@ -581,3 +732,403 @@ def grade_trace(run_dir: Path, acceptance: AcceptanceConstraints) -> TraceGradeR
             ],
         )
     return _Grader(run_dir, acceptance).grade()
+
+
+def grade_remote_infrastructure_trace(
+    run_dir: Path, *, exact_commit: str, label_view_sha256: str
+) -> TraceGradeReport:
+    """Fail-closed structural grade for the L4 infrastructure replay."""
+    acceptance = AcceptanceConstraints(
+        primary_metric="force_component_mae_ev_per_a",
+        minimize=True,
+        min_relative_improvement=0.001,
+        tail_metric="force_vector_error_p95_ev_per_a",
+        tail_max=100.0,
+        runtime_max_seconds=1200.0,
+        memory_max_mb=24000.0,
+        reproducibility_max_delta=0.0,
+    )
+    core = _Grader(
+        run_dir,
+        acceptance,
+        remote_infrastructure_authorized=True,
+    ).grade()
+    violations: list[TraceViolation] = list(core.violations)
+    if core.n_iterations_graded != 2:
+        violations.append(
+            TraceViolation(
+                check="lineage",
+                location="lineage.json",
+                detail="remote replay must contain exactly two graded iterations",
+            )
+        )
+
+    def flag(check: str, location: str, detail: str) -> None:
+        violations.append(TraceViolation(check=check, location=location, detail=detail))
+
+    required = [
+        "objective.json",
+        "mutation_policy.json",
+        "environment.json",
+        "pip_freeze.txt",
+        "compute_attestation.json",
+        "dataset_verification.json",
+        "split_verification.json",
+        "checkpoint_verification.json",
+        "baseline/evaluation.json",
+        "iteration-001/proposal.json",
+        "iteration-001/evaluation.json",
+        "iteration-001/decision.json",
+        "iteration-001/lesson.json",
+        "agent_reviews/iteration-001/mlip_scientist.json",
+        "agent_reviews/iteration-001/active_learning_scientist.json",
+        "agent_reviews/iteration-001/scientific_auditor.json",
+        "agent_reviews/iteration-001/review_packet.json",
+        "agent_reviews/iteration-001/synthesis.json",
+        "iteration-002/proposal.json",
+        "iteration-002/evaluation.json",
+        "iteration-002/decision.json",
+        "iteration-002/lesson.json",
+        "lineage.json",
+        "completion_status.json",
+        "trace_report.md",
+        "manifest.json",
+        "cleanup_confirmation.json",
+        "artifact_manifest.json",
+    ]
+    for relative in required:
+        if not (run_dir / relative).is_file():
+            flag("missing_artifact", relative, "required remote replay artifact is absent")
+    if violations:
+        return TraceGradeReport(
+            run_dir=run_dir.name,
+            passed=False,
+            n_iterations_graded=0,
+            violations=violations,
+        )
+    environment = json.loads((run_dir / "environment.json").read_text())
+    if environment.get("git_commit") != exact_commit:
+        flag("exact_commit", "environment.json", "remote commit differs from authorized commit")
+    attestation = json.loads((run_dir / "compute_attestation.json").read_text())
+    if (
+        attestation.get("canonical_accelerator") != "nvidia-l4"
+        or attestation.get("policy_decision") != "allow"
+        or attestation.get("repo_commit") != exact_commit
+        or attestation.get("observed_gpu_count") != 1
+    ):
+        flag("compute_attestation", "compute_attestation.json", "not an allowed exact-commit L4")
+    dataset = json.loads((run_dir / "dataset_verification.json").read_text())
+    if dataset.get("dataset_content_sha256") != (
+        "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48"
+    ) or not dataset.get("contains_only_d0_and_validation") or dataset.get(
+        "bounded_label_view_sha256"
+    ) != label_view_sha256:
+        flag("data_isolation", "dataset_verification.json", "bounded label view is not proven")
+    split = json.loads((run_dir / "split_verification.json").read_text())
+    if split.get("protected_partitions_accessed") is not False or split.get(
+        "acquisition_pool_labels_accessed"
+    ) is not False:
+        flag("protected_data", "split_verification.json", "protected data access is not denied")
+    checkpoint = json.loads((run_dir / "checkpoint_verification.json").read_text())
+    if checkpoint.get("checkpoint_sha256") != (
+        "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736"
+    ) or checkpoint.get("scientific_status") != "candidate_only":
+        flag(
+            "model_identity",
+            "checkpoint_verification.json",
+            "checkpoint identity/status mismatch",
+        )
+    environment = json.loads((run_dir / "environment.json").read_text())
+    dependency_lock = (
+        Path(__file__).resolve().parents[3]
+        / "scripts/colab/ralphthon_mace_replay_requirements.txt"
+    )
+    replay_config = (
+        Path(__file__).resolve().parents[3]
+        / "configs/research/ralphthon_mace_replay.yaml"
+    )
+    if (
+        environment.get("dependency_lock_sha256") != sha256_file(dependency_lock)
+        or environment.get("pip_freeze_sha256") != sha256_file(run_dir / "pip_freeze.txt")
+        or not _locked_versions_match(dependency_lock, environment)
+        or attestation.get("environment_hash") != sha256_file(dependency_lock)
+        or attestation.get("config_hash") != sha256_file(replay_config)
+        or not str(environment.get("torch_version", "")).startswith("2.11.0")
+        or environment.get("mace_torch_version") != "0.3.16"
+        or environment.get("e3nn_version") != "0.4.4"
+        or environment.get("numpy_version") != "2.0.2"
+        or environment.get("ase_version") != "3.29.0"
+        or environment.get("scipy_version") != "1.16.3"
+        or environment.get("opt_einsum_version") != "3.4.0"
+        or attestation.get("torch_version") != "2.11.0+cu128"
+        or environment.get("torch_version") != attestation.get("torch_version")
+    ):
+        flag("dependency_lock", "environment.json", "dependency lock/freeze identity mismatch")
+    baseline_evaluation = json.loads((run_dir / "baseline/evaluation.json").read_text())
+    baseline_metrics = json.loads((run_dir / "baseline/metrics.json").read_text())
+    evaluator_source = Path(__file__).parent.parent / "research/auto_research/mace_evaluator.py"
+    if (
+        baseline_evaluation.get("evaluator_name") != "mlip_validation_evaluator/1.0.0"
+        or baseline_evaluation.get("evaluator_source_sha256")
+        != sha256_file(evaluator_source)
+        or baseline_metrics.get("boundary") != "mlip_metrics/bounded_validation/1.0.0"
+    ):
+        flag("wp5_boundary", "baseline", "baseline did not use the pinned typed WP5 boundary")
+    completion = json.loads((run_dir / "completion_status.json").read_text())
+    if completion.get("scientific_status") != "infrastructure_only" or completion.get(
+        "claim_eligible"
+    ) is not False:
+        flag("unsupported_claims", "completion_status.json", "completion status is claim-bearing")
+    cleanup = json.loads((run_dir / "cleanup_confirmation.json").read_text())
+    if (
+        cleanup.get("status") != "confirmed_absent_stable"
+        or not isinstance(cleanup.get("session_elapsed_seconds"), int | float)
+        or cleanup.get("session_elapsed_seconds", 3601) > 3600
+        or cleanup.get("maximum_session_seconds") != 3600
+    ):
+        flag("colab_cleanup", "cleanup_confirmation.json", "Colab session absence not confirmed")
+    try:
+        from mlip_research_agent.research.auto_research.review import (
+            AgentReview,
+            ReviewPacket,
+            ReviewSynthesis,
+            verify_review_packet,
+        )
+
+        reviews = {
+            role: AgentReview.model_validate_json(
+                (run_dir / "agent_reviews/iteration-001" / f"{role}.json").read_text()
+            )
+            for role in (
+                "mlip_scientist",
+                "active_learning_scientist",
+                "scientific_auditor",
+            )
+        }
+        synthesis = ReviewSynthesis.model_validate_json(
+            (run_dir / "agent_reviews/iteration-001/synthesis.json").read_text()
+        )
+        packet = ReviewPacket.model_validate_json(
+            (run_dir / "agent_reviews/iteration-001/review_packet.json").read_text()
+        )
+        if not packet.verify_seal() or synthesis.review_packet_sha256 != packet.content_sha256:
+            flag(
+                "agent_reviews",
+                "agent_reviews/iteration-001/review_packet.json",
+                "packet seal/link mismatch",
+            )
+        verify_review_packet(packet, run_dir)
+        if not synthesis.verify_seal():
+            flag(
+                "agent_reviews",
+                "agent_reviews/iteration-001/synthesis.json",
+                "review synthesis seal mismatch",
+            )
+        for role in synthesis.review_hashes:
+            review = reviews[role]
+            if (
+                not review.verify_seal()
+                or synthesis.review_hashes.get(role) != review.content_sha256
+                or review.review_packet_sha256 != packet.content_sha256
+                or not set(review.evidence_artifact_ids)
+                <= set(packet.allowed_evidence_artifact_ids)
+            ):
+                flag(
+                    "agent_reviews",
+                    f"agent_reviews/iteration-001/{role}.json",
+                    "review seal/link mismatch",
+                )
+        for name, recorded_hash in synthesis.iteration_evidence_sha256.items():
+            actual_hash = sha256_file(run_dir / "iteration-001" / f"{name}.json")
+            if recorded_hash != actual_hash:
+                flag(
+                    "proposal_lineage",
+                    "agent_reviews/iteration-001/synthesis.json",
+                    f"iteration-1 {name} evidence hash mismatch",
+                )
+        proposal2 = ExperimentProposal.model_validate_json(
+            (run_dir / "iteration-002/proposal.json").read_text()
+        )
+        if proposal2.parent_iteration_id != "iteration-001" or (
+            f"review_synthesis:{synthesis.content_sha256}" not in proposal2.required_skills
+        ):
+            flag(
+                "proposal_lineage",
+                "iteration-002/proposal.json",
+                "proposal 2 is unrelated to review synthesis",
+            )
+        mutation2 = proposal2.proposed_mutations[0]
+        direction = synthesis.recommended_direction.lower()
+        expects_increase = any(word in direction for word in ("increase", "raise", "larger"))
+        numeric_direction_ok = True
+        if isinstance(mutation2.old_value, int | float) and isinstance(
+            mutation2.new_value, int | float
+        ):
+            numeric_direction_ok = (
+                mutation2.new_value > mutation2.old_value
+                if expects_increase
+                else mutation2.new_value < mutation2.old_value
+            )
+        elif isinstance(mutation2.new_value, str):
+            numeric_direction_ok = direction == f"set_to:{mutation2.new_value}".lower()
+        if (
+            mutation2.target_key != synthesis.recommended_mutation_class
+            or not numeric_direction_ok
+            or not {"mace_finetune", "mlip_metrics"}.issubset(proposal2.required_skills)
+        ):
+            flag(
+                "proposal_lineage",
+                "iteration-002/proposal.json",
+                "mutation does not implement synthesis",
+            )
+    except (OSError, ValueError, ValidationError) as exc:
+        flag("agent_reviews", "agent_reviews/iteration-001", f"invalid review bundle: {exc}")
+    operation_ids: set[str] = set()
+    policy_raw = json.loads((run_dir / "mutation_policy.json").read_text())
+    policy_raw.pop("content_sha256", None)
+    policy = MutationPolicy.model_validate(policy_raw)
+    objective = ResearchObjective.model_validate_json((run_dir / "objective.json").read_text())
+    current_config = json.loads((run_dir / "config_store/state-000.json").read_text())
+    for iteration in ("iteration-001", "iteration-002"):
+        proposal = ExperimentProposal.model_validate_json(
+            (run_dir / iteration / "proposal.json").read_text()
+        )
+        legality = LegalityResult.model_validate_json(
+            (run_dir / iteration / "legality.json").read_text()
+        )
+        rederived_legality = policy.check_mutations(
+            proposal.proposal_id,
+            proposal.proposed_mutations,
+            current_config,
+            allowed_classes=objective.allowed_mutation_classes,
+        )
+        if (
+            legality.legal != rederived_legality.legal
+            or legality.per_mutation_class != rederived_legality.per_mutation_class
+            or legality.violations != rederived_legality.violations
+        ):
+            flag("legality", f"{iteration}/legality.json", "legality does not rederive")
+        evaluation = json.loads((run_dir / iteration / "evaluation.json").read_text())
+        evaluator_source = (
+            Path(__file__).parent.parent / "research/auto_research/mace_evaluator.py"
+        )
+        if (
+            evaluation.get("evaluator_name") != "mlip_validation_evaluator/1.0.0"
+            or evaluation.get("scientific_status") != "infrastructure_only"
+            or evaluation.get("evaluator_source_sha256") != sha256_file(evaluator_source)
+        ):
+            flag("evaluator_identity", iteration, "unapproved evaluator or scientific status")
+        controller_hash = sha256_file(
+            Path(__file__).parent.parent / "research/auto_research/controller.py"
+        )
+        if evaluation.get("evaluator_source_sha256") == controller_hash:
+            flag("evaluator_identity", iteration, "controller and evaluator identities collide")
+        execution = json.loads((run_dir / iteration / "execution.json").read_text())
+        if execution.get("git_commit") != exact_commit:
+            flag("exact_commit", f"{iteration}/execution.json", "execution commit mismatch")
+        operation_dir = run_dir / iteration / "workdir" / "operation"
+        requests = list(operation_dir.glob("operation_request.json"))
+        starts = list(operation_dir.glob("operation_started.json"))
+        completes = list(operation_dir.glob("operation_completed.json"))
+        if len(requests) != 1 or len(starts) != 1 or len(completes) != 1:
+            flag(
+                "exactly_once",
+                iteration,
+                "requires one request, one start, and one completion receipt",
+            )
+            continue
+        try:
+            request = OptimizerOperationRequest.model_validate_json(requests[0].read_text())
+            started = OptimizerOperationReceipt.model_validate_json(starts[0].read_text())
+            complete = OptimizerOperationReceipt.model_validate_json(completes[0].read_text())
+        except (OSError, ValueError, ValidationError) as exc:
+            flag("exactly_once", iteration, f"invalid optimizer request/receipt: {exc}")
+            continue
+        if not request.verify_seal() or not started.verify_seal() or not complete.verify_seal():
+            flag("exactly_once", iteration, "optimizer request/receipt seal mismatch")
+        operation_id = complete.operation_id
+        if operation_id in operation_ids or complete.optimizer_steps != 1:
+            flag("exactly_once", iteration, "duplicate operation id or optimizer-step count")
+        if (
+            complete.request_sha256 != started.request_sha256
+            or complete.request_sha256 != request.content_sha256
+            or request.operation_id != started.operation_id
+            or request.operation_id != complete.operation_id
+            or started.status != "started"
+            or complete.status != "complete"
+        ):
+            flag("exactly_once", iteration, "start/completion request identity mismatch")
+        candidate_config = json.loads((run_dir / iteration / "candidate_config.json").read_text())
+        if (
+            request.git_commit != exact_commit
+            or request.proposal_fingerprint != proposal.content_sha256
+            or request.config_fingerprint
+            != sha256_of_text(canonical_json(candidate_config))
+            or request.seed != proposal.seed
+            or request.dataset_content_sha256
+            != "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48"
+            or request.split_manifest_sha256
+            != "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e"
+            or request.checkpoint_sha256
+            != "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736"
+        ):
+            flag("exactly_once", iteration, "optimizer request is not bound to run inputs")
+        try:
+            output_hashes_match = (
+                complete.model_sha256
+                == sha256_file(run_dir / iteration / "workdir/fine_tuned.model")
+                and complete.checkpoint_sha256
+                == sha256_file(run_dir / iteration / "workdir/optimizer_checkpoint.pt")
+            )
+        except OSError:
+            output_hashes_match = False
+        if not output_hashes_match:
+            flag("exactly_once", iteration, "completion hashes do not match produced files")
+        operation_ids.add(operation_id)
+        decision = ExperimentDecision.model_validate_json(
+            (run_dir / iteration / "decision.json").read_text()
+        )
+        if decision.decision is DecisionValue.ACCEPT:
+            for mutation in proposal.proposed_mutations:
+                current_config[mutation.target_key] = mutation.new_value
+        metrics_payload = json.loads((run_dir / iteration / "metrics.json").read_text())
+        if (
+            metrics_payload.get("boundary") != "mlip_metrics/bounded_validation/1.0.0"
+            or metrics_payload.get("scientific_status") != "infrastructure_only"
+            or metrics_payload.get("claim_eligible") is not False
+        ):
+            flag("wp5_boundary", f"{iteration}/metrics.json", "typed WP5 boundary evidence missing")
+    try:
+        manifest = json.loads((run_dir / "artifact_manifest.json").read_text())
+        expected = {entry["relative_path"] for entry in manifest["files"]}
+        actual = {
+            path.relative_to(run_dir).as_posix()
+            for path in run_dir.rglob("*")
+            if path.is_file()
+            and path.name not in {"artifact_manifest.json", "trace_grade.json"}
+        }
+        if expected != actual:
+            flag("artifact_integrity", "artifact_manifest.json", "manifest coverage mismatch")
+        for entry in manifest["files"]:
+            if sha256_file(run_dir / entry["relative_path"]) != entry["sha256"]:
+                flag("artifact_integrity", entry["relative_path"], "SHA-256 mismatch")
+    except (OSError, ValueError, KeyError) as exc:
+        flag("artifact_integrity", "artifact_manifest.json", str(exc))
+    for path in run_dir.rglob("*.json"):
+        try:
+            payload = json.loads(path.read_text())
+        except ValueError:
+            continue
+        for status in _find_values_for_key(payload, "scientific_status"):
+            if status not in {"infrastructure_only", "candidate_only"}:
+                flag(
+                    "unsupported_claims",
+                    str(path.relative_to(run_dir)),
+                    f"unsupported scientific status {status!r}",
+                )
+    return TraceGradeReport(
+        run_dir=run_dir.name,
+        passed=not violations,
+        n_iterations_graded=2 if not violations else 0,
+        violations=violations,
+    )

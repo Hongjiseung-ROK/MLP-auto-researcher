@@ -137,6 +137,48 @@ class MLIPMetricsOutput(BaseModel):
     n_groups: int = Field(ge=0)
 
 
+class BoundedValidationRequest(BaseModel):
+    """Least-privilege WP5 request for the infrastructure-only replay."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    predictions_artifact: str
+    predictions_rerun_artifact: str
+    model_manifest_artifact: str
+    bounded_view_sha256: str = Field(min_length=64, max_length=64)
+    dataset_content_sha256: str = Field(min_length=64, max_length=64)
+    split_semantic_sha256: str = Field(min_length=64, max_length=64)
+    high_error_threshold_ev_per_a: float = Field(gt=0)
+    partition: Literal["validation"] = "validation"
+
+
+class BoundedValidationMetricsArtifact(BaseModel):
+    """Aggregate-only WP5 evidence with exact input identities."""
+
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    boundary: Literal["mlip_metrics/bounded_validation/1.0.0"] = (
+        "mlip_metrics/bounded_validation/1.0.0"
+    )
+    evaluation_code_sha256: str = Field(min_length=64, max_length=64)
+    partition: Literal["validation"] = "validation"
+    bounded_view_sha256: str = Field(min_length=64, max_length=64)
+    dataset_content_sha256: str = Field(min_length=64, max_length=64)
+    split_semantic_sha256: str = Field(min_length=64, max_length=64)
+    model_id: str
+    checkpoint_sha256: str = Field(min_length=64, max_length=64)
+    prediction_sha256: str = Field(min_length=64, max_length=64)
+    prediction_rerun_sha256: str = Field(min_length=64, max_length=64)
+    model_manifest_sha256: str = Field(min_length=64, max_length=64)
+    input_artifact_ids: list[str] = Field(min_length=3)
+    aggregate: AggregateMetrics
+    rerun_metric_delta: float = Field(ge=0)
+    units: dict[str, str]
+    scientific_status: Literal["infrastructure_only"] = "infrastructure_only"
+    claim_eligible: Literal[False] = False
+
+
 class LearningCurvePoint(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

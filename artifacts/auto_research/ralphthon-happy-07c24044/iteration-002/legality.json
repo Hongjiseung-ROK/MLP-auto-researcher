@@ -1,0 +1,12 @@
+{
+  "content_sha256": "a61ae76cd80538f7745e2279bf3fef17581c23d6c6bb188a3bc54aa5d01151e8",
+  "legal": true,
+  "per_mutation_class": [
+    "bounded_mutable"
+  ],
+  "policy_content_sha256": "8f295b71493366328841a18b71ed0b24c7b0bcc95730d111484d119b88981ebe",
+  "policy_id": "ralphthon-local-demo-mutation-policy",
+  "proposal_id": "ralphthon-local-demo-p002",
+  "schema_version": "1.0.0",
+  "violations": []
+}

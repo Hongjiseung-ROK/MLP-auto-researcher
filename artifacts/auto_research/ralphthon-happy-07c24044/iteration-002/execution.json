@@ -1,0 +1,29 @@
+{
+  "compute_attestation": "local-cpu",
+  "config_artifact": "iteration-002:candidate_config.json",
+  "content_sha256": "56d60200d0583af70d281b7d62a582c3904cbd6d73face21d0223c51e66d091c",
+  "dataset_artifact": "iteration-002:fixture_definition.json",
+  "environment_artifact": "run:environment.json",
+  "event_log_range": {
+    "first_sequence": 32,
+    "last_sequence": 33
+  },
+  "execution_id": "ralphthon-local-demo-p002-exec",
+  "failure_artifact": null,
+  "git_commit": "07c24044b47ba29c71d96a93243b856b8a1e3ab0",
+  "model_artifact": null,
+  "produced_artifacts": [
+    "iteration-002:fixture_definition.json",
+    "iteration-002:predictions.json",
+    "iteration-002:predictions_rerun.json"
+  ],
+  "proposal_artifact_sha256": "e80af8f4a5b72308c6cdba61108ba0c4ff9e2a65a4c75b903ed94032ae0b4992",
+  "resource_usage": {
+    "device": "cpu",
+    "peak_memory_mb": 260.0,
+    "wall_seconds": 9.0
+  },
+  "schema_version": "1.0.0",
+  "split_artifact": null,
+  "succeeded": true
+}

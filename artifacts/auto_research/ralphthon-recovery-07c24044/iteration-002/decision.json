@@ -1,0 +1,42 @@
+{
+  "acceptance_policy_version": "acceptance-policy/1.0.0",
+  "compute_budget": {
+    "detail": "runtime 9.00s (max 60.0s), memory 260.0MB (max 1024.0MB)",
+    "passed": true
+  },
+  "content_sha256": "a1075bcdcd7a4dcf9f04b30f770dbe8cc161da9d23bffb51d4b4c756406f03bf",
+  "decision": "reject",
+  "decision_id": "ralphthon-recovery-demo-p002-decision",
+  "engineering_validity": {
+    "detail": "execution completed and produced valid artifacts",
+    "passed": true
+  },
+  "evaluation_id": "ralphthon-recovery-demo-p002-eval",
+  "legality": {
+    "detail": "mutation was legal under the recorded policy",
+    "passed": true
+  },
+  "metric_result": {
+    "detail": "synthetic_validation_loss: 0.452839 vs baseline 0.449405 (relative improvement -0.0076)",
+    "passed": false
+  },
+  "proposal_id": "ralphthon-recovery-demo-p002",
+  "rationale": "Primary metric did not improve enough: relative change -0.0076 < threshold 0.99.",
+  "reproducibility": {
+    "detail": "rerun_metric_delta: 0.0 (max 1e-12)",
+    "passed": true
+  },
+  "schema_version": "1.0.0",
+  "scientific_objective": {
+    "detail": "objective unchanged; no method pivot involved",
+    "passed": true
+  },
+  "tail_risk": {
+    "detail": "synthetic_p95_residual: 0.48273700154324317 (max 2.0)",
+    "passed": true
+  },
+  "uncertainty": {
+    "detail": "evaluator notes recorded: Synthetic fixture metrics: the residual spread comes from a seeded deterministic noise model, so run-to-run uncertainty is zero by construction and these numbers support no scientific claim.",
+    "passed": true
+  }
+}

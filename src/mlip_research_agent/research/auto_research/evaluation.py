@@ -45,9 +45,7 @@ class EvaluationOutcome(ContentAddressedModel):
     )
     input_prediction_artifacts: list[str] = Field(min_length=1)
     metric_artifacts: list[str] = Field(min_length=1)
-    legality_result_sha256: str = Field(
-        min_length=SHA256_HEX_LENGTH, max_length=SHA256_HEX_LENGTH
-    )
+    legality_result_sha256: str = Field(min_length=SHA256_HEX_LENGTH, max_length=SHA256_HEX_LENGTH)
     aggregate_metrics: dict[str, float] = Field(
         min_length=1, description="Aggregates only; per-record errors never leave the evaluator"
     )
@@ -55,7 +53,9 @@ class EvaluationOutcome(ContentAddressedModel):
     baseline_reference: BaselineReference
     resource_metrics: dict[str, float] = Field(default_factory=dict)
     uncertainty_notes: str = Field(min_length=5, max_length=2000)
-    scientific_status: str = Field(pattern=r"^(non_scientific|staging_only|pilot_only)$")
+    scientific_status: str = Field(
+        pattern=r"^(non_scientific|infrastructure_only|staging_only|pilot_only)$"
+    )
 
     @model_validator(mode="after")
     def _no_per_record_leakage(self) -> EvaluationOutcome:

@@ -1,0 +1,49 @@
+{
+  "content_sha256": "f4cfb8c7ae467a836f5fded8f22821c6c27deab9e592a54a3d72bc4ee21e82d8",
+  "estimated_compute": {
+    "device": "cpu",
+    "estimated_seconds": 30.0,
+    "remote": false
+  },
+  "expected_mechanism": "Mutating gradient_clip explores a different bounded direction after learning_rate proved ineffective in iteration-001.",
+  "expected_observables": [
+    {
+      "expected_direction": "decrease",
+      "metric": "synthetic_validation_loss",
+      "rationale": "The mutation is chosen to move the primary metric toward the objective's success criterion."
+    }
+  ],
+  "falsification_condition": "If mutating gradient_clip also fails to improve the metric, neither knob is the binding factor and the mutation class itself is suspect.",
+  "hypothesis": "Iteration iteration-001 showed learning_rate is not the binding factor; a different bounded knob (gradient_clip) may be.",
+  "objective_id": "ralphthon-recovery-demo",
+  "parent_iteration_id": "iteration-001",
+  "proposal_id": "ralphthon-recovery-demo-p002",
+  "proposal_policy_version": "proposal-policy/1.0.0",
+  "proposed_mutations": [
+    {
+      "allowed_range": {
+        "choices": null,
+        "maximum": 100.0,
+        "minimum": 0.01,
+        "value_type": "float"
+      },
+      "content_sha256": "a64432d94cf92c00aa21c167a1401484b9763d958c651406aac2cb168ccc8b9e",
+      "engineering_effect": "Bounded halving of one configuration knob.",
+      "new_value": 0.5,
+      "old_value": 1.0,
+      "reversibility": "reversible",
+      "schema_version": "1.0.0",
+      "scientific_effect": "Mutating gradient_clip explores a different bounded direction after learning_rate proved ineffective in iteration-001.",
+      "target_key": "gradient_clip",
+      "target_path": "config_store/current.json",
+      "target_type": "config"
+    }
+  ],
+  "required_approval": null,
+  "required_skills": [
+    "tea_time_with_reading_poem"
+  ],
+  "risk_class": "low",
+  "schema_version": "1.0.0",
+  "seed": 20260713
+}

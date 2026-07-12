@@ -31,6 +31,17 @@ from mlip_research_agent.verification.trace_grader import grade_trace  # noqa: E
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-id", default=None, help="Override the run id")
+    parser.add_argument(
+        "--config",
+        default="configs/research/ralphthon_local_demo.yaml",
+        help="Repository-relative LocalDemoConfig path",
+    )
+    parser.add_argument(
+        "--output-root",
+        type=Path,
+        default=None,
+        help="Override the configured output root (useful for uncommitted checks)",
+    )
     args = parser.parse_args()
 
     git_commit = subprocess.run(
@@ -41,10 +52,11 @@ def main() -> int:
         check=True,
     ).stdout.strip()
 
-    demo = LocalDemoConfig.load(REPO_ROOT / "configs/research/ralphthon_local_demo.yaml")
+    demo = LocalDemoConfig.load(REPO_ROOT / args.config)
     policy = MutationPolicy.load(REPO_ROOT / demo.mutation_policy_path)
     run_id = args.run_id or f"ralphthon-demo-{git_commit[:8]}"
-    run_dir = REPO_ROOT / demo.output_root / run_id
+    output_root = args.output_root or (REPO_ROOT / demo.output_root)
+    run_dir = output_root / run_id
 
     controller = AutoResearchController(
         run_id=run_id,

@@ -80,7 +80,10 @@ def resolve_checkpoint(
             f"checkpoint SHA-256 mismatch: expected {manifest.checkpoint_sha256}, got {actual_sha}"
         )
     return ResolvedCheckpoint(
-        path=str(checkpoint_path.resolve()),
+        # Persist only a portable cache-relative identity. The verified SHA,
+        # size, filename, and manifest hash are the evidence; a user-home path
+        # is neither portable nor scientifically meaningful.
+        path=checkpoint_path.name,
         sha256=actual_sha,
         size_bytes=size,
         manifest_sha256=manifest.content_hash(),

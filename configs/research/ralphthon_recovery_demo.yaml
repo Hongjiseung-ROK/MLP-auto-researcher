@@ -1,0 +1,64 @@
+# Deterministic synthetic rollback fixture. The deliberately stringent
+# infrastructure-only threshold rejects both legal executions so the trace
+# proves transactional rollback and a connected second proposal.
+schema_version: "1.0.0"
+
+objective:
+  schema_version: "1.0.0"
+  objective_id: ralphthon-recovery-demo
+  title: Verify rejected-mutation rollback and connected recovery
+  research_question: >-
+    Does the Auto Research controller reject legal but insufficient synthetic
+    improvements, roll back the candidate configuration, record a lesson, and
+    generate a different second proposal without changing protected constants?
+  domain: research-infrastructure
+  benchmark_adapter: synthetic_quadratic_finetune_fixture/1.0.0
+  success_criteria:
+    - criterion_id: exercise-rollback
+      metric: synthetic_validation_loss
+      direction: minimize
+      description: Exercise the deterministic rejection and rollback path.
+  budget:
+    max_compute_seconds: 600.0
+    max_retries_per_iteration: 1
+    max_labels: 0
+    max_remote_jobs: 0
+  maximum_iterations: 2
+  protected_constants:
+    - key: dataset_content_sha256
+      value: bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48
+      reason: The synthetic fixture must never touch the real dataset.
+    - key: split_manifest_sha256
+      value: 80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e
+      reason: The synthetic fixture must never change partition identity.
+  allowed_mutation_classes: [bounded_mutable]
+  required_evaluator: synthetic_aggregate_evaluator/1.0.0
+  stopping_rules:
+    - rule_id: max-iterations
+      description: Stop after two connected rollback-path iterations.
+    - rule_id: budget-exhaustion
+      description: Stop partial when the synthetic compute budget is exhausted.
+  approval_requirements: []
+  scientific_status_ceiling: non_scientific
+  created_by: ralphthon-controller-recovery-fixture
+
+mutation_policy_path: configs/research/ralphthon_mutation_policy.yaml
+base_config:
+  learning_rate: 0.02
+  gradient_clip: 1.0
+  batch_size: 8
+  scheduler_patience: 5
+  force_loss_weight: 10.0
+  energy_loss_weight: 1.0
+  trainable_layer_policy: readout_only
+fixture_seed: 20260712
+output_root: artifacts/auto_research
+acceptance:
+  primary_metric: synthetic_validation_loss
+  minimize: true
+  min_relative_improvement: 0.99
+  tail_metric: synthetic_p95_residual
+  tail_max: 2.0
+  runtime_max_seconds: 60.0
+  memory_max_mb: 1024.0
+  reproducibility_max_delta: 1.0e-12

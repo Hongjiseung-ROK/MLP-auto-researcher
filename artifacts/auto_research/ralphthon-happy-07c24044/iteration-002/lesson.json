@@ -1,0 +1,23 @@
+{
+  "alternative_explanations": [
+    "The aggregate metric may mask a smaller configuration-specific effect.",
+    "The step size was too large or too small to reveal the mechanism."
+  ],
+  "anti_pattern": "decision=accept: do not repeat an identical learning_rate move without changing the step or direction.",
+  "applicability_conditions": "Applies only to this adapter, exact inputs, and bounded mutation policy.",
+  "attempt_summary": "Reducing learning_rate from 0.004 to 0.002 under hypothesis: The accepted direction on learning_rate in iteration-001 has not been exhausted; a bounded nearby value should yield a further, smaller improvement.",
+  "content_sha256": "89a0ad8db3bf0cecdd941411f1d6f466a70e5f4517b4e671cdb0d7fdc053c9c1",
+  "evidence_references": [
+    "iteration-002:decision.json",
+    "iteration-002:proposal.json",
+    "iteration-002:evaluation.json",
+    "iteration-002:execution.json"
+  ],
+  "iteration_id": "iteration-002",
+  "lesson_id": "ralphthon-local-demo-p002-lesson",
+  "likely_explanation": "Iteration iteration-001 accepted a move of learning_rate; a smaller step in the same direction tests whether the improvement continues toward the optimum.",
+  "limits": "Bounded infrastructure iteration; aggregate validation metrics support no scientific or checkpoint-selection claim.",
+  "observed_result": "synthetic_validation_loss = 0.051631 against baseline synthetic_validation_loss: 0.051631 vs baseline 0.087228 (relative improvement 0.4081); outcome: decrease.",
+  "recommended_next_mutation_class": "bounded_mutable",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,62 @@
+{
+  "allowed_mutation_classes": [
+    "bounded_mutable"
+  ],
+  "approval_requirements": [],
+  "benchmark_adapter": "synthetic_quadratic_finetune_fixture/1.0.0",
+  "budget": {
+    "max_compute_seconds": 600.0,
+    "max_labels": 0,
+    "max_remote_jobs": 0,
+    "max_retries_per_iteration": 1
+  },
+  "content_sha256": "c6772ac9edbfcd15ef1b8b3f26d445bfa0e9aff95963668e9b36d362962751ac",
+  "created_by": "ralphthon-controller-demo",
+  "domain": "research-infrastructure",
+  "maximum_iterations": 2,
+  "objective_id": "ralphthon-local-demo",
+  "protected_constants": [
+    {
+      "key": "dataset_content_sha256",
+      "reason": "H1-approved Cu dataset content hash; the loop must never touch it.",
+      "value": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48"
+    },
+    {
+      "key": "split_manifest_sha256",
+      "reason": "Whole-family split manifest; partition membership is frozen.",
+      "value": "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e"
+    },
+    {
+      "key": "primary_endpoint",
+      "reason": "Preregistered Phase 2 endpoint; only H2 can change it.",
+      "value": "force_mae_ev_per_angstrom_on_frozen_test"
+    }
+  ],
+  "required_evaluator": "synthetic_aggregate_evaluator/1.0.0",
+  "research_question": "Can the Auto Research controller propose a bounded fine-tuning configuration mutation, pause for Tea Time, validate legality, execute a deterministic fixture, accept or reject on an independent evaluation, record a lesson, and generate a second proposal that depends on the first outcome?",
+  "schema_version": "1.0.0",
+  "scientific_status_ceiling": "non_scientific",
+  "stopping_rules": [
+    {
+      "description": "Stop after maximum_iterations connected iterations.",
+      "rule_id": "max-iterations"
+    },
+    {
+      "description": "Stop with PARTIAL when the simulated compute budget is exhausted.",
+      "rule_id": "budget-exhaustion"
+    },
+    {
+      "description": "Stop with BLOCKED when a decision escalates to the owner.",
+      "rule_id": "escalation"
+    }
+  ],
+  "success_criteria": [
+    {
+      "criterion_id": "reduce-synthetic-loss",
+      "description": "The synthetic validation loss decreases by at least the acceptance policy's minimum relative improvement.",
+      "direction": "minimize",
+      "metric": "synthetic_validation_loss"
+    }
+  ],
+  "title": "Locally verify the bounded Auto Research loop on a synthetic fixture"
+}

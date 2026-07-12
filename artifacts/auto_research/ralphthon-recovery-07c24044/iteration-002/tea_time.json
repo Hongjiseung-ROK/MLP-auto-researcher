@@ -1,0 +1,21 @@
+{
+  "alternative_routes": [
+    "boundary_first",
+    "bounded_comparison"
+  ],
+  "benchmark_lock_in_risk": "low",
+  "claim_eligible": false,
+  "content_sha256": "150abb2849e43e2de84fbe1d4f49a9c4fb55517406bb20b8dce013f62d8dde2c",
+  "continue_or_refine_recommendation": "continue",
+  "evidence_class": "agent_text",
+  "objective_alignment": "Proposal ralphthon-recovery-demo-p002 mutates gradient_clip toward 'Verify rejected-mutation rollback and connected recovery'. Prior decisions: reject=1. Last failure category: none.",
+  "owner_question": "Budget remaining: 1 iterations, 591 compute-seconds. Continue this mutation direction, or ask for a bounded alternative?",
+  "pivot_request_rationale": "",
+  "post_hoc_selection_risk": "Selection uses the preregistered acceptance policy and aggregate metrics only; no per-record test errors reach the controller, so post-hoc metric shopping is structurally blocked. Residual risk: repeated bounded mutations of one knob can still overfit the fixture landscape.",
+  "proposal_id": "ralphthon-recovery-demo-p002",
+  "review_id": "tea-time-ralphthon-recovery-demo-p002",
+  "schema_version": "1.0.0",
+  "skill_reframings_artifact": "iteration-002-tea-time:reframings.json",
+  "skill_report_artifact": "iteration-002-tea-time:tea_time_report.md",
+  "trigger": "auto_research_iteration_boundary"
+}

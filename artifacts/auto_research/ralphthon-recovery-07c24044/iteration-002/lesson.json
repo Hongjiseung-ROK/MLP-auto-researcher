@@ -1,0 +1,23 @@
+{
+  "alternative_explanations": [
+    "The aggregate metric may mask a smaller configuration-specific effect.",
+    "The step size was too large or too small to reveal the mechanism."
+  ],
+  "anti_pattern": "decision=reject: do not repeat an identical gradient_clip move without changing the step or direction.",
+  "applicability_conditions": "Applies only to this adapter, exact inputs, and bounded mutation policy.",
+  "attempt_summary": "Reducing gradient_clip from 1.0 to 0.5 under hypothesis: Iteration iteration-001 showed learning_rate is not the binding factor; a different bounded knob (gradient_clip) may be.",
+  "content_sha256": "4eb59866db709c4232e3d7ee69d25b844c4c2ab11de0b33533c652376dd56225",
+  "evidence_references": [
+    "iteration-002:decision.json",
+    "iteration-002:proposal.json",
+    "iteration-002:evaluation.json",
+    "iteration-002:execution.json"
+  ],
+  "iteration_id": "iteration-002",
+  "lesson_id": "ralphthon-recovery-demo-p002-lesson",
+  "likely_explanation": "The mutation did not produce the hypothesized effect within bounds; the bounded response surface or step size is the likely reason.",
+  "limits": "Bounded infrastructure iteration; aggregate validation metrics support no scientific or checkpoint-selection claim.",
+  "observed_result": "synthetic_validation_loss = 0.452839 against baseline synthetic_validation_loss: 0.452839 vs baseline 0.449405 (relative improvement -0.0076); outcome: no qualifying decrease.",
+  "recommended_next_mutation_class": "bounded_mutable",
+  "schema_version": "1.0.0"
+}
