@@ -861,8 +861,7 @@ def grade_remote_infrastructure_trace(
         or environment.get("scipy_version") != "1.16.3"
         or environment.get("opt_einsum_version") != "3.4.0"
         or attestation.get("torch_version") != "2.11.0+cu128"
-        or str(environment.get("torch_version", "")).split("+", 1)[0]
-        != str(attestation.get("torch_version", "")).split("+", 1)[0]
+        or environment.get("torch_version") != attestation.get("torch_version")
     ):
         flag("dependency_lock", "environment.json", "dependency lock/freeze identity mismatch")
     baseline_evaluation = json.loads((run_dir / "baseline/evaluation.json").read_text())

@@ -199,7 +199,7 @@ def _write_run_verifications(args: argparse.Namespace) -> None:
         "evaluator": "mlip_validation_evaluator/1.0.0",
         "dependency_lock_sha256": sha256_file(lock_path),
         "pip_freeze_sha256": sha256_file(freeze_path),
-        "torch_version": metadata.version("torch"),
+        "torch_version": str(torch.__version__),
         "mace_torch_version": metadata.version("mace-torch"),
         "e3nn_version": metadata.version("e3nn"),
         "numpy_version": metadata.version("numpy"),
