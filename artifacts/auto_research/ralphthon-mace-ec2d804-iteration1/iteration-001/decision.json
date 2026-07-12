@@ -1,0 +1,42 @@
+{
+  "acceptance_policy_version": "acceptance-policy/1.0.0",
+  "compute_budget": {
+    "detail": "runtime 11.37s (max 1200.0s), memory 10058.3MB (max 24000.0MB)",
+    "passed": true
+  },
+  "content_sha256": "2ca9e300439f846e76365be1df5bfa44fd135b43b5cceebbe51e92ad8c05122f",
+  "decision": "reject",
+  "decision_id": "ralphthon-mace-replay-p001-decision",
+  "engineering_validity": {
+    "detail": "execution completed and produced valid artifacts",
+    "passed": true
+  },
+  "evaluation_id": "ralphthon-mace-replay-p001-eval",
+  "legality": {
+    "detail": "mutation was legal under the recorded policy",
+    "passed": true
+  },
+  "metric_result": {
+    "detail": "force_component_mae_ev_per_a: 0.072941 vs baseline 0.072980 (relative improvement 0.0005)",
+    "passed": false
+  },
+  "proposal_id": "ralphthon-mace-replay-p001",
+  "rationale": "Primary metric did not improve enough: relative change 0.0005 < threshold 0.001.",
+  "reproducibility": {
+    "detail": "rerun_metric_delta: 1.0 (max 0.0)",
+    "passed": false
+  },
+  "schema_version": "1.0.0",
+  "scientific_objective": {
+    "detail": "objective unchanged; no method pivot involved",
+    "passed": true
+  },
+  "tail_risk": {
+    "detail": "force_vector_error_p95_ev_per_a: 0.2511758188151736 (max 100.0)",
+    "passed": true
+  },
+  "uncertainty": {
+    "detail": "evaluator notes recorded: Validation aggregates support infrastructure decisions only; no calibrated uncertainty or protected-partition result is produced.",
+    "passed": true
+  }
+}

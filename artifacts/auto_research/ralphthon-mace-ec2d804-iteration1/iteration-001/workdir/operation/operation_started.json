@@ -1,0 +1,12 @@
+{
+  "checkpoint_sha256": null,
+  "claim_eligible": false,
+  "content_sha256": "9576be272e95c03ff92cdf180c55cc6ab6e7043b59d3d9179310c50d04af3762",
+  "model_sha256": null,
+  "operation_id": "iteration-001-ralphthon-mace-ec2d804f",
+  "optimizer_steps": 0,
+  "request_sha256": "66eec807dac769eec11368e5b92101e11f9a3e300530c144601f7884d244eb0e",
+  "schema_version": "1.0.0",
+  "scientific_status": "infrastructure_only",
+  "status": "started"
+}

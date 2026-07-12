@@ -1,0 +1,178 @@
+[
+  {
+    "artifact_id": "iteration-001-tea-time:reframings.json",
+    "created_by_step": "iteration-001-tea-time",
+    "kind": "reflection",
+    "relative_path": "steps/iteration-001-tea-time/reframings.json",
+    "sha256": "fbe00d207929094cf400582acdf60b979b28ec4907999dadedd19ee979519450",
+    "size_bytes": 4249
+  },
+  {
+    "artifact_id": "iteration-001-tea-time:tea_time_report.md",
+    "created_by_step": "iteration-001-tea-time",
+    "kind": "reflection",
+    "relative_path": "steps/iteration-001-tea-time/tea_time_report.md",
+    "sha256": "9630fd4c17de88fcd58f8d93ffdff6b723db21b031f65a435acef68b7a76f72b",
+    "size_bytes": 3530
+  },
+  {
+    "artifact_id": "iteration-001:candidate_config.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/candidate_config.json",
+    "sha256": "2c2cfd09ba8fab770d925ef089e3ee6a6c7a543f152324f8026d6c03939dfccd",
+    "size_bytes": 205
+  },
+  {
+    "artifact_id": "iteration-001:decision.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/decision.json",
+    "sha256": "e9fcf88db9c9139da781ae6c3be8e44075a37671877385d111d881169bde7697",
+    "size_bytes": 1509
+  },
+  {
+    "artifact_id": "iteration-001:evaluation.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/evaluation.json",
+    "sha256": "c3c55f4bc32c5f59bbd11afb676cb039c2e08cf09e276f1400babef326e0c1ae",
+    "size_bytes": 2492
+  },
+  {
+    "artifact_id": "iteration-001:execution.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/execution.json",
+    "sha256": "e0707f939e733d0ca1e38104d561b6e813237d6027a17946ff8678e30ebf3946",
+    "size_bytes": 1333
+  },
+  {
+    "artifact_id": "iteration-001:fine_tuned.model",
+    "created_by_step": "iteration-001",
+    "kind": "fine_tuned_mace_model",
+    "relative_path": "iteration-001/workdir/fine_tuned.model",
+    "sha256": "cbf606f2b6c9c6351b24678ab441a965f21f04e4eaed0b55a634e739c491a5ec",
+    "size_bytes": 16405495
+  },
+  {
+    "artifact_id": "iteration-001:fixture_definition.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/fixture_definition.json",
+    "sha256": "d4d86c7d4fe259d95f72f9c3a68d8c943104f4957f3b974dc0ac45c4f9b6f672",
+    "size_bytes": 1069
+  },
+  {
+    "artifact_id": "iteration-001:legality.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/legality.json",
+    "sha256": "c5e93df6aa3cc962f06d347558db783aefcc90e24709684f2b945dbb4ef3257d",
+    "size_bytes": 407
+  },
+  {
+    "artifact_id": "iteration-001:lesson.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/lesson.json",
+    "sha256": "2cc52c589e38e2230dc6e634816cda9c9d1ede913481e16a97ab82ca4d7d572d",
+    "size_bytes": 1582
+  },
+  {
+    "artifact_id": "iteration-001:metrics.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/metrics.json",
+    "sha256": "b6ecd528a28316d59fac09b626ec39fa488085db5f12b3fdb5dbf659cb0a9aaa",
+    "size_bytes": 1708
+  },
+  {
+    "artifact_id": "iteration-001:model_manifest.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/model_manifest.json",
+    "sha256": "7ce2e2dd39751a5fc13e79839e6680fe29b11a4ee33ab8f1688573779c812747",
+    "size_bytes": 435
+  },
+  {
+    "artifact_id": "iteration-001:mutation_diff.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/mutation_diff.json",
+    "sha256": "9a21b4206648acf86ac42ff39a854c4b9b3a795e89a6cabed920a3817418e13c",
+    "size_bytes": 1185
+  },
+  {
+    "artifact_id": "iteration-001:operation_completed.json",
+    "created_by_step": "iteration-001",
+    "kind": "optimizer_operation_receipt",
+    "relative_path": "iteration-001/workdir/operation/operation_completed.json",
+    "sha256": "5dc66dad9f736e5259d3636e9313b389a7023c4d71a59be2ea911ceb2578b30c",
+    "size_bytes": 565
+  },
+  {
+    "artifact_id": "iteration-001:operation_request.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/operation/operation_request.json",
+    "sha256": "800b958a1ff89af93756aded2ce17a3589e546474b3fc2d708f8bed99bbfb2e7",
+    "size_bytes": 784
+  },
+  {
+    "artifact_id": "iteration-001:operation_started.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/operation/operation_started.json",
+    "sha256": "6d967892c5fc520945e64f26fd911c0d137aae1744e503beb297b6faf21aefd4",
+    "size_bytes": 440
+  },
+  {
+    "artifact_id": "iteration-001:predictions.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/predictions.json",
+    "sha256": "ca4a77651df00aa095abc0ef492cdf661e839e56528eabd947cd71ab38defc5f",
+    "size_bytes": 495495
+  },
+  {
+    "artifact_id": "iteration-001:predictions_rerun.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/predictions_rerun.json",
+    "sha256": "fc6ae64b9df24655f13f1276f07f02ff834d65393d8d631b9d075f4eaae6e377",
+    "size_bytes": 495611
+  },
+  {
+    "artifact_id": "iteration-001:proposal.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/proposal.json",
+    "sha256": "758d6e6ddb262bb066eb10e7b79c6262e95df0c1a7ea0160a6aff08feb6d2193",
+    "size_bytes": 2214
+  },
+  {
+    "artifact_id": "iteration-001:rollback.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/rollback.json",
+    "sha256": "9ab598f07663b381d8f40e1e37eefc08d670f4b1c93c5ff7e2e2d271551ab8b0",
+    "size_bytes": 80
+  },
+  {
+    "artifact_id": "iteration-001:tea_time.json",
+    "created_by_step": "iteration-001",
+    "kind": "reflection",
+    "relative_path": "iteration-001/tea_time.json",
+    "sha256": "2e4b6a5c500399e9aa131084f25ff9e477a421b4419d1db7f6a2bfefb89818ec",
+    "size_bytes": 1338
+  },
+  {
+    "artifact_id": "iteration-001:training_evidence.json",
+    "created_by_step": "iteration-001",
+    "kind": "auto_research",
+    "relative_path": "iteration-001/workdir/training_evidence.json",
+    "sha256": "a31928b3d53f8b53156fb215bbfcee5d444259133fa210144b499eef80d048f4",
+    "size_bytes": 2103
+  }
+]

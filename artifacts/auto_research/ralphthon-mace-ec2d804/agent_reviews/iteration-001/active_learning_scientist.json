@@ -1,0 +1,34 @@
+{
+  "claim_eligible": false,
+  "content_sha256": "8ee58e3baac8b3c6f0bb4c9068b8b7e11423df346cc2cf1eea06e80f307480b3",
+  "engineering_rationale": "Iteration 1 passed legality, runtime, memory, and tail gates but failed the precommitted improvement threshold and reproducibility constraint. A readout-only step changes a permitted mutation class, avoids repeating the rejected learning-rate move, and reduces the trainable state that could contribute to run-to-run instability. This recommendation is gate-driven rather than post-hoc metric tuning and remains subordinate to legality, Tea Time, and evaluator decisions.",
+  "evidence_artifact_ids": [
+    "baseline_evaluation",
+    "iteration_001_decision",
+    "iteration_001_evaluation",
+    "iteration_001_execution",
+    "iteration_001_legality",
+    "iteration_001_lesson",
+    "mutation_policy",
+    "objective"
+  ],
+  "evidence_class": "agent_text",
+  "limitations": [
+    "The recommendation uses aggregate metrics from one optimizer step and cannot establish generalization, uncertainty calibration, or scientific validity.",
+    "The validation set is reused, with no protected evaluation data or claim-bearing evidence.",
+    "The checkpoint remains candidate_only, and the recommendation cannot override legality, Tea Time, or evaluator gates."
+  ],
+  "recommended_direction": "set_to:readout_only",
+  "recommended_mutation_class": "trainable_layer_policy",
+  "review_packet_sha256": "6578b3c4efc726d8a2c04b1cdde58bf8120b3c90da05356d37d3c97aec446a8b",
+  "review_status": "refine",
+  "risks": [
+    "Readout-only training may be too restrictive to improve force MAE by the precommitted threshold.",
+    "The observed reproducibility failure may originate outside the trainable-layer scope, so this mutation may not reduce rerun_metric_delta.",
+    "Energy MAE per atom worsened slightly in iteration 1, and another update could deepen that tradeoff.",
+    "Reusing the same validation set makes further adaptation vulnerable to post-hoc selection bias; results must remain infrastructure-only."
+  ],
+  "role": "active_learning_scientist",
+  "schema_version": "1.0.0",
+  "scientific_rationale": "Restricting adaptation to the readout preserves the candidate checkpoint's learned representation while testing whether a lower-capacity update can retain the small force-error improvement without increasing energy error. This is an infrastructure hypothesis only, not evidence of calibrated uncertainty or scientific superiority."
+}

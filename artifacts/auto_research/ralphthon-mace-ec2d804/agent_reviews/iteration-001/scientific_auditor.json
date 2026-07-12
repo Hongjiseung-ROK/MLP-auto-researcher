@@ -1,0 +1,36 @@
+{
+  "claim_eligible": false,
+  "content_sha256": "2c972054a113d82d8cf981105e6637b794d4402752617ce60bd3249bae6b7d96",
+  "engineering_rationale": "Proceeding is justified only to validate pause/review/resume and independent rejection within the same authorized infrastructure-only session. The mutation changes one legal parameter, preserves the connected trace, and can be evaluated by the existing gates. Reject iteration 2 if the reproducibility constraint fails again.",
+  "evidence_artifact_ids": [
+    "objective",
+    "mutation_policy",
+    "compute_attestation",
+    "checkpoint_verification",
+    "baseline_evaluation",
+    "iteration_001_execution",
+    "iteration_001_evaluation",
+    "iteration_001_decision",
+    "iteration_001_lesson",
+    "iteration_001_tea_time"
+  ],
+  "evidence_class": "agent_text",
+  "limitations": [
+    "This recommendation is solely for infrastructure validation, not model selection or scientific optimization.",
+    "Aggregate-only evidence cannot diagnose the reproducibility failure.",
+    "No pool, test, or stress labels were accessed, and claim_eligible remains false."
+  ],
+  "recommended_direction": "decrease within the recorded bound",
+  "recommended_mutation_class": "learning_rate",
+  "review_packet_sha256": "6578b3c4efc726d8a2c04b1cdde58bf8120b3c90da05356d37d3c97aec446a8b",
+  "review_status": "refine",
+  "risks": [
+    "The smaller update may produce changes below meaningful numerical resolution.",
+    "The unresolved rerun_metric_delta=1.0 may dominate any mutation effect.",
+    "Two rejected iterations would validate control flow but provide no optimization or scientific conclusion.",
+    "The candidate-only checkpoint must not be promoted or used for claims."
+  ],
+  "role": "scientific_auditor",
+  "schema_version": "1.0.0",
+  "scientific_rationale": "A second, bounded learning-rate decrease is non-identical and falsifiable. It tests whether the iteration-1 energy degradation is consistent with an overly large update, without treating the rejected iteration as accepted evidence. Scientific interpretation remains prohibited unless reproducibility passes."
+}

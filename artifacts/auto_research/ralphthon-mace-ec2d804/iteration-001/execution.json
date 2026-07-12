@@ -1,0 +1,35 @@
+{
+  "compute_attestation": "run:compute_attestation.json",
+  "config_artifact": "iteration-001:candidate_config.json",
+  "content_sha256": "16e5ec70175d0f66a5b61d5e486d8630827aaff68e56cbfb96b2711920a456f3",
+  "dataset_artifact": "iteration-001:fixture_definition.json",
+  "environment_artifact": "run:environment.json",
+  "event_log_range": {
+    "first_sequence": 12,
+    "last_sequence": 13
+  },
+  "execution_id": "ralphthon-mace-replay-p001-exec",
+  "failure_artifact": null,
+  "git_commit": "ec2d804fb3b6dafa012620d83436007569de5e7c",
+  "model_artifact": "iteration-001:fine_tuned.model",
+  "produced_artifacts": [
+    "iteration-001:fixture_definition.json",
+    "iteration-001:predictions.json",
+    "iteration-001:predictions_rerun.json",
+    "iteration-001:model_manifest.json",
+    "iteration-001:training_evidence.json",
+    "iteration-001:operation_request.json",
+    "iteration-001:operation_started.json",
+    "iteration-001:fine_tuned.model",
+    "iteration-001:operation_completed.json"
+  ],
+  "proposal_artifact_sha256": "9e4d6055bacc69d177d01f7308fdfd8171d38f8c34eae339a4f2ff110f00ee7e",
+  "resource_usage": {
+    "device": "gpu",
+    "peak_memory_mb": 10058.31201171875,
+    "wall_seconds": 11.3716193140001
+  },
+  "schema_version": "1.0.0",
+  "split_artifact": "run:split_verification.json",
+  "succeeded": true
+}

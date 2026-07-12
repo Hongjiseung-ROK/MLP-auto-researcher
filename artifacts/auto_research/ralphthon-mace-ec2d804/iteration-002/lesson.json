@@ -1,0 +1,23 @@
+{
+  "alternative_explanations": [
+    "The aggregate metric may mask a smaller configuration-specific effect.",
+    "The step size was too large or too small to reveal the mechanism."
+  ],
+  "anti_pattern": "decision=reject: do not repeat an identical learning_rate move without changing the step or direction.",
+  "applicability_conditions": "Applies only to this adapter, exact inputs, and bounded mutation policy.",
+  "attempt_summary": "Reducing learning_rate from 0.001 to 0.0005 under hypothesis: The evidence-bound review synthesis recommends a bounded decrease within the recorded bound move for learning_rate; one exact-commit replay step will test that direction.",
+  "content_sha256": "bbb4a0c89b4f92834fd3c5196daeb05fe0718933eedca10b19cd55dd7d374069",
+  "evidence_references": [
+    "iteration-002:decision.json",
+    "iteration-002:proposal.json",
+    "iteration-002:evaluation.json",
+    "iteration-002:execution.json"
+  ],
+  "iteration_id": "iteration-002",
+  "lesson_id": "ralphthon-mace-replay-p002-lesson",
+  "likely_explanation": "The mutation did not produce the hypothesized effect within bounds; the bounded response surface or step size is the likely reason.",
+  "limits": "Bounded infrastructure iteration; aggregate validation metrics support no scientific or checkpoint-selection claim.",
+  "observed_result": "force_component_mae_ev_per_a = 0.072883 against baseline force_component_mae_ev_per_a: 0.072883 vs baseline 0.072980 (relative improvement 0.0013); outcome: no qualifying decrease.",
+  "recommended_next_mutation_class": "bounded_mutable",
+  "schema_version": "1.0.0"
+}

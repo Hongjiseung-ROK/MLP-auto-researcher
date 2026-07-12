@@ -1,0 +1,32 @@
+{
+  "accepted_recommendations": [
+    "Accept the auditor's bounded learning-rate refinement solely to validate resume and independent re-evaluation.",
+    "Accept the MLIP review's requirement to preserve checkpoint, data, split, optimizer-step count, receipts, and claim ceiling.",
+    "Accept the active-learning review's warning that validation reuse and post-hoc selection prohibit scientific interpretation."
+  ],
+  "claim_eligible": false,
+  "content_sha256": "858ce7c9ca721ad11e1ed9172d41f42c05a95230cf8794273e7b14f11af37d92",
+  "evidence_class": "agent_text",
+  "iteration_evidence_sha256": {
+    "decision": "e9fcf88db9c9139da781ae6c3be8e44075a37671877385d111d881169bde7697",
+    "evaluation": "c3c55f4bc32c5f59bbd11afb676cb039c2e08cf09e276f1400babef326e0c1ae",
+    "lesson": "2cc52c589e38e2230dc6e634816cda9c9d1ede913481e16a97ab82ca4d7d572d",
+    "proposal": "758d6e6ddb262bb066eb10e7b79c6262e95df0c1a7ea0160a6aff08feb6d2193"
+  },
+  "iteration_id": "iteration-001",
+  "rationale": "Iteration 1 was legally executed but independently rejected for sub-threshold force-MAE improvement and failed exact rerun equality. For the infrastructure-only pause/review/resume test, use the least confounded non-identical legal response: a smaller learning-rate move from the rolled-back base while preserving the exact data, candidate checkpoint, trainable-layer policy, one-step budget, evaluator, and rejection gates.",
+  "recommended_direction": "decrease within the recorded bound",
+  "recommended_mutation_class": "learning_rate",
+  "rejected_recommendations": [
+    "Reject last_interaction_and_readout because broader trainability adds representation and memory confounds while reproducibility is unresolved.",
+    "Reject set_to:readout_only because the rolled-back current state is already readout_only, so it is not a legal mutation.",
+    "Reject checkpoint selection, promotion, protected evaluation, and any claim-bearing interpretation."
+  ],
+  "review_hashes": {
+    "active_learning_scientist": "8ee58e3baac8b3c6f0bb4c9068b8b7e11423df346cc2cf1eea06e80f307480b3",
+    "mlip_scientist": "65786bd9910ccf8d35c813b1e0d6c3916a1b11c2713273b1843b6a0bc717a335",
+    "scientific_auditor": "2c972054a113d82d8cf981105e6637b794d4402752617ce60bd3249bae6b7d96"
+  },
+  "review_packet_sha256": "6578b3c4efc726d8a2c04b1cdde58bf8120b3c90da05356d37d3c97aec446a8b",
+  "schema_version": "1.0.0"
+}

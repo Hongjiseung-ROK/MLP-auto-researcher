@@ -1,0 +1,60 @@
+{
+  "aggregate_metrics": {
+    "energy_mae_ev_per_atom": 0.003742964877427205,
+    "force_component_mae_ev_per_a": 0.07297993144655539,
+    "force_component_rmse_ev_per_a": 0.09065232673239901,
+    "force_vector_error_p95_ev_per_a": 0.25132143974576443,
+    "high_error_structure_fraction": 0.0,
+    "n_atoms": 4320.0,
+    "n_structures": 40.0,
+    "rerun_metric_delta": 1.0
+  },
+  "baseline_reference": {
+    "baseline_id": "none",
+    "metrics": {},
+    "source_artifact": null
+  },
+  "constraint_results": [
+    {
+      "constraint_id": "tail-max",
+      "description": "Validation force-vector p95 stays within the infrastructure limit.",
+      "limit": 100.0,
+      "observed": 0.25132143974576443,
+      "passed": true
+    },
+    {
+      "constraint_id": "runtime-max",
+      "description": "Execution stays within the bounded runtime.",
+      "limit": 1200.0,
+      "observed": 26.207093149000002,
+      "passed": true
+    },
+    {
+      "constraint_id": "memory-max",
+      "description": "Execution stays within the bounded memory limit.",
+      "limit": 24000.0,
+      "observed": 537.08203125,
+      "passed": true
+    }
+  ],
+  "content_sha256": "92662704aac6e4640f29bdcc183938ef809be4e4709fd641650f65756f81a87a",
+  "evaluation_id": "baseline-evaluation",
+  "evaluator_name": "mlip_validation_evaluator/1.0.0",
+  "evaluator_source_sha256": "da9c552831fb68cccfe9d40692132c558d1b19eb2695da85db20434dcd46a14b",
+  "execution_id": "baseline",
+  "input_prediction_artifacts": [
+    "baseline:predictions.json",
+    "baseline:predictions_rerun.json"
+  ],
+  "legality_result_sha256": "e739271ff79b353e0d84a96f95c021e865de5e4ceef036210294c6aa0d8789e0",
+  "metric_artifacts": [
+    "baseline:metrics.json"
+  ],
+  "resource_metrics": {
+    "peak_memory_mb": 537.08203125,
+    "wall_seconds": 26.207093149000002
+  },
+  "schema_version": "1.0.0",
+  "scientific_status": "infrastructure_only",
+  "uncertainty_notes": "Validation aggregates support infrastructure decisions only; no calibrated uncertainty or protected-partition result is produced."
+}

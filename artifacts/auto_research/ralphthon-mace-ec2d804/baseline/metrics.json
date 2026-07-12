@@ -1,0 +1,37 @@
+{
+  "aggregate": {
+    "energy_mae_ev_per_atom": 0.003742964877427205,
+    "force_component_mae_ev_per_a": 0.07297993144655539,
+    "force_component_rmse_ev_per_a": 0.09065232673239901,
+    "force_vector_error_p95_ev_per_a": 0.25132143974576443,
+    "high_error_structure_fraction": 0.0,
+    "n_atoms": 4320,
+    "n_structures": 40
+  },
+  "boundary": "mlip_metrics/bounded_validation/1.0.0",
+  "bounded_view_sha256": "90ef76ca4c927401ac59ee645236af23b6d49d229ec9da53cae0f16dd27e2be7",
+  "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+  "claim_eligible": false,
+  "dataset_content_sha256": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48",
+  "evaluation_code_sha256": "f2a3b48df3bf34c8c35dcae342df5325d28e9118e1439e39d4296f54e155b413",
+  "input_artifact_ids": [
+    "baseline:predictions.json",
+    "baseline:predictions_rerun.json",
+    "baseline:model_manifest.json"
+  ],
+  "model_id": "mace-mp-0-small-2023-12-10-infrastructure-2ddb079cee0e",
+  "model_manifest_sha256": "72c44989c80fb42ed3caa36bd7a9bc3975c6d39cc6fda0d36f1c514e3644a5cf",
+  "partition": "validation",
+  "prediction_rerun_sha256": "99cb5097a473f40ad0daec231f35bda625c8fa750813ac1e1fd2b5bd6a91dae1",
+  "prediction_sha256": "850f6e8d21843a862470d202b23fa51d8673ab5ab981fc0c91e4700eca75ce64",
+  "rerun_metric_delta": 1.0,
+  "schema_version": "1.0.0",
+  "scientific_status": "infrastructure_only",
+  "split_semantic_sha256": "4fb9397aeb3ec4ab3a52078b10663beff912d1bb209b5969b06406885ec6bfc9",
+  "units": {
+    "energy_mae": "eV/atom",
+    "force_component_mae": "eV/angstrom",
+    "force_component_rmse": "eV/angstrom",
+    "force_vector_error_p95": "eV/angstrom"
+  }
+}

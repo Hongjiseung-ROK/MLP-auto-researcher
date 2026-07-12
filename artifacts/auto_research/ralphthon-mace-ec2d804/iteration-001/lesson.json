@@ -1,0 +1,23 @@
+{
+  "alternative_explanations": [
+    "The aggregate metric may mask a smaller configuration-specific effect.",
+    "The step size was too large or too small to reveal the mechanism."
+  ],
+  "anti_pattern": "decision=reject: do not repeat an identical learning_rate move without changing the step or direction.",
+  "applicability_conditions": "Applies only to this adapter, exact inputs, and bounded mutation policy.",
+  "attempt_summary": "Reducing learning_rate from 0.001 to 0.0002 under hypothesis: A smaller learning rate may reduce the aggregate validation force error after one bounded MACE optimizer step from the same foundation checkpoint.",
+  "content_sha256": "436384d5490ad52af611a270e24ebec88f88273054da0df3794d51a83a82f3e1",
+  "evidence_references": [
+    "iteration-001:decision.json",
+    "iteration-001:proposal.json",
+    "iteration-001:evaluation.json",
+    "iteration-001:execution.json"
+  ],
+  "iteration_id": "iteration-001",
+  "lesson_id": "ralphthon-mace-replay-p001-lesson",
+  "likely_explanation": "The mutation did not produce the hypothesized effect within bounds; the bounded response surface or step size is the likely reason.",
+  "limits": "Bounded infrastructure iteration; aggregate validation metrics support no scientific or checkpoint-selection claim.",
+  "observed_result": "force_component_mae_ev_per_a = 0.072941 against baseline force_component_mae_ev_per_a: 0.072941 vs baseline 0.072980 (relative improvement 0.0005); outcome: no qualifying decrease.",
+  "recommended_next_mutation_class": "bounded_mutable",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,69 @@
+{
+  "aggregate_metrics": {
+    "energy_mae_ev_per_atom": 0.0037845541641134323,
+    "force_component_mae_ev_per_a": 0.07294113791747851,
+    "force_component_rmse_ev_per_a": 0.09060404594316081,
+    "force_vector_error_p95_ev_per_a": 0.2511758188151736,
+    "high_error_structure_fraction": 0.0,
+    "n_atoms": 4320.0,
+    "n_structures": 40.0,
+    "rerun_metric_delta": 1.0
+  },
+  "baseline_reference": {
+    "baseline_id": "accepted-config-baseline",
+    "metrics": {
+      "energy_mae_ev_per_atom": 0.003742964877427205,
+      "force_component_mae_ev_per_a": 0.07297993144655539,
+      "force_component_rmse_ev_per_a": 0.09065232673239901,
+      "force_vector_error_p95_ev_per_a": 0.25132143974576443,
+      "high_error_structure_fraction": 0.0,
+      "n_atoms": 4320.0,
+      "n_structures": 40.0,
+      "rerun_metric_delta": 1.0
+    },
+    "source_artifact": null
+  },
+  "constraint_results": [
+    {
+      "constraint_id": "tail-max",
+      "description": "Validation force-vector p95 stays within the infrastructure limit.",
+      "limit": 100.0,
+      "observed": 0.2511758188151736,
+      "passed": true
+    },
+    {
+      "constraint_id": "runtime-max",
+      "description": "Execution stays within the bounded runtime.",
+      "limit": 1200.0,
+      "observed": 11.3716193140001,
+      "passed": true
+    },
+    {
+      "constraint_id": "memory-max",
+      "description": "Execution stays within the bounded memory limit.",
+      "limit": 24000.0,
+      "observed": 10058.31201171875,
+      "passed": true
+    }
+  ],
+  "content_sha256": "c4d8dd7da24d511f2c69aa7dd08c18022db827138831e23566609a5a3f45c962",
+  "evaluation_id": "ralphthon-mace-replay-p001-eval",
+  "evaluator_name": "mlip_validation_evaluator/1.0.0",
+  "evaluator_source_sha256": "da9c552831fb68cccfe9d40692132c558d1b19eb2695da85db20434dcd46a14b",
+  "execution_id": "ralphthon-mace-replay-p001-exec",
+  "input_prediction_artifacts": [
+    "iteration-001:predictions.json",
+    "iteration-001:predictions_rerun.json"
+  ],
+  "legality_result_sha256": "97039a4827e3ab59e99143c348758f1471e2418652d869bae417eda556fb48e8",
+  "metric_artifacts": [
+    "iteration-001:metrics.json"
+  ],
+  "resource_metrics": {
+    "peak_memory_mb": 10058.31201171875,
+    "wall_seconds": 11.3716193140001
+  },
+  "schema_version": "1.0.0",
+  "scientific_status": "infrastructure_only",
+  "uncertainty_notes": "Validation aggregates support infrastructure decisions only; no calibrated uncertainty or protected-partition result is produced."
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint": {
+    "sha256": "b1e544d8e8aa7e4ff7d7a6465c44c983a13cc1a988ffc92aa51b15353396c30d"
+  },
+  "claim_eligible": false,
+  "model_id": "mace-mp-0-small-2023-12-10-infrastructure-b1e544d8e8aa",
+  "predictions_artifact": "iteration-002:predictions.json",
+  "schema_version": "2.0.0",
+  "scientific_status": "infrastructure_only",
+  "structure_set_sha256": "5f8fdc4f74e5b020dea4efc9e539b0cc8c350907b3a544d6f5e984a735a882ec"
+}

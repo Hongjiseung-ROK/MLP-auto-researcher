@@ -1,0 +1,566 @@
+{
+  "allowed_evidence_artifact_ids": [
+    "baseline_evaluation",
+    "checkpoint_verification",
+    "compute_attestation",
+    "dataset_verification",
+    "environment",
+    "iteration_001_decision",
+    "iteration_001_evaluation",
+    "iteration_001_execution",
+    "iteration_001_legality",
+    "iteration_001_lesson",
+    "iteration_001_proposal",
+    "iteration_001_tea_time",
+    "mutation_policy",
+    "objective",
+    "split_verification"
+  ],
+  "artifact_file_sha256": {
+    "baseline_evaluation": "f674e0493a07f1dfe985138e7168e5a48927110db5403e1f1cc01ca71cbaf80a",
+    "checkpoint_verification": "035778c820cd051db06b01e8a75b5d38a6b0bb36d5070c9d485b6ace5ee7f227",
+    "compute_attestation": "eaf5c4198deb96895eb7ca8dc6b629539f77a378b4103d10c0223a04029c3b5a",
+    "dataset_verification": "9b68d22004cb31aa624619861718a1f0d5c9079bbfdeff955709439683abd51c",
+    "environment": "b4b8ef23aba067d0ebe7404bff6d12cbb04c654ab7cdf0dc65bee368cab5c127",
+    "iteration_001_decision": "e9fcf88db9c9139da781ae6c3be8e44075a37671877385d111d881169bde7697",
+    "iteration_001_evaluation": "c3c55f4bc32c5f59bbd11afb676cb039c2e08cf09e276f1400babef326e0c1ae",
+    "iteration_001_execution": "e0707f939e733d0ca1e38104d561b6e813237d6027a17946ff8678e30ebf3946",
+    "iteration_001_legality": "c5e93df6aa3cc962f06d347558db783aefcc90e24709684f2b945dbb4ef3257d",
+    "iteration_001_lesson": "2cc52c589e38e2230dc6e634816cda9c9d1ede913481e16a97ab82ca4d7d572d",
+    "iteration_001_proposal": "758d6e6ddb262bb066eb10e7b79c6262e95df0c1a7ea0160a6aff08feb6d2193",
+    "iteration_001_tea_time": "2e4b6a5c500399e9aa131084f25ff9e477a421b4419d1db7f6a2bfefb89818ec",
+    "mutation_policy": "84cf4a79939d6fb7d43a3f620d58d9ab2a914aa484b172277782a7b0a5ebc1ce",
+    "objective": "c3f6e539f79d2e51d4aa18eb168224b9e494eef8baecb614c742017a85fc5b9f",
+    "split_verification": "8015d8b73bc9ccc1fcd3e0d37e06ae9592edb6ae3805eefae96eb5dfee4f4ad0"
+  },
+  "artifact_payloads": {
+    "baseline_evaluation": {
+      "aggregate_metrics": {
+        "energy_mae_ev_per_atom": 0.003742964877427205,
+        "force_component_mae_ev_per_a": 0.07297993144655539,
+        "force_component_rmse_ev_per_a": 0.09065232673239901,
+        "force_vector_error_p95_ev_per_a": 0.25132143974576443,
+        "high_error_structure_fraction": 0.0,
+        "n_atoms": 4320.0,
+        "n_structures": 40.0,
+        "rerun_metric_delta": 1.0
+      },
+      "baseline_reference": {
+        "baseline_id": "none",
+        "metrics": {},
+        "source_artifact": null
+      },
+      "constraint_results": [
+        {
+          "constraint_id": "tail-max",
+          "description": "Validation force-vector p95 stays within the infrastructure limit.",
+          "limit": 100.0,
+          "observed": 0.25132143974576443,
+          "passed": true
+        },
+        {
+          "constraint_id": "runtime-max",
+          "description": "Execution stays within the bounded runtime.",
+          "limit": 1200.0,
+          "observed": 26.207093149000002,
+          "passed": true
+        },
+        {
+          "constraint_id": "memory-max",
+          "description": "Execution stays within the bounded memory limit.",
+          "limit": 24000.0,
+          "observed": 537.08203125,
+          "passed": true
+        }
+      ],
+      "content_sha256": "92662704aac6e4640f29bdcc183938ef809be4e4709fd641650f65756f81a87a",
+      "evaluation_id": "baseline-evaluation",
+      "evaluator_name": "mlip_validation_evaluator/1.0.0",
+      "evaluator_source_sha256": "da9c552831fb68cccfe9d40692132c558d1b19eb2695da85db20434dcd46a14b",
+      "execution_id": "baseline",
+      "input_prediction_artifacts": [
+        "baseline:predictions.json",
+        "baseline:predictions_rerun.json"
+      ],
+      "legality_result_sha256": "e739271ff79b353e0d84a96f95c021e865de5e4ceef036210294c6aa0d8789e0",
+      "metric_artifacts": [
+        "baseline:metrics.json"
+      ],
+      "resource_metrics": {
+        "peak_memory_mb": 537.08203125,
+        "wall_seconds": 26.207093149000002
+      },
+      "schema_version": "1.0.0",
+      "scientific_status": "infrastructure_only",
+      "uncertainty_notes": "Validation aggregates support infrastructure decisions only; no calibrated uncertainty or protected-partition result is produced."
+    },
+    "checkpoint_verification": {
+      "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+      "checkpoint_size_bytes": 32581838,
+      "claim_eligible": false,
+      "mace_torch_version": "0.3.16",
+      "model_id": "mace-mp-0-small-2023-12-10",
+      "scientific_status": "candidate_only"
+    },
+    "compute_attestation": {
+      "canonical_accelerator": "nvidia-l4",
+      "config_hash": "02483cc11548adaeb6ecbdcdb6c05910b867eb03b7f10178bd79789f98e2de20",
+      "cuda_runtime": "12.8",
+      "driver_version": "580.82.07",
+      "environment_hash": "24fc2b6a66876ee0f8b31e5727a1dda7534d178434ff0ca1f61f2cdde1af0b0d",
+      "gpu_uuid": "GPU-ad4d7610-a916-f5a8-72f8-05aecfef22ad",
+      "observed_gpu_count": 1,
+      "observed_gpu_name": "NVIDIA L4",
+      "policy_decision": "allow",
+      "policy_reasons": [],
+      "provider": "colab",
+      "repo_commit": "ec2d804fb3b6dafa012620d83436007569de5e7c",
+      "requested_accelerator": "nvidia-l4",
+      "run_id": "ralphthon-mace-ec2d804f",
+      "schema_version": "0.1.0",
+      "started_at": "2026-07-12T02:03:54+00:00",
+      "torch_version": "2.11.0+cu128",
+      "vram_mb": 23034,
+      "workload_class": "gpu_smoke_test"
+    },
+    "dataset_verification": {
+      "bounded_label_view_sha256": "90ef76ca4c927401ac59ee645236af23b6d49d229ec9da53cae0f16dd27e2be7",
+      "claim_eligible": false,
+      "contains_only_d0_and_validation": true,
+      "dataset_content_sha256": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48",
+      "n_initial_labeled": 32,
+      "n_validation": 40,
+      "normalized_manifest_sha256": "ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3",
+      "scientific_status": "infrastructure_only"
+    },
+    "environment": {
+      "adapter": "mace_phase2_infrastructure_replay/1.0.0",
+      "ase_version": "3.29.0",
+      "claim_eligible": false,
+      "dependency_lock_sha256": "24fc2b6a66876ee0f8b31e5727a1dda7534d178434ff0ca1f61f2cdde1af0b0d",
+      "e3nn_version": "0.4.4",
+      "evaluator": "mlip_validation_evaluator/1.0.0",
+      "git_commit": "ec2d804fb3b6dafa012620d83436007569de5e7c",
+      "mace_torch_version": "0.3.16",
+      "numpy_version": "2.0.2",
+      "opt_einsum_version": "3.4.0",
+      "pip_freeze_sha256": "84fe98cfd32914b315f21e07a822e90ed84a5f6af67cc31e57e6b364d2db26ff",
+      "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+      "python": "3.12.13",
+      "scientific_status": "infrastructure_only",
+      "scipy_version": "1.16.3",
+      "torch_version": "2.11.0+cu128"
+    },
+    "iteration_001_decision": {
+      "acceptance_policy_version": "acceptance-policy/1.0.0",
+      "compute_budget": {
+        "detail": "runtime 11.37s (max 1200.0s), memory 10058.3MB (max 24000.0MB)",
+        "passed": true
+      },
+      "content_sha256": "2ca9e300439f846e76365be1df5bfa44fd135b43b5cceebbe51e92ad8c05122f",
+      "decision": "reject",
+      "decision_id": "ralphthon-mace-replay-p001-decision",
+      "engineering_validity": {
+        "detail": "execution completed and produced valid artifacts",
+        "passed": true
+      },
+      "evaluation_id": "ralphthon-mace-replay-p001-eval",
+      "legality": {
+        "detail": "mutation was legal under the recorded policy",
+        "passed": true
+      },
+      "metric_result": {
+        "detail": "force_component_mae_ev_per_a: 0.072941 vs baseline 0.072980 (relative improvement 0.0005)",
+        "passed": false
+      },
+      "proposal_id": "ralphthon-mace-replay-p001",
+      "rationale": "Primary metric did not improve enough: relative change 0.0005 < threshold 0.001.",
+      "reproducibility": {
+        "detail": "rerun_metric_delta: 1.0 (max 0.0)",
+        "passed": false
+      },
+      "schema_version": "1.0.0",
+      "scientific_objective": {
+        "detail": "objective unchanged; no method pivot involved",
+        "passed": true
+      },
+      "tail_risk": {
+        "detail": "force_vector_error_p95_ev_per_a: 0.2511758188151736 (max 100.0)",
+        "passed": true
+      },
+      "uncertainty": {
+        "detail": "evaluator notes recorded: Validation aggregates support infrastructure decisions only; no calibrated uncertainty or protected-partition result is produced.",
+        "passed": true
+      }
+    },
+    "iteration_001_evaluation": {
+      "aggregate_metrics": {
+        "energy_mae_ev_per_atom": 0.0037845541641134323,
+        "force_component_mae_ev_per_a": 0.07294113791747851,
+        "force_component_rmse_ev_per_a": 0.09060404594316081,
+        "force_vector_error_p95_ev_per_a": 0.2511758188151736,
+        "high_error_structure_fraction": 0.0,
+        "n_atoms": 4320.0,
+        "n_structures": 40.0,
+        "rerun_metric_delta": 1.0
+      },
+      "baseline_reference": {
+        "baseline_id": "accepted-config-baseline",
+        "metrics": {
+          "energy_mae_ev_per_atom": 0.003742964877427205,
+          "force_component_mae_ev_per_a": 0.07297993144655539,
+          "force_component_rmse_ev_per_a": 0.09065232673239901,
+          "force_vector_error_p95_ev_per_a": 0.25132143974576443,
+          "high_error_structure_fraction": 0.0,
+          "n_atoms": 4320.0,
+          "n_structures": 40.0,
+          "rerun_metric_delta": 1.0
+        },
+        "source_artifact": null
+      },
+      "constraint_results": [
+        {
+          "constraint_id": "tail-max",
+          "description": "Validation force-vector p95 stays within the infrastructure limit.",
+          "limit": 100.0,
+          "observed": 0.2511758188151736,
+          "passed": true
+        },
+        {
+          "constraint_id": "runtime-max",
+          "description": "Execution stays within the bounded runtime.",
+          "limit": 1200.0,
+          "observed": 11.3716193140001,
+          "passed": true
+        },
+        {
+          "constraint_id": "memory-max",
+          "description": "Execution stays within the bounded memory limit.",
+          "limit": 24000.0,
+          "observed": 10058.31201171875,
+          "passed": true
+        }
+      ],
+      "content_sha256": "c4d8dd7da24d511f2c69aa7dd08c18022db827138831e23566609a5a3f45c962",
+      "evaluation_id": "ralphthon-mace-replay-p001-eval",
+      "evaluator_name": "mlip_validation_evaluator/1.0.0",
+      "evaluator_source_sha256": "da9c552831fb68cccfe9d40692132c558d1b19eb2695da85db20434dcd46a14b",
+      "execution_id": "ralphthon-mace-replay-p001-exec",
+      "input_prediction_artifacts": [
+        "iteration-001:predictions.json",
+        "iteration-001:predictions_rerun.json"
+      ],
+      "legality_result_sha256": "97039a4827e3ab59e99143c348758f1471e2418652d869bae417eda556fb48e8",
+      "metric_artifacts": [
+        "iteration-001:metrics.json"
+      ],
+      "resource_metrics": {
+        "peak_memory_mb": 10058.31201171875,
+        "wall_seconds": 11.3716193140001
+      },
+      "schema_version": "1.0.0",
+      "scientific_status": "infrastructure_only",
+      "uncertainty_notes": "Validation aggregates support infrastructure decisions only; no calibrated uncertainty or protected-partition result is produced."
+    },
+    "iteration_001_execution": {
+      "compute_attestation": "run:compute_attestation.json",
+      "config_artifact": "iteration-001:candidate_config.json",
+      "content_sha256": "16e5ec70175d0f66a5b61d5e486d8630827aaff68e56cbfb96b2711920a456f3",
+      "dataset_artifact": "iteration-001:fixture_definition.json",
+      "environment_artifact": "run:environment.json",
+      "event_log_range": {
+        "first_sequence": 12,
+        "last_sequence": 13
+      },
+      "execution_id": "ralphthon-mace-replay-p001-exec",
+      "failure_artifact": null,
+      "git_commit": "ec2d804fb3b6dafa012620d83436007569de5e7c",
+      "model_artifact": "iteration-001:fine_tuned.model",
+      "produced_artifacts": [
+        "iteration-001:fixture_definition.json",
+        "iteration-001:predictions.json",
+        "iteration-001:predictions_rerun.json",
+        "iteration-001:model_manifest.json",
+        "iteration-001:training_evidence.json",
+        "iteration-001:operation_request.json",
+        "iteration-001:operation_started.json",
+        "iteration-001:fine_tuned.model",
+        "iteration-001:operation_completed.json"
+      ],
+      "proposal_artifact_sha256": "9e4d6055bacc69d177d01f7308fdfd8171d38f8c34eae339a4f2ff110f00ee7e",
+      "resource_usage": {
+        "device": "gpu",
+        "peak_memory_mb": 10058.31201171875,
+        "wall_seconds": 11.3716193140001
+      },
+      "schema_version": "1.0.0",
+      "split_artifact": "run:split_verification.json",
+      "succeeded": true
+    },
+    "iteration_001_legality": {
+      "content_sha256": "97039a4827e3ab59e99143c348758f1471e2418652d869bae417eda556fb48e8",
+      "legal": true,
+      "per_mutation_class": [
+        "bounded_mutable"
+      ],
+      "policy_content_sha256": "8f295b71493366328841a18b71ed0b24c7b0bcc95730d111484d119b88981ebe",
+      "policy_id": "ralphthon-local-demo-mutation-policy",
+      "proposal_id": "ralphthon-mace-replay-p001",
+      "schema_version": "1.0.0",
+      "violations": []
+    },
+    "iteration_001_lesson": {
+      "alternative_explanations": [
+        "The aggregate metric may mask a smaller configuration-specific effect.",
+        "The step size was too large or too small to reveal the mechanism."
+      ],
+      "anti_pattern": "decision=reject: do not repeat an identical learning_rate move without changing the step or direction.",
+      "applicability_conditions": "Applies only to this adapter, exact inputs, and bounded mutation policy.",
+      "attempt_summary": "Reducing learning_rate from 0.001 to 0.0002 under hypothesis: A smaller learning rate may reduce the aggregate validation force error after one bounded MACE optimizer step from the same foundation checkpoint.",
+      "content_sha256": "436384d5490ad52af611a270e24ebec88f88273054da0df3794d51a83a82f3e1",
+      "evidence_references": [
+        "iteration-001:decision.json",
+        "iteration-001:proposal.json",
+        "iteration-001:evaluation.json",
+        "iteration-001:execution.json"
+      ],
+      "iteration_id": "iteration-001",
+      "lesson_id": "ralphthon-mace-replay-p001-lesson",
+      "likely_explanation": "The mutation did not produce the hypothesized effect within bounds; the bounded response surface or step size is the likely reason.",
+      "limits": "Bounded infrastructure iteration; aggregate validation metrics support no scientific or checkpoint-selection claim.",
+      "observed_result": "force_component_mae_ev_per_a = 0.072941 against baseline force_component_mae_ev_per_a: 0.072941 vs baseline 0.072980 (relative improvement 0.0005); outcome: no qualifying decrease.",
+      "recommended_next_mutation_class": "bounded_mutable",
+      "schema_version": "1.0.0"
+    },
+    "iteration_001_proposal": {
+      "content_sha256": "9e4d6055bacc69d177d01f7308fdfd8171d38f8c34eae339a4f2ff110f00ee7e",
+      "estimated_compute": {
+        "device": "gpu",
+        "estimated_seconds": 900.0,
+        "remote": true
+      },
+      "expected_mechanism": "Reducing the update magnitude may improve one-step numerical stability without changing the data, checkpoint, seed, or trainable-layer policy.",
+      "expected_observables": [
+        {
+          "expected_direction": "decrease",
+          "metric": "force_component_mae_ev_per_a",
+          "rationale": "The independent evaluator will compare only aggregate validation metrics under the fixed infrastructure contract."
+        }
+      ],
+      "falsification_condition": "If the independently computed aggregate validation force error does not improve by the precommitted threshold, the one-step smaller-update hypothesis is rejected for this infrastructure trace.",
+      "hypothesis": "A smaller learning rate may reduce the aggregate validation force error after one bounded MACE optimizer step from the same foundation checkpoint.",
+      "objective_id": "ralphthon-mace-replay",
+      "parent_iteration_id": null,
+      "proposal_id": "ralphthon-mace-replay-p001",
+      "proposal_policy_version": "mace-infrastructure-replay/1.0.0",
+      "proposed_mutations": [
+        {
+          "allowed_range": {
+            "choices": null,
+            "maximum": 0.1,
+            "minimum": 1e-06,
+            "value_type": "float"
+          },
+          "content_sha256": "1486c53bcc9e08e1561944ac9e7991f0134888c809ba06ea31a1ed6fcd98a464",
+          "engineering_effect": "Use smaller optimizer steps without changing the checkpoint, data, or trainable-layer policy.",
+          "new_value": 0.0002,
+          "old_value": 0.001,
+          "reversibility": "reversible",
+          "schema_version": "1.0.0",
+          "scientific_effect": "A smaller update may improve the independently evaluated aggregate validation force metric for this bounded infrastructure replay.",
+          "target_key": "learning_rate",
+          "target_path": "config_store/current.json",
+          "target_type": "config"
+        }
+      ],
+      "required_approval": null,
+      "required_skills": [
+        "tea_time_with_reading_poem",
+        "mace_finetune",
+        "mlip_metrics"
+      ],
+      "risk_class": "medium",
+      "schema_version": "1.0.0",
+      "seed": 20260712
+    },
+    "iteration_001_tea_time": {
+      "alternative_routes": [
+        "boundary_first",
+        "bounded_comparison"
+      ],
+      "benchmark_lock_in_risk": "low",
+      "claim_eligible": false,
+      "content_sha256": "58b0a25222077b904c2a4f78051f90fc432dd885accafc9ef76b031972707b3e",
+      "continue_or_refine_recommendation": "continue",
+      "evidence_class": "agent_text",
+      "objective_alignment": "Proposal ralphthon-mace-replay-p001 mutates learning_rate toward 'Verify the bounded real-MACE Auto Research infrastructure loop'. Prior decisions: none yet. Last failure category: none.",
+      "owner_question": "Budget remaining: 2 iterations, 3600 compute-seconds. Continue this mutation direction, or ask for a bounded alternative?",
+      "pivot_request_rationale": "",
+      "post_hoc_selection_risk": "Selection uses the preregistered acceptance policy and aggregate metrics only; no per-record test errors reach the controller, so post-hoc metric shopping is structurally blocked. Residual risk: repeated bounded mutations of one knob can still overfit the fixture landscape.",
+      "proposal_id": "ralphthon-mace-replay-p001",
+      "review_id": "tea-time-ralphthon-mace-replay-p001",
+      "schema_version": "1.0.0",
+      "skill_reframings_artifact": "iteration-001-tea-time:reframings.json",
+      "skill_report_artifact": "iteration-001-tea-time:tea_time_report.md",
+      "trigger": "auto_research_remote_prelaunch"
+    },
+    "mutation_policy": {
+      "bounded_mutable": {
+        "batch_size": {
+          "choices": null,
+          "maximum": 64.0,
+          "minimum": 1.0,
+          "value_type": "int"
+        },
+        "energy_loss_weight": {
+          "choices": null,
+          "maximum": 1000.0,
+          "minimum": 0.1,
+          "value_type": "float"
+        },
+        "force_loss_weight": {
+          "choices": null,
+          "maximum": 1000.0,
+          "minimum": 0.1,
+          "value_type": "float"
+        },
+        "gradient_clip": {
+          "choices": null,
+          "maximum": 100.0,
+          "minimum": 0.01,
+          "value_type": "float"
+        },
+        "learning_rate": {
+          "choices": null,
+          "maximum": 0.1,
+          "minimum": 1e-06,
+          "value_type": "float"
+        },
+        "scheduler_patience": {
+          "choices": null,
+          "maximum": 50.0,
+          "minimum": 1.0,
+          "value_type": "int"
+        },
+        "trainable_layer_policy": {
+          "choices": [
+            "all",
+            "readout_only",
+            "last_interaction_and_readout"
+          ],
+          "maximum": null,
+          "minimum": null,
+          "value_type": "choice"
+        }
+      },
+      "content_sha256": "8f295b71493366328841a18b71ed0b24c7b0bcc95730d111484d119b88981ebe",
+      "freely_mutable_fixture_only": [],
+      "immutable": [
+        "dataset_content_sha256",
+        "normalized_manifest_sha256",
+        "split_manifest_sha256",
+        "partition_membership",
+        "primary_endpoint",
+        "frozen_test_policy",
+        "label_budget",
+        "experiment_arms",
+        "scientific_claim_ceiling",
+        "approval_records",
+        "source_code"
+      ],
+      "owner_gated": [
+        "checkpoint_id",
+        "checkpoint_sha256",
+        "checkpoint_family"
+      ],
+      "policy_id": "ralphthon-local-demo-mutation-policy",
+      "policy_version": "1.0.0",
+      "schema_version": "1.0.0"
+    },
+    "objective": {
+      "allowed_mutation_classes": [
+        "bounded_mutable"
+      ],
+      "approval_requirements": [],
+      "benchmark_adapter": "mace_phase2_infrastructure_replay/1.0.0",
+      "budget": {
+        "max_compute_seconds": 3600.0,
+        "max_labels": 0,
+        "max_remote_jobs": 1,
+        "max_retries_per_iteration": 0
+      },
+      "content_sha256": "9789e4b574e35ee6ccefc1b3c8482e27dd710d6c3617f5c9569ec5c11156cad9",
+      "created_by": "bounded-colab-infrastructure-replay",
+      "domain": "research-infrastructure",
+      "maximum_iterations": 2,
+      "objective_id": "ralphthon-mace-replay",
+      "protected_constants": [
+        {
+          "key": "dataset_content_sha256",
+          "reason": "H1-approved source dataset identity.",
+          "value": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48"
+        },
+        {
+          "key": "normalized_manifest_sha256",
+          "reason": "Immutable normalized-manifest bytes.",
+          "value": "ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3"
+        },
+        {
+          "key": "split_manifest_sha256",
+          "reason": "Immutable partition assignment.",
+          "value": "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e"
+        },
+        {
+          "key": "checkpoint_sha256",
+          "reason": "Candidate-only infrastructure checkpoint.",
+          "value": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736"
+        },
+        {
+          "key": "scientific_claim_ceiling",
+          "reason": "The replay may produce no scientific claim.",
+          "value": "infrastructure_only"
+        }
+      ],
+      "required_evaluator": "mlip_validation_evaluator/1.0.0",
+      "research_question": "Can one exact-commit L4 session execute two connected, independently evaluated one-step MACE configuration experiments over the approved D0 and validation label view with a host review pause and no protected data?",
+      "schema_version": "1.0.0",
+      "scientific_status_ceiling": "infrastructure_only",
+      "stopping_rules": [
+        {
+          "description": "Stop after two connected iterations.",
+          "rule_id": "two-iterations"
+        },
+        {
+          "description": "Pause after iteration one for three specialized host reviews.",
+          "rule_id": "external-review"
+        },
+        {
+          "description": "Ambiguous optimizer execution escalates without relaunch.",
+          "rule_id": "no-retry"
+        }
+      ],
+      "success_criteria": [
+        {
+          "criterion_id": "validation-force-component-mae",
+          "description": "Infrastructure-only aggregate validation comparison.",
+          "direction": "minimize",
+          "metric": "force_component_mae_ev_per_a"
+        }
+      ],
+      "title": "Verify the bounded real-MACE Auto Research infrastructure loop"
+    },
+    "split_verification": {
+      "acquisition_pool_labels_accessed": false,
+      "claim_eligible": false,
+      "protected_partitions_accessed": false,
+      "scientific_status": "infrastructure_only",
+      "split_manifest_sha256": "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e",
+      "split_semantic_sha256": "4fb9397aeb3ec4ab3a52078b10663beff912d1bb209b5969b06406885ec6bfc9"
+    }
+  },
+  "claim_eligible": false,
+  "content_sha256": "6578b3c4efc726d8a2c04b1cdde58bf8120b3c90da05356d37d3c97aec446a8b",
+  "iteration_id": "iteration-001",
+  "protected_records_included": false,
+  "schema_version": "1.0.0"
+}
