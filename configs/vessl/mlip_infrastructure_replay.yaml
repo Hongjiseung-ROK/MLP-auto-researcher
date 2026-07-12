@@ -1,0 +1,49 @@
+schema_version: "1.0.0"
+profile_id: vessl_mlip_infrastructure_replay
+provider: vessl_cloud
+execution_status: local_dry_run_only
+scientific_status: infrastructure_only
+claim_eligible: false
+
+competition:
+  route: general_track_1
+  official_skill_dependencies:
+    - auto-research
+    - vessl-cloud-onboarding
+  karpathy_training_path_used: false
+  wandb_mode: disabled
+
+immutable_inputs:
+  dataset_sha256: bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48
+  normalized_manifest_sha256: ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3
+  split_sha256: 80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e
+  bounded_label_view_sha256: 90ef76ca4c927401ac59ee645236af23b6d49d229ec9da53cae0f16dd27e2be7
+  checkpoint_sha256: 2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736
+  checkpoint_status: candidate_only
+
+resource_gate:
+  accelerator: NVIDIA A100
+  gpu_count: 1
+  exact_resource_spec: owner_must_select_from_live_inventory
+  image: owner_must_approve_exact_digest
+  vesslctl_job_file_schema_verified: false
+  cost_approval_required: true
+
+topology:
+  jobs: 2
+  sequential: true
+  same_session: false
+  job_1: baseline_and_iteration_1
+  host_pause: three_specialized_reviews_and_synthesis
+  job_2: iteration_2_only
+  iteration_1_retry_after_ambiguous_execution: forbidden
+  optimizer_receipts_per_iteration: 1
+
+data_transport:
+  root: /runs/<run-id>
+  bounded_label_view_only: true
+  frozen_test: forbidden
+  acquisition_pool_labels: forbidden
+  stress_labels: forbidden
+  full_dataset: forbidden
+  volume_deletion_requires_separate_confirmation: true

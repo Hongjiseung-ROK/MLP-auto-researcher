@@ -23,6 +23,14 @@ infrastructure-only real-data/real-MACE replay completed on Colab L4 at
 hash-verified pull-back, passing trace grade, and stable session cleanup.
 H2, H3, and H5 remain open.
 
+Phase 4 vendors the official Ralphthon @ICML plugin version 0.5.0 at commit
+`a9f4f2583648ef4ca54f980f951ae393d153473f` without modifying upstream files.
+MLIP work routes through official General Track 1; the pinned VESSL cookbook
+Karpathy Training path and `val_bpb` remain separate. The current `vesslctl`
+provider and two-sequential-Job replay contract are locally implemented and
+dry-run verified only. `vesslctl` is not installed on this host and no VESSL
+compute or storage has been created.
+
 The mlearn Cu/MACE path is a pipeline-hardening scaffold. Keep reusable controller,
 evaluation, provenance, and compute interfaces model- and benchmark-agnostic.
 Record consequential scientific choices in `docs/PHASE2_DECISIONS.md` and unresolved
@@ -124,6 +132,12 @@ execution paths are retired. Attestation/compute artifacts carry timestamps —
 never wire compute skills into byte-reproducibility-gated scientific DAGs.
 `pytest -m colab_remote` / `-m vessl_remote` markers are opt-in real-resource
 tests; ordinary CI runs mocks only.
+
+Current VESSL Cloud integration uses only `vesslctl`. Its read-only transport
+allowlists commands and invokes argument arrays with `shell=False`; billable Job
+creation additionally requires a live-schema-verified JSON config and sealed
+cost approval. Do not use the legacy `vessl` CLI, create resources during
+default tests, or treat credit as spend authorization.
 
 Phase 1 campaign allowlists remain mock-only. Phase 2 real capabilities use separate
 typed research/SKILL boundaries instead of silently widening those stable schemas.

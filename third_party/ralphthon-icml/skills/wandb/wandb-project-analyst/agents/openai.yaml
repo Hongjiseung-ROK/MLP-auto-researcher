@@ -1,0 +1,11 @@
+interface:
+  display_name: "W&B Project Analyst"
+  short_description: "Analyze W&B runs, traces, evals, and artifacts"
+  default_prompt: "Use $wandb-project-analyst to analyze this W&B project and ground the findings in live data."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "wandb"
+      description: "W&B MCP server for live Models and Weave analysis"
+      transport: "streamable_http"
+      url: "https://mcp.withwandb.com/mcp"

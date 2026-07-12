@@ -168,11 +168,6 @@ class MACEFineTuneSkill(Skill):
                 "the preregistration"
             )
         bundle = load_and_validate_data(params, ctx.registry)
-        if params.batch_size < len(bundle.train_records):
-            raise validation_error(
-                "boundary test requires batch_size >= the training subset size so resume "
-                "occurs only at complete epoch boundaries"
-            )
         manifest_path = local_file(params.checkpoint_manifest_path, "checkpoint manifest")
         foundation_path = local_file(params.checkpoint_path, "foundation checkpoint")
         try:

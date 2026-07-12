@@ -1,0 +1,4 @@
+interface:
+  display_name: "Track Experiments with W&B"
+  short_description: "Track experiment metrics, provenance, and alerts"
+  default_prompt: "Use $wandb-track-experiment to add W&B tracking and guarded alerts to this experiment loop."

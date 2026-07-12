@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Weave Tracing"
+  short_description: "Instrument and verify Weave traces in AI applications"
+  default_prompt: "Use $weave-add-tracing to add and verify W&B Weave tracing in this AI application."

@@ -35,7 +35,10 @@ def _colab_credentials_missing() -> bool:
 
 
 def _vessl_credentials_missing() -> bool:
-    return "VESSL_ACCESS_TOKEN" not in os.environ
+    return (
+        os.environ.get("RUN_VESSL_REMOTE_TESTS") != "1"
+        or shutil.which("vesslctl") is None
+    )
 
 
 class _AuthOnlyColabTransport:
@@ -63,18 +66,22 @@ class _AuthOnlyColabTransport:
 
 
 class _AuthOnlyVesslTransport:
-    """Read-only real transport: checks VESSL CLI auth, never runs a job."""
+    """Read-only real transport: checks current vesslctl auth, never runs a job."""
 
     def auth_status(self) -> tuple[bool, str, str]:
         try:
             proc = subprocess.run(
-                ["vessl", "whoami"], capture_output=True, text=True, timeout=30
+                ["vesslctl", "auth", "status", "-o", "json"],
+                shell=False,
+                capture_output=True,
+                text=True,
+                timeout=30,
             )
         except (OSError, subprocess.TimeoutExpired) as exc:
-            return False, "vessl-cli", f"vessl CLI auth check failed: {exc!r}"
+            return False, "vesslctl", f"vesslctl auth check failed: {type(exc).__name__}"
         authenticated = proc.returncode == 0
-        detail = "vessl CLI reachable" if authenticated else proc.stderr.strip()
-        return authenticated, "vessl-cli", detail
+        detail = "vesslctl auth status succeeded" if authenticated else "auth status failed"
+        return authenticated, "vesslctl", detail
 
     def start_session(self, spec: JobSpec) -> Any:
         raise NotImplementedError("opt-in auth check never submits jobs")
@@ -96,7 +103,10 @@ def test_colab_remote_validate_auth_reports_authenticated(tmp_path: Path) -> Non
 
 
 @pytest.mark.vessl_remote
-@pytest.mark.skipif(_vessl_credentials_missing(), reason="no VESSL_ACCESS_TOKEN in environment")
+@pytest.mark.skipif(
+    _vessl_credentials_missing(),
+    reason="set RUN_VESSL_REMOTE_TESTS=1 with an installed authenticated vesslctl",
+)
 def test_vessl_remote_validate_auth_reports_authenticated(tmp_path: Path) -> None:
     policy = load_policy(POLICY_PATH)
     provider = VesslProvider(policy, tmp_path, transport=_AuthOnlyVesslTransport())

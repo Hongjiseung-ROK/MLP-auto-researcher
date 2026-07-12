@@ -1,0 +1,15 @@
+schema_version: "1.0.0"
+repository: https://github.com/team-attention/ralphthon-icml.git
+commit: a9f4f2583648ef4ca54f980f951ae393d153473f
+plugin_version: "0.5.0"
+registered_at: "2026-07-12"
+license: MIT
+vendor_root: third_party/ralphthon-icml
+source_manifest: third_party/ralphthon-icml/SOURCE_MANIFEST.json
+provenance: copied_verbatim
+
+policy:
+  upstream_skills_immutable: true
+  mlip_route: general_track_1
+  karpathy_training_route: separate_optional_dependency
+  claim_eligible: false

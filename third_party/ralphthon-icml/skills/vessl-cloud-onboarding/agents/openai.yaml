@@ -1,0 +1,4 @@
+interface:
+  display_name: "VESSL Cloud Onboarding"
+  short_description: "Set up vesslctl, Jobs, and storage safely"
+  default_prompt: "Use $vessl-cloud-onboarding to verify VESSL Cloud and review exact compute, Job, storage, timeout, and cleanup costs before creation."

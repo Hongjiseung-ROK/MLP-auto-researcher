@@ -240,3 +240,14 @@ not scientific findings. The complete trace passed the independent grader,
 78 pulled-back files were covered by the strict artifact manifest, and the
 session was confirmed absent. H2, H3, and H5 remain open; no checkpoint was
 selected or promoted.
+
+**D-P2-23. Ralphthon MLIP uses official General Track 1 and current VESSL Cloud
+only (2026-07-12).** The official Ralphthon plugin is byte-pinned at
+`a9f4f2583648ef4ca54f980f951ae393d153473f` (version 0.5.0). Cu/MACE cannot
+enter the Karpathy Training path or mix energy/force metrics with `val_bpb`;
+the pinned VESSL cookbook remains optional and unchanged for that independent
+benchmark. The VESSL replay uses two sequential Jobs with a host review pause,
+not an idle GPU or the same-session Colab contract. Current `vesslctl` Job
+creation is gated by exact live cost approval and a verified Job-file schema.
+Because the CLI is absent and no spend is authorized, capability is local
+implementation/dry-run only. H2/H3/H5 remain open.

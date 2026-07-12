@@ -1,0 +1,4 @@
+interface:
+  display_name: "W&B Onboarding"
+  short_description: "Set up W&B with reviewed offline sync"
+  default_prompt: "Use $wandb-onboarding to guide signup, verify an offline run, and review the exact destination and upload allowlist before sync."

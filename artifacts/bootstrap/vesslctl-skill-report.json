@@ -1,0 +1,14 @@
+{
+  "canonical_targets": [
+    "~/.agents/skills",
+    "~/.claude/skills"
+  ],
+  "cli_installed": false,
+  "install_command_pending_confirmation": "curl -fsSL https://api.cloud.vessl.ai/cli/install.sh | bash",
+  "official_skill_installed": false,
+  "official_skill_sha256": null,
+  "reason": "vesslctl was not present on PATH; the installer was not authorized",
+  "schema_version": "1.0.0",
+  "scientific_status": "infrastructure_only",
+  "token_material_recorded": false
+}

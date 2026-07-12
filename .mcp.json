@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "vessl-docs": {
+      "type": "http",
+      "url": "https://docs.cloud.vessl.ai/mcp"
+    }
+  }
+}

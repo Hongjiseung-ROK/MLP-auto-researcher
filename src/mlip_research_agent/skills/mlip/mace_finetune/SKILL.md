@@ -19,10 +19,10 @@ without crossing the H2 preregistration gate.
   `mace_inference` (filename, size, SHA-256, `mace-torch==0.3.16`,
   `candidate_only` status) before any bytes are deserialized.
 - Training is seeded (`python`/`numpy`/`torch`/loader generator), uses
-  Adam/AdamW with `ReduceLROnPlateau` and gradient clipping, and trains only at
-  full-epoch boundaries: `batch_size` must cover the training subset so resume
-  happens at complete epochs.
-- After every epoch a complete continuation state (model/optimizer/scheduler/
+  Adam/AdamW with `ReduceLROnPlateau` and gradient clipping, and executes one
+  deterministic mini-batch per bounded optimizer operation. Policy-legal
+  `batch_size` reductions remain executable.
+- After every bounded optimizer operation a complete continuation state (model/optimizer/scheduler/
   RNG states, metric records) is checkpointed atomically. `resume_state_artifact`
   resumes only when the resume-contract SHA-256 (hyperparameters + data
   identity + base checkpoint) matches exactly.
@@ -39,7 +39,7 @@ without crossing the H2 preregistration gate.
 
 ## Maturity and limits
 
-- Maturity: boundary test locally executable on CPU; `pilot` mode is disabled
+- Maturity: boundary test executable by the approved compute provider; `pilot` mode is disabled
   in code until H2 selects a checkpoint and freezes the preregistration.
 - Scientific status: `training_boundary_only` — outputs are infrastructure
   evidence, never scientific claims.

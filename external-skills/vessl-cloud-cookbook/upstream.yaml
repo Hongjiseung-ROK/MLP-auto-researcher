@@ -1,0 +1,14 @@
+schema_version: "1.0.0"
+repository: https://github.com/vessl-ai/vessl-cloud-cookbook.git
+commit: 97a0af14b0acae042162b1f70f17fbe2d570afa2
+registered_at: "2026-07-12"
+license: Apache-2.0
+upstream_path: autoresearch/
+vendored: false
+usage: optional_official_karpathy_training_path_only
+
+policy:
+  authoritative_for: karpathy_autoresearch_training
+  forbidden_for: mlip_cu_mace_benchmark
+  metric: val_bpb
+  may_mix_with_mlip_metrics: false

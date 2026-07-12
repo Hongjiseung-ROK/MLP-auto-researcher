@@ -1,0 +1,35 @@
+schema_version: "1.0.0"
+competition: Ralphthon @ICML
+plugin:
+  repository: https://github.com/team-attention/ralphthon-icml.git
+  commit: a9f4f2583648ef4ca54f980f951ae393d153473f
+  version: "0.5.0"
+route: general_track_1
+research_domain: mlip_cu_mace
+required_official_skills:
+  - auto-research
+  - vessl-cloud-onboarding
+karpathy_training_path:
+  enabled: false
+  cookbook_repository: https://github.com/vessl-ai/vessl-cloud-cookbook.git
+  cookbook_commit: 97a0af14b0acae042162b1f70f17fbe2d570afa2
+  metric: val_bpb
+  may_mix_with_mlip_metrics: false
+outputs:
+  agent_workflow: required
+  short_paper_pages: [2, 4]
+  self_review: required
+  frozen_evidence_map: required
+template:
+  path: paper/track1/track1-submission-template.md
+  upstream_sha256: 302bb1fc5aa91ffb7d28ce0d2d08783540c427d33baa503e7a3ca172796ded01
+status:
+  scientific_status: infrastructure_only
+  claim_eligible: false
+  paper_drafting_authorized: false
+  h2_open: true
+  h3_open: true
+  h5_open: true
+wandb:
+  default_mode: disabled
+  online_sync_authorized: false

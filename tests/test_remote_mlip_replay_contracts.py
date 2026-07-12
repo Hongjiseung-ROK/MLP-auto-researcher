@@ -31,6 +31,7 @@ from mlip_research_agent.research.auto_research import (
     generate_proposal,
 )
 from mlip_research_agent.research.auto_research.adapters.mace_phase2 import (
+    MACEPhase2Adapter,
     build_initial_mace_proposal,
 )
 from mlip_research_agent.research.auto_research.operations import (
@@ -189,6 +190,57 @@ def test_trainable_layer_policy_is_real() -> None:
     assert frozen and all(not name.startswith("readouts.") for name in frozen)
     trainable, _ = _configure_trainable_layers(model, "last_interaction_and_readout")
     assert any(name.startswith("interactions.1.") for name in trainable)
+    with pytest.raises(ValueError, match="unsupported trainable layer policy"):
+        _configure_trainable_layers(model, "typo_falls_back_nowhere")
+
+
+def test_mace_replay_loads_one_calculator_for_both_prediction_passes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    adapter = MACEPhase2Adapter(
+        label_view_path=tmp_path / "view.json",
+        checkpoint_manifest_path=tmp_path / "manifest.json",
+        checkpoint_path=tmp_path / "checkpoint.model",
+        label_view_sha256="a" * 64,
+        git_commit="b" * 40,
+        compute_attestation="attestation:test",
+    )
+    calculator = object()
+    loads: list[tuple[Path, str, str]] = []
+    writes: list[tuple[Path, object]] = []
+
+    def fake_make(path: Path, device: str, dtype: str) -> object:
+        loads.append((path, device, dtype))
+        return calculator
+
+    def fake_predict(
+        view: object,
+        manifest: object,
+        model_path: Path,
+        output_path: Path,
+        workdir: Path,
+        received: object,
+    ) -> None:
+        writes.append((output_path, received))
+
+    monkeypatch.setattr(
+        "mlip_research_agent.research.auto_research.adapters.mace_phase2._make_calculator",
+        fake_make,
+    )
+    monkeypatch.setattr(adapter, "_predict", fake_predict)
+    adapter._predict_pair(
+        object(),  # type: ignore[arg-type]
+        object(),  # type: ignore[arg-type]
+        tmp_path / "checkpoint.model",
+        tmp_path / "predictions.json",
+        tmp_path / "predictions-rerun.json",
+        tmp_path,
+    )
+    assert loads == [(tmp_path / "checkpoint.model", "cuda", "float64")]
+    assert writes == [
+        (tmp_path / "predictions.json", calculator),
+        (tmp_path / "predictions-rerun.json", calculator),
+    ]
 
 
 def _review(role: str, packet_sha256: str = "a" * 64) -> AgentReview:

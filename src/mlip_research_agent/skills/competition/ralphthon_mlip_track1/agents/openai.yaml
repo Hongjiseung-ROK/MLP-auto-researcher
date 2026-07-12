@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ralphthon MLIP Track 1"
+  short_description: "Route bounded MLIP research to Track 1"
+  default_prompt: "Use $ralphthon-mlip-track1 to validate a bounded MLIP General Track 1 workflow."
