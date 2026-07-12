@@ -1,0 +1,53 @@
+{
+  "allowed_mutation_classes": [
+    "bounded_mutable"
+  ],
+  "approval_requirements": [],
+  "benchmark_adapter": "synthetic_quadratic_finetune_fixture/1.0.0",
+  "budget": {
+    "max_compute_seconds": 600.0,
+    "max_labels": 0,
+    "max_remote_jobs": 0,
+    "max_retries_per_iteration": 1
+  },
+  "content_sha256": "9dacf99b311aa25020fd5d4707d18ccca29e331c29ad962c2a77cb46255e4d9c",
+  "created_by": "ralphthon-controller-recovery-fixture",
+  "domain": "research-infrastructure",
+  "maximum_iterations": 2,
+  "objective_id": "ralphthon-recovery-demo",
+  "protected_constants": [
+    {
+      "key": "dataset_content_sha256",
+      "reason": "The synthetic fixture must never touch the real dataset.",
+      "value": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48"
+    },
+    {
+      "key": "split_manifest_sha256",
+      "reason": "The synthetic fixture must never change partition identity.",
+      "value": "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e"
+    }
+  ],
+  "required_evaluator": "synthetic_aggregate_evaluator/1.0.0",
+  "research_question": "Does the Auto Research controller reject legal but insufficient synthetic improvements, roll back the candidate configuration, record a lesson, and generate a different second proposal without changing protected constants?",
+  "schema_version": "1.0.0",
+  "scientific_status_ceiling": "non_scientific",
+  "stopping_rules": [
+    {
+      "description": "Stop after two connected rollback-path iterations.",
+      "rule_id": "max-iterations"
+    },
+    {
+      "description": "Stop partial when the synthetic compute budget is exhausted.",
+      "rule_id": "budget-exhaustion"
+    }
+  ],
+  "success_criteria": [
+    {
+      "criterion_id": "exercise-rollback",
+      "description": "Exercise the deterministic rejection and rollback path.",
+      "direction": "minimize",
+      "metric": "synthetic_validation_loss"
+    }
+  ],
+  "title": "Verify rejected-mutation rollback and connected recovery"
+}

@@ -1,0 +1,36 @@
+{
+  "baseline_metrics": {
+    "n_records": 32.0,
+    "rerun_metric_delta": 0.0,
+    "synthetic_p95_residual": 0.055040198243816514,
+    "synthetic_validation_loss": 0.051631329124927954
+  },
+  "compute_seconds_used": 18.0,
+  "consecutive_failures": 0,
+  "iteration_index": 2,
+  "iterations": [
+    {
+      "accepted_config_index": 1,
+      "completed": true,
+      "decision": "accept",
+      "iteration_id": "iteration-001",
+      "proposal_id": "ralphthon-local-demo-p001"
+    },
+    {
+      "accepted_config_index": 2,
+      "completed": true,
+      "decision": "accept",
+      "iteration_id": "iteration-002",
+      "proposal_id": "ralphthon-local-demo-p002"
+    }
+  ],
+  "labels_used": 0,
+  "last_failure_category": null,
+  "mutation_class_streak": null,
+  "mutation_class_streak_length": 0,
+  "objective_sha256": "c6772ac9edbfcd15ef1b8b3f26d445bfa0e9aff95963668e9b36d362962751ac",
+  "partial_reason": "",
+  "run_id": "ralphthon-happy-07c24044",
+  "schema_version": "1.0.0",
+  "state": "complete"
+}

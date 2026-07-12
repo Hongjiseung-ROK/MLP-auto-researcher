@@ -1,0 +1,11 @@
+{
+  "aggregate_metrics": {
+    "n_records": 32.0,
+    "rerun_metric_delta": 0.0,
+    "synthetic_p95_residual": 0.055040198243816514,
+    "synthetic_validation_loss": 0.051631329124927954
+  },
+  "evaluator_name": "synthetic_aggregate_evaluator/1.0.0",
+  "schema_version": "1.0.0",
+  "scientific_status": "non_scientific"
+}

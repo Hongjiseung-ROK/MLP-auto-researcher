@@ -1,0 +1,23 @@
+{
+  "alternative_explanations": [
+    "The aggregate metric may mask a smaller configuration-specific effect.",
+    "The step size was too large or too small to reveal the mechanism."
+  ],
+  "anti_pattern": "decision=reject: do not repeat an identical learning_rate move without changing the step or direction.",
+  "applicability_conditions": "Applies only to this adapter, exact inputs, and bounded mutation policy.",
+  "attempt_summary": "Reducing learning_rate from 0.02 to 0.004 under hypothesis: The base learning rate overshoots the optimum of the fixture landscape; reducing it by 5x will lower the synthetic validation loss.",
+  "content_sha256": "af0ad8fb6be74c83faecb891b51304e804d6de761b2afac45b955982ace137c7",
+  "evidence_references": [
+    "iteration-001:decision.json",
+    "iteration-001:proposal.json",
+    "iteration-001:evaluation.json",
+    "iteration-001:execution.json"
+  ],
+  "iteration_id": "iteration-001",
+  "lesson_id": "ralphthon-recovery-demo-p001-lesson",
+  "likely_explanation": "The mutation did not produce the hypothesized effect within bounds; the bounded response surface or step size is the likely reason.",
+  "limits": "Bounded infrastructure iteration; aggregate validation metrics support no scientific or checkpoint-selection claim.",
+  "observed_result": "synthetic_validation_loss = 0.087228 against baseline synthetic_validation_loss: 0.087228 vs baseline 0.449405 (relative improvement 0.8059); outcome: no qualifying decrease.",
+  "recommended_next_mutation_class": "bounded_mutable",
+  "schema_version": "1.0.0"
+}

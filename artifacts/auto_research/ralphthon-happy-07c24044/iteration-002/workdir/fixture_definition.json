@@ -1,0 +1,21 @@
+{
+  "claim_eligible": false,
+  "config": {
+    "batch_size": 8,
+    "energy_loss_weight": 1.0,
+    "force_loss_weight": 10.0,
+    "gradient_clip": 1.0,
+    "learning_rate": 0.002,
+    "scheduler_patience": 5,
+    "trainable_layer_policy": "readout_only"
+  },
+  "fixture": "synthetic_quadratic_finetune_fixture",
+  "n_records": 32,
+  "scientific_status": "non_scientific",
+  "seed": 20260713,
+  "uses_acquisition_pool_labels": false,
+  "uses_frozen_test_data": false,
+  "uses_hidden_labels": false,
+  "uses_protected_partitions": false,
+  "version": "1.0.0"
+}

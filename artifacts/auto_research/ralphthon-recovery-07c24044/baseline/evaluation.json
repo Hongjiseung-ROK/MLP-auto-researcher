@@ -1,0 +1,56 @@
+{
+  "aggregate_metrics": {
+    "n_records": 32.0,
+    "rerun_metric_delta": 0.0,
+    "synthetic_p95_residual": 0.487553108039884,
+    "synthetic_validation_loss": 0.449405413500368
+  },
+  "baseline_reference": {
+    "baseline_id": "none",
+    "metrics": {},
+    "source_artifact": null
+  },
+  "constraint_results": [
+    {
+      "constraint_id": "tail-max",
+      "description": "Synthetic p95 residual must stay under the demo tail limit.",
+      "limit": 2.0,
+      "observed": 0.487553108039884,
+      "passed": true
+    },
+    {
+      "constraint_id": "runtime-max",
+      "description": "Simulated runtime must stay under the demo runtime limit.",
+      "limit": 60.0,
+      "observed": 9.0,
+      "passed": true
+    },
+    {
+      "constraint_id": "memory-max",
+      "description": "Simulated peak memory must stay under the demo memory limit.",
+      "limit": 1024.0,
+      "observed": 260.0,
+      "passed": true
+    }
+  ],
+  "content_sha256": "bb906d39c14de8893b214108d52a68db73efe1298d836ecab1f4cc400ef5a5d9",
+  "evaluation_id": "baseline-evaluation",
+  "evaluator_name": "synthetic_aggregate_evaluator/1.0.0",
+  "evaluator_source_sha256": "930f78adc0c3e49478f3b3af41e4fae5aa7827efb560059e8a6a3959291760ae",
+  "execution_id": "baseline",
+  "input_prediction_artifacts": [
+    "baseline:predictions.json",
+    "baseline:predictions_rerun.json"
+  ],
+  "legality_result_sha256": "e739271ff79b353e0d84a96f95c021e865de5e4ceef036210294c6aa0d8789e0",
+  "metric_artifacts": [
+    "baseline:metrics.json"
+  ],
+  "resource_metrics": {
+    "peak_memory_mb": 260.0,
+    "wall_seconds": 9.0
+  },
+  "schema_version": "1.0.0",
+  "scientific_status": "non_scientific",
+  "uncertainty_notes": "Synthetic fixture metrics: the residual spread comes from a seeded deterministic noise model, so run-to-run uncertainty is zero by construction and these numbers support no scientific claim."
+}

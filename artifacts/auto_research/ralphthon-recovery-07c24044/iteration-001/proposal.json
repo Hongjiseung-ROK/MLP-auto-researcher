@@ -1,0 +1,49 @@
+{
+  "content_sha256": "c73fc518cf5237c0859c8cabd66c867f8cbd49e600b40fb2d2e0e02c6e30b6ae",
+  "estimated_compute": {
+    "device": "cpu",
+    "estimated_seconds": 30.0,
+    "remote": false
+  },
+  "expected_mechanism": "A lower learning rate should move optimization toward the loss basin, reducing the synthetic validation loss.",
+  "expected_observables": [
+    {
+      "expected_direction": "decrease",
+      "metric": "synthetic_validation_loss",
+      "rationale": "The mutation is chosen to move the primary metric toward the objective's success criterion."
+    }
+  ],
+  "falsification_condition": "If the synthetic validation loss does not decrease by the minimum relative improvement after the reduction, the overshoot hypothesis is wrong.",
+  "hypothesis": "The base learning rate overshoots the optimum of the fixture landscape; reducing it by 5x will lower the synthetic validation loss.",
+  "objective_id": "ralphthon-recovery-demo",
+  "parent_iteration_id": null,
+  "proposal_id": "ralphthon-recovery-demo-p001",
+  "proposal_policy_version": "proposal-policy/1.0.0",
+  "proposed_mutations": [
+    {
+      "allowed_range": {
+        "choices": null,
+        "maximum": 0.1,
+        "minimum": 1e-06,
+        "value_type": "float"
+      },
+      "content_sha256": "90535d88c4db032e4dd0db8d8c483d4ff43012c5c4453a52579f271ddfd011cd",
+      "engineering_effect": "Smaller update steps; identical memory and runtime profile.",
+      "new_value": 0.004,
+      "old_value": 0.02,
+      "reversibility": "reversible",
+      "schema_version": "1.0.0",
+      "scientific_effect": "A lower learning rate should move optimization toward the loss basin, reducing the synthetic validation loss.",
+      "target_key": "learning_rate",
+      "target_path": "config_store/current.json",
+      "target_type": "config"
+    }
+  ],
+  "required_approval": null,
+  "required_skills": [
+    "tea_time_with_reading_poem"
+  ],
+  "risk_class": "low",
+  "schema_version": "1.0.0",
+  "seed": 20260712
+}

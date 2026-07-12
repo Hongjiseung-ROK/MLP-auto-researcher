@@ -1,0 +1,79 @@
+{
+  "alternative_paths": [
+    {
+      "cost": "low",
+      "path_id": "boundary_first",
+      "risk": "May postpone broader scientific exploration.",
+      "summary": "Keep the benchmark fixed and harden the next reusable boundary."
+    },
+    {
+      "cost": "medium",
+      "path_id": "bounded_comparison",
+      "risk": "Adds evidence work but reduces single-path lock-in.",
+      "summary": "Compare one preregistered alternative before an irreversible choice."
+    }
+  ],
+  "benchmark_overfitting_audit": {
+    "audit_rule": "high when only benchmark-specific components are named; medium when they equal or outnumber reusable components; low otherwise",
+    "benchmark_role": "The fixture/benchmark is a pipeline-hardening scaffold, not the final scientific topic.",
+    "benchmark_specific_components": [
+      "synthetic_quadratic_finetune_fixture/1.0.0"
+    ],
+    "controls": [
+      "controller, domain skill, and execution backend remain decoupled",
+      "benchmark-specific identifiers stay in configuration and fixtures",
+      "no hidden labels or detailed test metrics enter this reflection",
+      "reflection artifacts cannot support claims"
+    ],
+    "reusable_components": [
+      "acceptance policy",
+      "auto_research contracts",
+      "mutation policy",
+      "trace grader"
+    ],
+    "risk": "low"
+  },
+  "claim_eligible": false,
+  "current_stage_purpose": "Bounded Auto Research iteration: propose, review, execute, evaluate and learn without expanding scientific claims.",
+  "evidence_class": "agent_text",
+  "focus_question": "Does mutating gradient_clip still serve the objective 'Verify rejected-mutation rollback and connected recovery'?",
+  "owner_question_packet_draft": {
+    "questions": [],
+    "status": "no_consequential_questions"
+  },
+  "poem": {
+    "author": "Matsuo Basho",
+    "key": "basho-old-pond",
+    "lines": [
+      "old pond \u2014",
+      "a frog leaps in,",
+      "the sound of water"
+    ],
+    "title": "Old pond (furu ike ya)",
+    "why_it_helps": "the signal is the brief disturbance, not the still background"
+  },
+  "provocations": [
+    {
+      "poem_line": "the sound of water",
+      "prompt": "Ignore the average behavior entirely. Start the story of Does mutating gradient_clip still serve the objective 'Verify rejected-mutation rollback and connected recovery'? from the single strangest point and work outward.",
+      "technique": "outlier_first"
+    },
+    {
+      "poem_line": "old pond \u2014",
+      "prompt": "What would this data look like if nothing interesting were happening in Does mutating gradient_clip still serve the objective 'Verify rejected-mutation rollback and connected recovery'?? Describe the boring universe precisely; your result is only the distance from it.",
+      "technique": "null_model"
+    },
+    {
+      "poem_line": "the sound of water",
+      "prompt": "Swap the roles of the variables in Does mutating gradient_clip still serve the objective 'Verify rejected-mutation rollback and connected recovery'?: treat the thing you predict as the thing you know, and vice versa. What question is the data now answering?",
+      "technique": "axis_swap"
+    },
+    {
+      "poem_line": "old pond \u2014",
+      "prompt": "List what is absent from the data about Does mutating gradient_clip still serve the objective 'Verify rejected-mutation rollback and connected recovery'?: configurations never sampled, regimes never visited, failures never recorded. The absence has a shape; sketch it.",
+      "technique": "negative_space"
+    }
+  ],
+  "schema_version": "2.0.0",
+  "trigger": "auto_research_iteration_boundary"
+}

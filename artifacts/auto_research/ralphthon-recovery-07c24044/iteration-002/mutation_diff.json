@@ -1,0 +1,29 @@
+{
+  "applied": true,
+  "base_config_sha256": "a9ad63a7d2b6784cada39b330b2ae76d30eaa7be023edf11e2112638a164d431",
+  "changes": [
+    {
+      "allowed_range": {
+        "choices": null,
+        "maximum": 100.0,
+        "minimum": 0.01,
+        "value_type": "float"
+      },
+      "content_sha256": "a64432d94cf92c00aa21c167a1401484b9763d958c651406aac2cb168ccc8b9e",
+      "engineering_effect": "Bounded halving of one configuration knob.",
+      "new_value": 0.5,
+      "old_value": 1.0,
+      "reversibility": "reversible",
+      "schema_version": "1.0.0",
+      "scientific_effect": "Mutating gradient_clip explores a different bounded direction after learning_rate proved ineffective in iteration-001.",
+      "target_key": "gradient_clip",
+      "target_path": "config_store/current.json",
+      "target_type": "config"
+    }
+  ],
+  "content_sha256": "60de3598247644cb66eab017565289ece31cf73b6069f8451632ba0bb342a891",
+  "proposal_id": "ralphthon-recovery-demo-p002",
+  "result_config_sha256": "3efb6db20b645605bea7d0cde0520c71f3eaf6fed691843257fe5d3f8714296e",
+  "rolled_back": false,
+  "schema_version": "1.0.0"
+}
