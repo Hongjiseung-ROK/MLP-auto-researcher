@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.1.0",
+  "claim_ceiling": "T2",
+  "claim_class": "infrastructure_claim",
+  "scientific_status": "infrastructure_only",
+  "claim_eligible": false,
+  "tier_definitions": {
+    "T0": "Design or implementation description.",
+    "T1": "Locally verified infrastructure fact.",
+    "T2": "Remote infrastructure observation.",
+    "T3": "Exploratory scientific observation.",
+    "T4": "Replicated scientific finding.",
+    "T5": "Publication-releasable scientific claim after final release approval."
+  },
+  "claims": [
+    {
+      "claim_id": "C0",
+      "tier": "T0",
+      "class": "design_description",
+      "text": "The evaluated workflow separates proposal, execution, evaluator identity, decision, and evidence release; reflection is excluded from numerical claim evidence.",
+      "evidence": ["research-spec", "benchmark-execution"]
+    },
+    {
+      "claim_id": "C1",
+      "tier": "T1",
+      "class": "local_infrastructure_fact",
+      "text": "Under the white-box catalog, the semantic grader detected 48 of 48 declared corrupt traces and rejected none of four clean controls.",
+      "evidence": ["benchmark-summary", "benchmark-ledger", "benchmark-execution", "analysis-json"]
+    },
+    {
+      "claim_id": "C2",
+      "tier": "T1",
+      "class": "local_infrastructure_fact",
+      "text": "The mutable manifest-only integrity ablation detected 4 of 48 declared corrupt traces; both methods' macro and micro recalls coincide under the balanced design, giving a macro-recall gap of 0.9167.",
+      "evidence": ["benchmark-summary", "benchmark-ledger", "analysis-json", "aggregation-amendment"]
+    },
+    {
+      "claim_id": "C3",
+      "tier": "T2",
+      "class": "remote_infrastructure_observation",
+      "text": "A prior policy-attested NVIDIA L4 replay completed two connected real-MACE infrastructure iterations and rejected both.",
+      "evidence": ["remote-trace-grade", "remote-completion-status", "remote-attestation", "remote-round-state", "remote-op-001", "remote-op-002"]
+    },
+    {
+      "claim_id": "C4",
+      "tier": "T2",
+      "class": "remote_infrastructure_observation",
+      "text": "The second L4 iteration crossed the frozen validation force-component-MAE improvement threshold but was rejected because the binary reproducibility constraint failed.",
+      "evidence": ["remote-iteration-002-evaluation", "remote-iteration-002-decision"]
+    },
+    {
+      "claim_id": "C5",
+      "tier": "T2",
+      "class": "remote_infrastructure_observation",
+      "text": "The first L4 iteration improved the validation force-component MAE by 0.053 percent, remained below the frozen 0.1 percent threshold, and was rejected; both the relative value and decision are derived from bound aggregate evidence.",
+      "evidence": ["remote-iteration-001-evaluation", "remote-iteration-001-decision", "real-mace-derived-table"]
+    },
+    {
+      "claim_id": "C6",
+      "tier": "T2",
+      "class": "remote_infrastructure_method_observation",
+      "text": "The L4 replay used mace-torch 0.3.16, a candidate-only checkpoint, an H1-approved bounded energy/force label view, one optimizer step in each iteration, and a separately identified aggregate evaluator.",
+      "evidence": ["remote-h1-approval", "remote-environment", "remote-checkpoint-verification", "remote-dataset-verification", "remote-op-001", "remote-op-002", "remote-iteration-001-evaluation", "remote-iteration-002-evaluation"]
+    }
+  ],
+  "excluded_claims": [
+    "The candidate MACE model improved scientifically.",
+    "The grader is robust to arbitrary or independently designed faults.",
+    "The grader guarantees general scientific validity or security.",
+    "The exact-equality mismatch was physically significant.",
+    "Four accepted clean controls establish a population false-positive rate of zero."
+  ]
+}

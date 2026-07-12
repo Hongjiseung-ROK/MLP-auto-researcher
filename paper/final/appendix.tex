@@ -1,0 +1,26 @@
+\section{Technical Appendix}
+
+\subsection{Fault Families}
+
+The frozen families were: missing Tea Time, missing lesson, evaluator identity collision, immutable-input change, forbidden label payload, unauthorized remote attestation, decision--metric inconsistency, internal-seal tamper, registered-artifact corruption, inflated scientific status, forged rejection without rollback, and broken lineage parent. Each family was evaluated once for each of four fixed seeds. A semantic forgery could refresh the producer manifest; the baseline therefore tested only declared path, size, and SHA-256 consistency.
+
+\subsection{Evidence Identities}
+
+The fault ledger SHA-256 is \texttt{f6bbd45076e63c75bb539fa72439413214bb7234f9199669133032cd3995e2ed}. The corrected frozen-summary SHA-256 is \texttt{258bdaaedada3dc621b21f62eda754e77be7cd610f3e982c768cfed59384e65b}. A post-execution amendment records that the primary macro aggregation was corrected without rerunning or changing any case. The blinded real-MACE evidence bundle \texttt{remote-trace-A} was produced by a policy-attested exact-commit replay; its final trace grade passed with two graded iterations, while its completion status remained \texttt{infrastructure\_only} and \texttt{claim\_eligible=false}.
+
+\subsection{Reproduction}
+
+From the repository root, run:
+
+\begin{verbatim}
+env -u PYTHONPATH conda run -n mlip-research-agent \
+  python scripts/research/run_trace_fault_audit.py \
+  --output artifacts/reproductions/free-ralph-trace-audit
+env -u PYTHONPATH conda run -n mlip-research-agent \
+  python scripts/research/build_trace_audit_analysis.py \
+  --benchmark artifacts/reproductions/free-ralph-trace-audit \
+  --output artifacts/reproductions/free-ralph-trace-analysis
+Rscript paper/figures/render_figures.R "$PWD"
+\end{verbatim}
+
+The campaign performs no network calls, label acquisition, protected evaluation, W\&B upload, or remote compute. Decisions and aggregate endpoints are deterministic; timing-bearing ledger bytes are not promised to be identical across hosts. The preregistered \texttt{wall\_seconds} secondary endpoint was under-specified and is excluded from interpretation by amendment A-002.

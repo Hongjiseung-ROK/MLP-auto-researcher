@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "sources": [
+    {"key": "yamada2025aiscientistv2", "metadata_url": "https://arxiv.org/bibtex/2504.08066", "primary_url": "https://arxiv.org/abs/2504.08066"},
+    {"key": "starace2025paperbench", "metadata_url": "https://proceedings.mlr.press/v267/starace25a.html", "primary_url": "https://proceedings.mlr.press/v267/starace25a.html"},
+    {"key": "huang2025popper", "metadata_url": "https://proceedings.mlr.press/v267/huang25n.html", "primary_url": "https://proceedings.mlr.press/v267/huang25n.html"},
+    {"key": "huang2024mlagentbench", "metadata_url": "https://proceedings.mlr.press/v235/huang24y.html", "primary_url": "https://proceedings.mlr.press/v235/huang24y.html"},
+    {"key": "bouthillier2019reproducible", "metadata_url": "https://proceedings.mlr.press/v97/bouthillier19a.html", "primary_url": "https://proceedings.mlr.press/v97/bouthillier19a.html"},
+    {"key": "batatia2022mace", "metadata_url": "https://api.crossref.org/works/10.52202/068431-0830", "primary_url": "https://papers.neurips.cc/paper_files/paper/2022/hash/4a36c3c51af11ed9f34615b81edb5bbc-Abstract-Conference.html"},
+    {"key": "maxson2024reporting", "metadata_url": "https://api.crossref.org/works/10.1021/acs.jpcc.4c00028", "primary_url": "https://doi.org/10.1021/acs.jpcc.4c00028"},
+    {"key": "dwork2015holdout", "metadata_url": "https://api.crossref.org/works/10.1126/science.aaa9375", "primary_url": "https://doi.org/10.1126/science.aaa9375"},
+    {"key": "hsueh1997fault", "metadata_url": "https://api.crossref.org/works/10.1109/2.585157", "primary_url": "https://doi.org/10.1109/2.585157"},
+    {"key": "pytorch2026reproducibility", "metadata_url": "https://docs.pytorch.org/docs/2.13/notes/randomness.html", "primary_url": "https://docs.pytorch.org/docs/2.13/notes/randomness.html"}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "status": "pass",
+  "bibliography_sha256": "c3c601e5382db40ce5dfbada82a17be3fb8711fdda4b577650e3fb7fdaa202c1",
+  "n_entries": 10,
+  "n_cited": 10,
+  "n_unresolved": 0,
+  "entries": [
+    {"key": "huang2024mlagentbench", "metadata_verified": true, "supports": "Language agents are evaluated on iterative ML experimentation."},
+    {"key": "yamada2025aiscientistv2", "metadata_verified": true, "supports": "An end-to-end agentic system formulates hypotheses, runs experiments, and authors papers."},
+    {"key": "starace2025paperbench", "metadata_verified": true, "supports": "PaperBench evaluates agents on research replication."},
+    {"key": "bouthillier2019reproducible", "metadata_verified": true, "supports": "Reproducible methods and reproducible empirical findings are distinct."},
+    {"key": "batatia2022mace", "metadata_verified": true, "supports": "MACE is an equivariant message-passing architecture for force fields."},
+    {"key": "maxson2024reporting", "metadata_verified": true, "supports": "MLIP reporting should document models, data, validation, software, and hardware."},
+    {"key": "huang2025popper", "metadata_verified": true, "supports": "POPPER uses sequential falsification for automated hypothesis validation."},
+    {"key": "dwork2015holdout", "metadata_verified": true, "supports": "Repeated adaptive data access can invalidate ordinary holdout guarantees."},
+    {"key": "hsueh1997fault", "metadata_verified": true, "supports": "Fault injection is an established controlled technique for dependability analysis."},
+    {"key": "pytorch2026reproducibility", "metadata_verified": true, "supports": "Exact numerical reproducibility is not guaranteed across PyTorch releases, platforms, or CPU and GPU execution even with identical seeds."}
+  ],
+  "checks": {"undefined_citations": 0, "undefined_references": 0, "memory_generated_bibtex": false, "programmatic_metadata_sources_recorded": true}
+}

@@ -1,0 +1,62 @@
+{
+  "auditor": "scripts/research/audit_paper_bundle.py",
+  "checks": {
+    "claim_ceiling": "T2",
+    "claim_evidence_resolves": true,
+    "claim_tiers_within_ceiling": true,
+    "headline_matches_claims": true,
+    "headline_recomputed": {
+      "absolute_macro_recall_gain": 0.9166666666666666,
+      "manifest_detected": 4,
+      "manifest_macro_recall": 0.08333333333333333,
+      "n_clean": 4,
+      "n_corrupt": 48,
+      "n_fault_families": 12,
+      "n_records": 52,
+      "semantic_clean_rejected": 0,
+      "semantic_detected": 48,
+      "semantic_macro_recall": 1.0
+    },
+    "local_public_hashes": {
+      "aggregation-amendment": true,
+      "analysis-json": true,
+      "benchmark-execution": true,
+      "benchmark-ledger": true,
+      "benchmark-summary": true,
+      "real-mace-derived-table": true,
+      "research-spec": true,
+      "seed-level-analysis": true
+    },
+    "public_text_anonymous": true,
+    "public_text_files_scanned": 31,
+    "remote_packet_hash": true,
+    "remote_private_hashes_and_public_bindings": {
+      "remote-attestation": true,
+      "remote-checkpoint-verification": true,
+      "remote-cleanup-confirmation": true,
+      "remote-completion-status": true,
+      "remote-dataset-verification": true,
+      "remote-environment": true,
+      "remote-h1-approval": true,
+      "remote-iteration-001-decision": true,
+      "remote-iteration-001-evaluation": true,
+      "remote-iteration-002-decision": true,
+      "remote-iteration-002-evaluation": true,
+      "remote-op-001": true,
+      "remote-op-002": true,
+      "remote-round-state": true,
+      "remote-trace-grade": true
+    },
+    "scientific_status": "infrastructure_only",
+    "unique_claim_ids": true,
+    "unique_evidence_ids": true
+  },
+  "claim_ceiling_decision": {
+    "class": "infrastructure_only",
+    "publication_scientific_claim_released": false,
+    "tier": "T2"
+  },
+  "schema_version": "1.0.0",
+  "status": "pass",
+  "unresolved_blockers": []
+}

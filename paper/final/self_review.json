@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "review_type": "Ralphthon General Track 1 self-review",
+  "paper_version": "final-anonymous",
+  "summary": "The paper presents a preregistered white-box audit of a repository-defined evidence contract for autonomous MLIP research. Across a finite catalog of 48 single-fault traces and four clean controls, semantic re-derivation covered all declared faults while a mutable manifest-hash ablation covered four. A separately attested two-iteration MACE replay illustrates why a metric pass is not sufficient for promotion when a frozen reproducibility constraint fails. All released claims are infrastructure-only.",
+  "strengths": [
+    "The question, fault catalog, seeds, budgets, endpoint, thresholds, fallback, and claim ceiling were frozen before the new experiment.",
+    "Every headline value is recomputed from an immutable 52-row ledger and bound to hashes; negative MACE decisions are retained.",
+    "The paper clearly separates T1 local infrastructure facts, T2 remote infrastructure observations, and excluded scientific claims.",
+    "The anonymous evidence packet resolves public claims without exposing exact repository commits or local paths.",
+    "Independent review caused two explicit post-execution amendments: a macro-aggregation representation correction and disclosure that the timing endpoint was under-specified. Neither case execution nor the primary decision was changed."
+  ],
+  "weaknesses": [
+    "The fault suite and grader share the same white-box repository contract, so the result is finite contract coverage rather than independent robustness evidence.",
+    "The mutable manifest-only comparator is intentionally weak and is an ablation, not a competitive provenance system.",
+    "The four seeds are deterministic trace instantiations with identical pass/fail patterns, not independent statistical replications.",
+    "Only four clean traces were tested, so specificity is reported as an observed 0/4 count without population inference.",
+    "The real-MACE case contains two one-step iterations on one L4, no frozen-test release, no physical-property validation, and a binary exact-equality rerun flag.",
+    "The preregistered wall_seconds endpoint lacked a per-method timing boundary and is excluded from interpretation."
+  ],
+  "questions_for_authors": [
+    "How well would the grader cover faults authored independently or held out from contract development?",
+    "How would performance change against an append-only, consumer-owned, or externally anchored provenance baseline?",
+    "Can exact equality be replaced by tolerance-aware deltas calibrated to decision stability across devices and software versions?"
+  ],
+  "scores": {
+    "technical_soundness_1_to_5": 4,
+    "evidence_quality_1_to_5": 4,
+    "novelty_1_to_5": 2,
+    "clarity_1_to_5": 4,
+    "reproducibility_1_to_5": 4,
+    "overall_1_to_10": 6,
+    "recommendation": "weak_accept_for_narrow_infrastructure_methodology_claim",
+    "confidence_1_to_5": 5
+  },
+  "ethics_and_limitations": {
+    "sensitive_data_used": false,
+    "new_remote_compute_used": false,
+    "secret_accessed": false,
+    "known_harms": "The main risk is overinterpreting a self-authored finite fault suite as general scientific validity; the title, abstract, limitations, claim audit, and excluded-claims list explicitly prohibit that inference.",
+    "negative_evidence_preserved": true
+  },
+  "evidence_trace": [
+    "research_spec.json",
+    "experiment_ledger.jsonl",
+    "evidence/summary.json",
+    "evidence/analysis.json",
+    "evidence/amendments.jsonl",
+    "evidence/remote_trace_A.json",
+    "evidence_map.json",
+    "claims.json",
+    "claim_audit.json",
+    "format_audit.json"
+  ],
+  "release_conditions": [
+    "Keep the claim ceiling at T2 and scientific_status at infrastructure_only.",
+    "Do not describe the fault result as adversarial robustness or the MACE percentages as scientific improvement.",
+    "Preserve both amendment records, the external weak-reject assessment, and all negative MACE decisions."
+  ]
+}

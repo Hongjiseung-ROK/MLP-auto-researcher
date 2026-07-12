@@ -1,0 +1,3 @@
+method,detected,corrupt_total,recall,clean_rejected,clean_total,clean_false_positive_rate
+Manifest only,4,48,0.08333333333333333,0,4,0.0
+Semantic grader,48,48,1.0,0,4,0.0

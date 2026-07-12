@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.2.0",
+  "evidence_frozen": true,
+  "scientific_status": "infrastructure_only",
+  "claim_eligible": false,
+  "anonymization": "Remote source paths and commit identifiers are blinded. A sanitized extract binds selected fields to original source hashes; exact local resolution is retained only in paper/internal/private_evidence_map.json.",
+  "resolver": {
+    "submission_root": "paper/final",
+    "remote_packet": "evidence/remote_trace_A.json",
+    "remote_packet_sha256": "f044f8ebf9bd8395d6b0a2a28314514203ef5e25ce0a92cc9319c4a50cd9ef1c"
+  },
+  "entries": [
+    {"artifact_id": "research-spec", "public_locator": "research_spec.json", "sha256": "bd098153ffb882b67007d6aa1d8de71cf122c494f07a5e83a8a1f3f10dfe1366", "class": "preregistration"},
+    {"artifact_id": "aggregation-amendment", "public_locator": "evidence/amendments.jsonl", "sha256": "d3b3e1f30fa90132839f5f9bd8cbacd5cb7c9397d5f99ecb8356947fd614458a", "class": "post_execution_amendment"},
+    {"artifact_id": "benchmark-ledger", "public_locator": "experiment_ledger.jsonl", "sha256": "f6bbd45076e63c75bb539fa72439413214bb7234f9199669133032cd3995e2ed", "class": "local_infrastructure_evidence"},
+    {"artifact_id": "benchmark-summary", "public_locator": "evidence/summary.json", "sha256": "258bdaaedada3dc621b21f62eda754e77be7cd610f3e982c768cfed59384e65b", "class": "local_infrastructure_evidence"},
+    {"artifact_id": "benchmark-execution", "public_locator": "evidence/execution.json", "sha256": "75e1a1b51972e440bb19f34de3435d13b6a0ca5e358c92c912105e4e2d9aca46", "class": "local_infrastructure_evidence"},
+    {"artifact_id": "analysis-json", "public_locator": "evidence/analysis.json", "sha256": "75e6b996f4bba7fbb3be9d6fc33013937417e433eb938411293fa4c336b9fa6f", "class": "derived_analysis"},
+    {"artifact_id": "seed-level-analysis", "public_locator": "evidence/seed_level_fault_detection.csv", "sha256": "b15132138e112b2f07e99bbd16b7e9d80a198fa737a58ef31951de2ca692c86e", "class": "derived_analysis"},
+    {"artifact_id": "real-mace-derived-table", "public_locator": "evidence/real_mace_case_study.csv", "sha256": "973833712cf58c5a03908486fc1f53ee9c769ad5f7218f0797cf240ddad0b3a0", "class": "derived_analysis"},
+    {"artifact_id": "remote-h1-approval", "public_locator": "evidence/remote_trace_A.json#/approval", "source_sha256": "352b4edab985ba1dd2c75a37818a681f0ad759257a19f5586d68a6de96264154", "class": "owner_approval_record"},
+    {"artifact_id": "remote-attestation", "public_locator": "evidence/remote_trace_A.json#/attestation", "source_sha256": "eaf5c4198deb96895eb7ca8dc6b629539f77a378b4103d10c0223a04029c3b5a", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-environment", "public_locator": "evidence/remote_trace_A.json#/environment", "source_sha256": "b4b8ef23aba067d0ebe7404bff6d12cbb04c654ab7cdf0dc65bee368cab5c127", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-checkpoint-verification", "public_locator": "evidence/remote_trace_A.json#/checkpoint", "source_sha256": "035778c820cd051db06b01e8a75b5d38a6b0bb36d5070c9d485b6ace5ee7f227", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-dataset-verification", "public_locator": "evidence/remote_trace_A.json#/dataset", "source_sha256": "9b68d22004cb31aa624619861718a1f0d5c9079bbfdeff955709439683abd51c", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-iteration-001-evaluation", "public_locator": "evidence/remote_trace_A.json#/iterations/0", "source_sha256": "c3c55f4bc32c5f59bbd11afb676cb039c2e08cf09e276f1400babef326e0c1ae", "class": "aggregate_remote_infrastructure_evidence"},
+    {"artifact_id": "remote-iteration-001-decision", "public_locator": "evidence/remote_trace_A.json#/iterations/0", "source_sha256": "e9fcf88db9c9139da781ae6c3be8e44075a37671877385d111d881169bde7697", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-op-001", "public_locator": "evidence/remote_trace_A.json#/iterations/0", "source_sha256": "5dc66dad9f736e5259d3636e9313b389a7023c4d71a59be2ea911ceb2578b30c", "class": "remote_operation_receipt"},
+    {"artifact_id": "remote-iteration-002-evaluation", "public_locator": "evidence/remote_trace_A.json#/iterations/1", "source_sha256": "fff6d17e192e5dfc5dc109bc6042bf8378290e36c41a408b1a2e687976839aba", "class": "aggregate_remote_infrastructure_evidence"},
+    {"artifact_id": "remote-iteration-002-decision", "public_locator": "evidence/remote_trace_A.json#/iterations/1", "source_sha256": "ef9bf371685003077dbe1c6821323f107163dc1c4b17a8590415e294a95e49a2", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-op-002", "public_locator": "evidence/remote_trace_A.json#/iterations/1", "source_sha256": "034bb942b8b9739bda3b8cf701742181b8dd4ef0be289a639ff84de2ad8f939f", "class": "remote_operation_receipt"},
+    {"artifact_id": "remote-trace-grade", "public_locator": "evidence/remote_trace_A.json#/completion", "source_sha256": "4ad3d222cbb0f006a295eab397fe14c00b03ae497524ae45d8bf0ae1c1e63bac", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-completion-status", "public_locator": "evidence/remote_trace_A.json#/completion", "source_sha256": "36093f830eb73c0ae65701eeb963fd192e7c0cdc4630f4800341ef8109cfb778", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-round-state", "public_locator": "evidence/remote_trace_A.json#/completion", "source_sha256": "472cc2d11eedbddc3111d6cb146e411733f5c15a7987444eed5a64a59ef509d0", "class": "remote_infrastructure_evidence"},
+    {"artifact_id": "remote-cleanup-confirmation", "public_locator": "evidence/remote_trace_A.json#/completion", "source_sha256": "a915f05d4573178512544ef4aad846de778250e4341968a2b7bf82f110a1b6f6", "class": "remote_infrastructure_evidence"}
+  ],
+  "excluded_evidence_classes": ["agent_text", "reflection", "review_consensus", "cost_card"]
+}

@@ -1,0 +1,3 @@
+iteration,relative_improvement,metric_passed,rerun_metric_delta,reproducibility_passed,decision
+iteration-001,0.000531564339784069,false,1.0,false,reject
+iteration-002,0.0013295451166076221,true,1.0,false,reject
