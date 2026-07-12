@@ -39,6 +39,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
+from mlip_research_agent.compute.types import (  # noqa: E402
+    AcceleratorId,
+    JobSpec,
+    ProviderName,
+    WorkloadClass,
+)
+
 from mlip_research_agent.artifacts.registry import sha256_file  # noqa: E402
 from mlip_research_agent.compute.attestation import (  # noqa: E402
     perform_attestation,
@@ -46,12 +53,6 @@ from mlip_research_agent.compute.attestation import (  # noqa: E402
     write_attestation,
 )
 from mlip_research_agent.compute.policy import Decision, load_policy  # noqa: E402
-from mlip_research_agent.compute.types import (  # noqa: E402
-    AcceleratorId,
-    JobSpec,
-    ProviderName,
-    WorkloadClass,
-)
 from mlip_research_agent.research.auto_research import (  # noqa: E402
     TERMINAL_STATES,
     AutoResearchController,
