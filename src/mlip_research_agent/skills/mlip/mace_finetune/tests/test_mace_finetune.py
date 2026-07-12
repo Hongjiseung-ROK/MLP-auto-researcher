@@ -27,6 +27,8 @@ from mlip_research_agent.skills.base import SkillContext, SkillError, get_skill
 from mlip_research_agent.skills.mlip.mace_finetune.implementation import MACEFineTuneSkill
 from mlip_research_agent.skills.mlip.mace_finetune.runner import (
     ControlledTrainingResult,
+    _epoch_batches,
+    _validate_checkpoint_epoch_mode,
     run_controlled_training,
 )
 from mlip_research_agent.skills.mlip.mace_finetune.schema import (
@@ -251,8 +253,73 @@ def install_fake_runner(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(RUNNER_TARGET, fake)
 
 
+def authorized_campaign_params(
+    fixture: Fixture, tmp_path: Path, **overrides: Any
+) -> MACEFineTuneInput:
+    research_spec_sha256 = "9" * 64
+    authorization_path = tmp_path / "inputs" / "campaign_authorization.json"
+    authorization_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "authorization_status": "approved",
+                "campaign_id": "campaign-fixture",
+                "research_spec_sha256": research_spec_sha256,
+                "authorized_actions": ["real_gpu_fine_tuning"],
+                "expires_at": "2099-01-01T00:00:00Z",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    )
+    authorization = fixture.registry.register(
+        authorization_path, "campaign_authorization", "inputs"
+    )
+    payload: dict[str, Any] = {
+        "execution_mode": "authorized_campaign",
+        "campaign_id": "campaign-fixture",
+        "research_spec_sha256": research_spec_sha256,
+        "campaign_authorization_artifact": authorization.artifact_id,
+        "epoch_mode": "full_epoch",
+        "max_epochs": 3,
+        "max_optimizer_steps": 3,
+    }
+    payload.update(overrides)
+    return fixture.params(**payload)
+
+
 def test_skill_is_registered() -> None:
     assert get_skill("mace_finetune") is MACEFineTuneSkill
+
+
+def test_epoch_batch_iterator_does_not_consume_an_extra_batch() -> None:
+    consumed: list[int] = []
+
+    def loader() -> Any:
+        for value in range(3):
+            consumed.append(value)
+            yield value
+
+    assert list(_epoch_batches(loader(), 1)) == [0]
+    assert consumed == [0]
+    consumed.clear()
+    assert list(_epoch_batches(loader(), 3)) == [0, 1, 2]
+    assert consumed == [0, 1, 2]
+
+
+def test_checkpoint_epoch_mode_is_versioned_and_legacy_means_single_batch() -> None:
+    _validate_checkpoint_epoch_mode({"schema_version": "1.0.0"}, "single_batch")
+    _validate_checkpoint_epoch_mode(
+        {"schema_version": "1.1.0", "epoch_mode": "full_epoch"}, "full_epoch"
+    )
+    with pytest.raises(ValueError, match="epoch mode mismatch"):
+        _validate_checkpoint_epoch_mode({"schema_version": "1.0.0"}, "full_epoch")
+    with pytest.raises(ValueError, match="epoch mode mismatch"):
+        _validate_checkpoint_epoch_mode(
+            {"schema_version": "1.1.0", "epoch_mode": "full_epoch"},
+            "single_batch",
+        )
 
 
 def test_schema_blocks_pilot_without_frozen_preregistration(tmp_path: Path) -> None:
@@ -261,12 +328,44 @@ def test_schema_blocks_pilot_without_frozen_preregistration(tmp_path: Path) -> N
         fixture.params(execution_mode="pilot")
     with pytest.raises(ValueError, match="two epochs"):
         fixture.params(max_epochs=3, max_optimizer_steps=3)
+    with pytest.raises(ValueError, match="single_batch"):
+        fixture.params(epoch_mode="full_epoch")
 
 
 def test_pilot_mode_is_disabled_before_h2(tmp_path: Path) -> None:
     fixture = Fixture(tmp_path)
     params = fixture.params(execution_mode="pilot", h2_preregistration_frozen=True)
     with pytest.raises(SkillError, match="pilot fine-tuning is disabled"):
+        MACEFineTuneSkill().run(params, fixture.context(tmp_path))
+
+
+def test_authorized_campaign_reaches_full_epoch_and_binds_status(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake(**kwargs: Any) -> ControlledTrainingResult:
+        captured.update(kwargs)
+        Path(kwargs["checkpoint_path"]).write_bytes(b"controlled checkpoint")
+        Path(kwargs["model_path"]).write_bytes(b"fine-tuned model")
+        return fake_runner_result()
+
+    monkeypatch.setattr(RUNNER_TARGET, fake)
+    fixture = Fixture(tmp_path)
+    output = MACEFineTuneSkill().run(
+        authorized_campaign_params(fixture, tmp_path), fixture.context(tmp_path)
+    )
+    assert isinstance(output, MACEFineTuneOutput)
+    assert captured["epoch_mode"] == "full_epoch"
+    manifest = json.loads((tmp_path / output.model_manifest_path).read_text())
+    assert manifest["scientific_status"] == "campaign_experiment"
+
+
+def test_authorized_campaign_rejects_tampered_authorization(tmp_path: Path) -> None:
+    fixture = Fixture(tmp_path)
+    params = authorized_campaign_params(fixture, tmp_path)
+    (tmp_path / "inputs" / "campaign_authorization.json").write_text("{}\n")
+    with pytest.raises(SkillError, match="hash check"):
         MACEFineTuneSkill().run(params, fixture.context(tmp_path))
 
 

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "generator": {
+    "script": "paper/mlip_study/figures/make_figures.R",
+    "sha256": "f0e53fa2902b12af95d925fd2bf08e017e0dbb1aad734453b2e049479c8fce84",
+    "dependencies": "R 4.6.1; ggplot2 4.0.3",
+    "dependency_receipt_sha256": "d93939b1186c0db7b6724ff3e693201d718e0bbb223c74a3e4cb4193388f3dd2"
+  },
+  "figures": [
+    {
+      "id": "F1a",
+      "caption_claim_ids": ["C1"],
+      "source_data": "paper/mlip_study/figures/training_trace_source.csv",
+      "source_data_sha256": "dc6e064ad97ecfb08d59c6188b2ccaaa5db9bbb53088773a84b79eca37087e2e",
+      "vector_pdf_sha256": "b8ca4d395b4c014bd2ad8cde9d5ac567104f7d46cc697e69476946871a84a1a4",
+      "submission_png_sha256": "78adc34f39f92dccb3b6c6b46aec70f71161667cd67c875bde43937a2cdf117b",
+      "submission_dpi": 600
+    },
+    {
+      "id": "F1b",
+      "caption_claim_ids": ["C2", "C3"],
+      "source_data": "paper/mlip_study/figures/pool_disagreement_source.csv",
+      "source_data_sha256": "a12dac05fa63dd6f41d4234d6872b440a02e2e400d6600bd2c8c7fab3f34da21",
+      "vector_pdf_sha256": "2b6b86acf70c00bbb7088468f81d469efa24393659756f2f0cad2214f32555c1",
+      "submission_png_sha256": "1ccc74d6e4993cf1609836f023e4520d4647151706c56a7f59ecb34a26a00b49",
+      "submission_dpi": 600
+    }
+  ],
+  "accessibility": "Color-blind-safe palette plus redundant shapes and line types; grayscale distinguishability checked visually."
+}

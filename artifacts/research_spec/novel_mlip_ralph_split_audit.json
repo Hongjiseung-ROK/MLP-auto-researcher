@@ -1,0 +1,49 @@
+{
+  "label_access": "none; normalized manifest metadata only",
+  "partition_groups": {
+    "acquisition_pool": [
+      "aimd_nvt_1000k",
+      "elastic_mode_2",
+      "elastic_mode_3",
+      "elastic_mode_4",
+      "elastic_mode_5",
+      "surface_3_3_2",
+      "vacancy_3000k"
+    ],
+    "frozen_test": [
+      "aimd_nvt_3000k",
+      "vacancy_300k"
+    ],
+    "initial_labeled": [
+      "elastic_ground_state",
+      "elastic_mode_1",
+      "surface_1_0_0",
+      "surface_1_1_0",
+      "surface_2_1_0",
+      "surface_2_1_1",
+      "surface_2_2_1",
+      "surface_3_1_0",
+      "surface_3_1_1",
+      "surface_3_2_0",
+      "surface_3_2_1",
+      "surface_3_2_2",
+      "surface_3_3_1"
+    ],
+    "stress_test": [
+      "elastic_mode_6"
+    ],
+    "validation": [
+      "aimd_nvt_300k"
+    ]
+  },
+  "partition_sizes": {
+    "acquisition_pool": 141,
+    "frozen_test": 60,
+    "initial_labeled": 32,
+    "stress_test": 20,
+    "validation": 40
+  },
+  "schema_version": "1.0.0",
+  "split_path": "artifacts/research_spec/novel_mlip_ralph_split.json",
+  "split_semantic_sha256": "3f909d7aaf10ee959aaebf4538e82fb4f391cba4cad5f5fd44850939629ef457"
+}

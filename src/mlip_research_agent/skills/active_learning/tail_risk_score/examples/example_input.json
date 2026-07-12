@@ -1,0 +1,10 @@
+{
+  "campaign_id": "example-campaign",
+  "disagreement_weight": 1.0,
+  "magnitude_weight": 1.0,
+  "members": [],
+  "metadata": {},
+  "pool_candidate_ids": [],
+  "round_id": "round-1",
+  "tail_fraction": 0.05
+}

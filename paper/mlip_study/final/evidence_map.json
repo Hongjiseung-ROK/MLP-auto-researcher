@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "claims": {
+    "C1": {
+      "statement": "Every fixed-epoch adapted seed had worse final validation force-vector P95 than zero shot.",
+      "strength": "exploratory_observation_with_optimizer_seed_consistency",
+      "artifacts": [
+        {"path": "artifacts/novel_mlip_campaign/pullback-50d09184/baseline/evaluations/zero_shot/validation/metrics.json", "sha256": "8a775d771ac64ea8a95ecd51ad999cd29543a67d27e8b679e16d4b512c014ad3"},
+        {"path": "artifacts/novel_mlip_campaign/pullback-50d09184/baseline/evaluations/static_initial/round-0/validation/metrics.json", "sha256": "ba67f9216c3cacfc2036d9d42a15fd76f6659a0adb619eab0ca46595d524d427"}
+      ]
+    },
+    "C2": {
+      "statement": "The original all-pool median committee gate failed despite 61 candidates above threshold and a viable top-36 window.",
+      "strength": "label_free_pool_audit",
+      "artifacts": [
+        {"path": "artifacts/novel_mlip_campaign/pullback-50d09184/baseline/acquisition/d0_committee_viability.json", "sha256": "60fc5938e62c60ca8da953388820a90b594c317a3529232f63b60889ccf45221"},
+        {"path": "artifacts/novel_mlip_campaign/pullback-50d09184/baseline/acquisition/d0_scores.json", "sha256": "52c9a97592575c5501d579a7604e011dd8513bbc8b34d4221d2b6b7900dff18e"},
+        {"path": "docs/research/novel_mlip_ralph_pivot_001.json", "sha256": null}
+      ]
+    },
+    "C3": {
+      "statement": "The measured same-calculator numerical force floor was 3.178683982696384e-7 eV/angstrom.",
+      "strength": "same_session_calibration",
+      "artifacts": [
+        {"path": "artifacts/novel_mlip_campaign/pullback-50d09184/baseline/calibration/colab_same_session.json", "sha256": "27179f9a90000064a7bfb25ed707f7faa411f1448db319c8c14c03ad0c5e7d35"}
+      ]
+    }
+  }
+}

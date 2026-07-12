@@ -3,22 +3,50 @@
 from __future__ import annotations
 
 import json
+from typing import Protocol
 
 import numpy as np
 from pydantic import BaseModel
 
 from mlip_research_agent.skills.active_learning.diversity_select.schema import (
     POLICY_VERSION,
+    DescriptorSet,
     DiversitySelectInput,
     DiversitySelectOutput,
 )
 from mlip_research_agent.skills.active_learning.diversity_select.validators import (
     validate_inputs,
 )
-from mlip_research_agent.skills.active_learning.selection_types import SelectionRecord
+from mlip_research_agent.skills.active_learning.selection_types import SelectionRecord, reject
 from mlip_research_agent.skills.base import Skill, SkillContext, expect_inputs, register_skill
 
 SELECTION_FILENAME = "diversity_selection.json"
+
+
+class DescriptorSource(Protocol):
+    descriptors: DescriptorSet | None
+    descriptor_artifact: str | None
+
+
+def resolve_descriptors(params: DescriptorSource, ctx: SkillContext) -> DescriptorSet:
+    if params.descriptors is not None:
+        return params.descriptors
+    artifact_id = params.descriptor_artifact
+    if artifact_id is None:
+        raise reject("descriptor artifact is missing")
+    artifact = ctx.registry.get(artifact_id)
+    if artifact is None or artifact.kind != "mace_descriptors":
+        raise reject("MACE descriptor artifact is not registered with the expected kind")
+    if not ctx.registry.verify(artifact_id):
+        raise reject("MACE descriptor artifact failed its registered hash check")
+    try:
+        payload = json.loads((ctx.run_dir / artifact.relative_path).read_text())
+        descriptors = DescriptorSet.model_validate(payload["descriptor_set"])
+    except (KeyError, OSError, ValueError, json.JSONDecodeError) as exc:
+        raise reject(f"invalid MACE descriptor artifact: {exc}") from exc
+    if descriptors.source != "mace_descriptor_adapter":
+        raise reject("registered descriptor artifact has the wrong source")
+    return descriptors
 
 
 def farthest_point_selection(
@@ -63,11 +91,12 @@ class DiversitySelectSkill(Skill):
 
     def run(self, inputs: BaseModel, ctx: SkillContext) -> BaseModel:
         params = expect_inputs(inputs, DiversitySelectInput)
-        validate_inputs(params)
+        descriptors = resolve_descriptors(params, ctx)
+        validate_inputs(params, descriptors)
 
         ids = sorted(params.pool_candidate_ids)
         matrix = np.asarray(
-            [params.descriptors.vectors[c] for c in ids], dtype=float
+            [descriptors.vectors[c] for c in ids], dtype=float
         )
         picks = farthest_point_selection(ids, matrix, params.budget)
 
@@ -80,7 +109,7 @@ class DiversitySelectSkill(Skill):
                 rank=rank,
                 selection_reason=(
                     "farthest-point step: min distance to already-selected set "
-                    f"{distance:.6f} (descriptor source: {params.descriptors.source})"
+                    f"{distance:.6f} (descriptor source: {descriptors.source})"
                 ),
                 policy_version=POLICY_VERSION,
             )
@@ -102,8 +131,9 @@ class DiversitySelectSkill(Skill):
             "campaign_id": params.campaign_id,
             "round_id": params.round_id,
             "policy_version": POLICY_VERSION,
-            "descriptor_source": params.descriptors.source,
-            "descriptor_dimension": params.descriptors.dimension,
+            "descriptor_source": descriptors.source,
+            "descriptor_dimension": descriptors.dimension,
+            "descriptor_artifact": params.descriptor_artifact,
             "mean_pairwise_distance": mean_pairwise,
             "records": [r.model_dump(mode="json") for r in records],
         }

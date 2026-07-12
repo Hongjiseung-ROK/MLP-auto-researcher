@@ -1,0 +1,58 @@
+\appendix
+
+\section{Artifact and Protocol Ledger}
+
+This appendix records the evidence used in the main text. The pilot ran from exact source commit \hash{50d09184021074e10985eee4c85951ab25e3ba9c}; the research specification SHA-256 is \hash{9dea3391d6285a2ab7590a3cf18ad0f76992585d31d047eca892e63fb97a92d3}. Dataset content SHA-256 is \hash{bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48}; split semantic SHA-256 is \hash{3f909d7aaf10ee959aaebf4538e82fb4f391cba4cad5f5fd44850939629ef457}; and the foundation checkpoint SHA-256 is \hash{2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736}.
+
+\begin{table}[h]
+\caption{Primary local evidence files and current SHA-256 values. The run stopped at the original D0 gate, so these numerical artifacts are recorded in a separate paper ledger rather than misrepresented as a completed campaign manifest.}
+\label{tab:hashes}
+\centering
+\footnotesize
+\begin{tabular}{@{}p{0.30\linewidth}p{0.62\linewidth}@{}}
+\toprule
+Evidence & SHA-256 \\
+\midrule
+Zero-shot validation metrics & \hash{8a775d771ac64ea8a95ecd51ad999cd29543a67d27e8b679e16d4b512c014ad3} \\
+Adapted validation metrics & \hash{ba67f9216c3cacfc2036d9d42a15fd76f6659a0adb619eab0ca46595d524d427} \\
+L4 numerical calibration & \hash{27179f9a90000064a7bfb25ed707f7faa411f1448db319c8c14c03ad0c5e7d35} \\
+D0 pool scores & \hash{52c9a97592575c5501d579a7604e011dd8513bbc8b34d4221d2b6b7900dff18e} \\
+Failed original gate & \hash{60fc5938e62c60ca8da953388820a90b594c317a3529232f63b60889ccf45221} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Metric Definitions}
+
+Let $\Delta\mathbf F_{xi}=\hat{\mathbf F}_{xi}-\mathbf F_{xi}$ for atom $i$ in configuration $x$. Force-component MAE and RMSE aggregate absolute and squared Cartesian component errors over all atoms. Vector P95 is \texttt{numpy.quantile} with $q=0.95$ and method \texttt{linear} over $\lVert\Delta\mathbf F_{xi}\rVert_2$. Energy MAE averages $|\hat E_x-E_x|/N_x$ over configurations. The softening slope is
+\begin{equation}
+\beta=\frac{\sum_x w_x\sum_i \mathbf F_{xi}\cdot\hat{\mathbf F}_{xi}}
+{\sum_x w_x\sum_i \lVert\mathbf F_{xi}\rVert_2^2},\qquad
+w_x=(3N_x)^{-1},
+\end{equation}
+so every configuration has equal total component weight. The magnitude-bias diagnostic is the median of $\lVert\hat{\mathbf F}_{xi}\rVert_2-\lVert\mathbf F_{xi}\rVert_2$.
+
+\section{Per-Seed Results and Runtime}
+
+\begin{table}[h]
+\caption{Final validation metrics for each adapted model. Runtime and memory are manifest-reported training values.}
+\label{tab:seeds}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Seed & Force MAE & Vector P95 & $\beta$ & Time (s) & MB \\
+\midrule
+42 & 0.13566 & 0.47390 & 0.62426 & 44.99 & 2005.65 \\
+43 & 0.13847 & 0.48363 & 0.61639 & 40.06 & 2005.66 \\
+44 & 0.13333 & 0.46595 & 0.63077 & 40.08 & 2005.66 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The corresponding final model SHA-256 values are \hash{6b95301deee9abac63b0cebefa837af7e6847485176a5def99910446e431140c}, \hash{0f530b5c7ac59be3146df096df2ba10262f9a1b970f32abaf0ce1eb724183674}, and \hash{d4d27d68918740598c02f89b75ac969ef85617c2b906315ebc7fee313ebb333a}.
+
+\section{Explicit Non-Claims}
+
+This manuscript does not report an acquisition round, selected-set label efficiency, a frozen-test result, a stress-test result, a VESSL replication, statistical significance, or acceptance/rejection of the tail-risk hypothesis. The recorded top-36 gate is a post-failure, pre-label protocol amendment. Zero pool labels were revealed before the amendment, and the research question, arms, budgets, training settings, endpoints, and protected-test policy were preserved.

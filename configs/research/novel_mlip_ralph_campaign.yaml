@@ -1,0 +1,71 @@
+campaign_id: cu-tail-risk-ralph-20260712
+scientific_status: frozen_preregistered_campaign
+research_spec: artifacts/research_spec/novel_mlip_ralph_spec.json
+split_manifest: artifacts/research_spec/novel_mlip_ralph_split.json
+authorization: docs/research/novel_mlip_ralph_authorization.json
+protocol: docs/research/novel_mlip_ralph_protocol.md
+
+question: >-
+  Under a fixed 36-label budget, does a label-free force-tail proxy improve
+  held-out Cu force-vector P95 and softening relative to standard committee
+  disagreement plus fixed-foundation MACE-descriptor diversity?
+hypothesis: >-
+  tail_risk_fps meets the preregistered relevant reduction in both the
+  AIMD-3000 K and vacancy-300 K frozen-test strata.
+null_hypothesis: >-
+  The joint two-stratum criterion is not met.
+
+dataset:
+  id: cu_phase2
+  content_sha256: bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48
+  file_sha256: 6c0fc583ead5e028ed72227ab864ea88fb8a9942a84d03d0558a890f5b4dba8f
+  split_semantic_sha256: 3f909d7aaf10ee959aaebf4538e82fb4f391cba4cad5f5fd44850939629ef457
+  label_units: {energy: eV, force: eV/angstrom}
+  stress_labels: excluded
+
+model:
+  family: MACE-MP-0-small
+  checkpoint_sha256: 2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736
+  mace_torch_version: 0.3.16
+  e0_policy: foundation
+  trainable_layers: last_interaction_and_readout
+
+design:
+  controls: [zero_shot, static_initial]
+  active_arms: [random, disagreement, disagreement_fps, tail_risk_fps]
+  rounds: 3
+  labels_per_round_per_arm: 12
+  initial_labels: 32
+  final_labels: 68
+  committee_seeds: [42, 43, 44]
+  shortlist_size: 36
+  tail_fraction: 0.05
+  frozen_test_strata: [aimd_nvt_3000k, vacancy_300k]
+  physical_stress_test: elastic_mode_6
+
+training:
+  optimizer: adamw
+  learning_rate: 0.0005
+  allowed_outcome_blind_fallback_learning_rate: 0.00025
+  epochs: 20
+  epoch_mode: full_epoch
+  batch_size: 4
+  valid_batch_size: 4
+  gradient_clip: 10.0
+  energy_loss_weight: 1.0
+  force_loss_weight: 100.0
+  dtype: float32
+  restart_from_foundation_each_fit: true
+
+compute:
+  colab: {planned_sessions: 2, maximum_sessions: 3, planned_gpu_hours: 3.0, maximum_gpu_hours: 6.0}
+  vessl: {planned_jobs: 4, maximum_jobs: 8, planned_gpu_hours: 6.0, maximum_gpu_hours: 9.67, max_minutes_per_job: 90}
+  global_maximum_gpu_hours: 22.0
+  sequential_only: true
+  paid_overage: forbidden
+
+frozen_test:
+  evaluations: 1
+  require_all_model_hashes_frozen: true
+  guide_proposals: false
+  retry_only_for_identical_infrastructure_failure: true

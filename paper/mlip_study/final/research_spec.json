@@ -1,0 +1,171 @@
+{
+  "acceptance_criteria": {
+    "confirmatory_contrast": "tail_risk_fps minus disagreement_fps",
+    "decision": "joint intersection-union across both frozen-test strata",
+    "minimum_relevant_effect_by_stratum": "max(0.05 eV/angstrom, 0.05 * disagreement_fps mean-seed P95)",
+    "required_for_joint_superiority": [
+      "effect is at least the minimum relevant reduction in both strata",
+      "all three paired seed differences are negative in both strata",
+      "one-sided 95% paired block-resampling upper bound is below zero in both strata"
+    ],
+    "result_if_not_met": "negative or inconclusive finite-benchmark result; no superiority claim",
+    "single_stratum_followup": "exploratory only, with Holm adjustment across two strata"
+  },
+  "acquisition": {
+    "batch_size_per_round": 12,
+    "committee_size": 3,
+    "committee_seeds": [42, 43, 44],
+    "descriptor": {
+      "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+      "distance": "euclidean",
+      "features": "MACE invariant node descriptors from all interaction layers",
+      "normalization": "current remaining pool only; population standardization, constant dimensions removed at 1e-12, then row L2 normalization with zero centroid preserved",
+      "pooling": "mean over atoms",
+      "selection": "deterministic farthest-point selection within the shortlist; centroid-farthest seed and lexicographic candidate-id ties"
+    },
+    "disagreement": "mean over atoms of population RMS Euclidean committee-force deviation (ddof=0)",
+    "random_selection_seeds": [31001, 31002, 31003],
+    "rounds": 3,
+    "shortlist_size": 36,
+    "tail_proxy": {
+      "aggregation": "mean of largest max(1, ceil(0.05 * n_atoms)) atomic proxy values",
+      "atomic_proxy": "norm(committee mean force) + population RMS vector disagreement",
+      "disagreement_weight": 1.0,
+      "magnitude_weight": 1.0,
+      "name": "label-free force-tail proxy",
+      "tail_fraction": 0.05,
+      "warning": "This is neither observed error nor calibrated uncertainty."
+    },
+    "viability_gate_before_oracle_reveal": {
+      "decision": "stop and invoke the scientific fallback if the gate fails; do not improvise an ensemble after labels are revealed",
+      "maximum_fraction_of_score_ties_at_1e-12": 0.2,
+      "minimum_median_disagreement": "max(10 * calibrated force-component numerical floor, 1e-6 eV/angstrom)"
+    }
+  },
+  "arms": [
+    {"acquisition": "none", "fine_tune": false, "name": "zero_shot"},
+    {"acquisition": "none", "fine_tune": true, "labels": 32, "name": "static_initial"},
+    {"acquisition": "fixed_seed_random", "fine_tune": true, "name": "random"},
+    {"acquisition": "top_committee_disagreement", "fine_tune": true, "name": "disagreement"},
+    {"acquisition": "top_36_disagreement_then_fps", "fine_tune": true, "name": "disagreement_fps"},
+    {"acquisition": "top_36_force_tail_proxy_then_fps", "fine_tune": true, "name": "tail_risk_fps"}
+  ],
+  "campaign_id": "cu-tail-risk-ralph-20260712",
+  "claim_scope": "paired finite-benchmark evidence conditional on the two named held-out Cu trajectories and one selected-label path per policy; no population-wide or universal Cu claim",
+  "compute_budget": {
+    "colab": {"maximum_gpu_hours": 6.0, "maximum_sessions": 3, "planned_gpu_hours": 3.0, "planned_sessions": 2},
+    "global_maximum_gpu_hours": 22.0,
+    "sequential_only": true,
+    "vessl": {
+      "credit_constraint": "actual and planned remaining cost must stay within verified promotional balance",
+      "gpu": "one NVIDIA A100 SXM 80GB",
+      "maximum_gpu_hours": 9.67,
+      "maximum_jobs": 8,
+      "planned_gpu_hours": 6.0,
+      "planned_jobs": 4,
+      "planned_maximum_minutes_per_job": 90
+    }
+  },
+  "dataset": {
+    "dataset_content_sha256": "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48",
+    "dataset_file_sha256": "6c0fc583ead5e028ed72227ab864ea88fb8a9942a84d03d0558a890f5b4dba8f",
+    "dataset_id": "cu_phase2",
+    "level_of_theory": "VASP 5.4.1, PBE, PAW, 520 eV as source-paper stated",
+    "license": "BSD-3-Clause repository-wide license with recorded residual data-license nuance",
+    "normalized_manifest_sha256": "ac3655e41ce4327ba18e2a603866b97b00b839ff04f16bb2cb86a3d8ba8a70d3",
+    "source": "mlearn Cu benchmark from Zuo et al., DOI 10.1021/acs.jpca.9b08723",
+    "stress_labels": "excluded because unit provenance remains inferred"
+  },
+  "frozen_at": "2026-07-12T06:21:47Z",
+  "frozen_test_policy": {
+    "authorization": "one simultaneous aggregate evaluation after all final model and analysis hashes are frozen",
+    "guidance_prohibition": "no frozen-test outcome may guide proposals, arm selection, retries, or hyperparameters",
+    "models": "all preregistered final VESSL models plus any preregistered cross-provider confirmation models",
+    "reruns": "only a documented infrastructure-failure retry with identical bytes and configuration"
+  },
+  "hypothesis": "At the same 36-label budget, tail_risk_fps reduces mean-seed atomic force-vector P95 on both held-out AIMD-3000 K and vacancy-300 K strata by a scientifically relevant amount relative to disagreement_fps.",
+  "model": {
+    "checkpoint_filename": "2023-12-10-mace-128-L0_energy_epoch-249.model",
+    "checkpoint_license": "MIT",
+    "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
+    "e0_policy": "foundation",
+    "family": "MACE-MP-0 small",
+    "mace_torch_version": "0.3.16",
+    "source_url": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_energy_epoch-249.model",
+    "training_data_compatibility": "same broad PBE/PBE+U foundation; exact target convention assessed by preregistered initial energy-offset diagnostic"
+  },
+  "novelty_claim": "Within the 35-paper verified scoped search, no study directly tested a predicted-force-magnitude-plus-disagreement tail proxy against standard disagreement-plus-fixed-foundation-descriptor diversity under an equal tiny Cu label budget with separately held-out high-temperature bulk and ordered-vacancy tail endpoints. This is a scoped literature-gap inference, not proof of absolute novelty.",
+  "null_hypothesis": "tail_risk_fps does not meet the preregistered relevant-effect and direction criteria relative to disagreement_fps in both held-out strata.",
+  "oracle": {
+    "append_only_ledger": true,
+    "labels_per_active_arm": 36,
+    "labels_per_round": 12,
+    "maximum_revealed_pool_labels_per_arm": 36,
+    "protected_partitions": ["validation", "frozen_test", "stress_test"],
+    "selection_inputs": "structures, fixed-foundation descriptors, predictions, and label-free committee scores only"
+  },
+  "physical_checks": {
+    "elastic_mode_6": "protected energy-strain response: geometry-derived signed strain coordinate, reference and predicted relative-energy curves, near-origin quadratic-curvature ratio, minimum shift, force metrics, and softening slope",
+    "force_softening_slope": "configuration-equal weighted no-intercept predicted-versus-reference force-component slope beta; report 1-beta and median force-magnitude difference",
+    "interpretation": "diagnostic checks on this benchmark, not standalone experimental Cu-property estimates"
+  },
+  "primary_endpoint": "for each frozen-test stratum, mean across seeds of numpy linear-method P95 atomic force-vector error in eV/angstrom",
+  "research_question": "Under a fixed 36-label budget, does a preregistered label-free force-tail proxy select Cu configurations that reduce held-out tail force error and systematic force softening more reliably than standard committee-disagreement plus fixed-foundation MACE-descriptor diversity?",
+  "schema_version": "1.0.0",
+  "secondary_endpoints": [
+    "force-component MAE and RMSE",
+    "energy MAE per atom",
+    "high-error structure fraction above 0.5 eV/angstrom",
+    "force softening slope and signed magnitude bias",
+    "group-specific results without pooling held-out strata",
+    "committee disagreement/error Spearman association on validation",
+    "selected-set descriptor diversity and group coverage",
+    "runtime, peak GPU memory, and failed runs",
+    "learning curves at 32, 44, 56, and 68 labels"
+  ],
+  "split": {
+    "frozen_test": {"groups": ["aimd_nvt_3000k", "vacancy_300k"], "n": 60},
+    "initial_labeled": {"groups": "elastic_ground_state, elastic_mode_1, and 11 deterministic surface groups", "n": 32},
+    "manifest_file_sha256": "ed917fcc39cacbba7092e7752cdca0d5987c9a1600c5f71863657e26764d8342",
+    "manifest_path": "artifacts/research_spec/novel_mlip_ralph_split.json",
+    "pool": {"groups": "aimd_nvt_1000k, vacancy_3000k, elastic_mode_2 through elastic_mode_5, and one remaining surface", "n": 141},
+    "semantic_sha256": "3f909d7aaf10ee959aaebf4538e82fb4f391cba4cad5f5fd44850939629ef457",
+    "stress_test": {"groups": ["elastic_mode_6"], "n": 20},
+    "validation": {"groups": ["aimd_nvt_300k"], "n": 40}
+  },
+  "starting_git_sha": "1f3febafdac7098cf4dee85cc5a528d59d46a821",
+  "statistical_design": {
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260712,
+    "interval_name": "paired block-resampling sensitivity interval conditional on the two trajectories",
+    "paired_blocks": {"aimd_nvt_3000k": "four existing contiguous ten-frame blocks", "vacancy_300k": "four existing contiguous five-frame blocks"},
+    "pseudoreplication_warning": "frames, atoms, components, and committee members are nested measurements, not acquisition-policy replicates",
+    "quantile": "numpy.quantile(q=0.95, method='linear')",
+    "seed_reporting": "show every seed; SD describes optimization variability conditional on one selected path"
+  },
+  "stopping_and_pivot": {
+    "fixed_rounds": "run all three rounds for all four active arms; no validation-driven arm dropping",
+    "pivot": "only before pool-label reveal if committee viability fails, required inputs are absent, the full-epoch calibration exceeds the sealed budget, or a methodological assumption is falsified",
+    "scientific_fallback": "same-shortlist comparison of top committee disagreement versus top-36 disagreement plus deterministic MACE-descriptor FPS",
+    "stop": "after independent cross-provider confirmation and the one frozen final evaluation answer the question, or when budget/credit makes any further decisive experiment impossible"
+  },
+  "training": {
+    "batch_size": 4,
+    "default_dtype": "float32",
+    "device": "cuda",
+    "early_stopping": "disabled scientifically by patience equal to 20 fixed epochs; final epoch is used",
+    "energy_loss_weight": 1.0,
+    "epoch_mode": "full_epoch",
+    "force_loss_weight": 100.0,
+    "gradient_clip": 10.0,
+    "learning_rate": 0.0005,
+    "learning_rate_fallback": "0.00025 only if the outcome-blind D0 training viability run is non-finite before any pool label reveal; if used, apply uniformly to every fit",
+    "max_epochs": 20,
+    "max_optimizer_steps": "20 * ceil(n_train / 4), recomputed exactly per cumulative label budget",
+    "optimizer": "AdamW with runner-owned ReduceLROnPlateau",
+    "restart_policy": "every arm, round, and seed restarts from the identical foundation checkpoint; no warm start",
+    "scheduler": "ReduceLROnPlateau factor 0.5 with runner-defined patience",
+    "trainable_layers": "last_interaction_and_readout",
+    "validation_batch_size": 4
+  }
+}

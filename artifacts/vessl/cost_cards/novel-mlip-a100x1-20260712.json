@@ -1,0 +1,35 @@
+{
+  "cleanup_action": "Verify terminal Job state, pull and hash-check artifacts, then report or remove the bounded object volume.",
+  "cluster": "cluster-betelgeuse",
+  "content_sha256": "15bc8389cc8471fe62c187be5ff09f03f15e2be978fd37627e83bc9a61a70bb4",
+  "currency": "CRD",
+  "current_credit": 15.0,
+  "current_hourly_price": 1.55,
+  "estimated_compute_cost": 2.325,
+  "estimated_storage_cost": 0.0,
+  "expected_max_duration_minutes": 90,
+  "gpu_count": 1,
+  "gpu_type": "A100 SXM 80GB",
+  "image": "quay.io/vessl-ai/torch@sha256:8bd418d49eeed841a607582b614c9d3ba86590b07d1be671816176c47253344a",
+  "live_snapshot_sha256": "721499161e4b23b2738c2ad76abee60fd3cb0894e7d237aad96c99d0ba02500d",
+  "observed_at": "2026-07-12T06:26:07Z",
+  "organization": "zhang-lab",
+  "resource_spec_slug": "resourcespec-a100x1",
+  "schema_version": "1.0.0",
+  "storage_capacity_gb": 5.0,
+  "storage_duration_hours": 168.0,
+  "storage_hourly_rate": 0.0,
+  "storage_type": "object",
+  "team": "Default",
+  "timeout_behavior": "The campaign wrapper exits nonzero at 90 minutes and the Job must terminate.",
+  "volume_mounts": [
+    {
+      "content_sha256": "d5a1f2600a5413e71a7566004dcdd509813ead6b64f5fc16220fef07a2845595",
+      "mount_path": "/campaign",
+      "read_only": false,
+      "schema_version": "1.0.0",
+      "volume_slug": "objvol-okbbesmemio8",
+      "volume_type": "object"
+    }
+  ]
+}

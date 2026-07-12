@@ -1,0 +1,132 @@
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\usepackage{icml2026}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\makeatletter
+\newcommand{\hash}[1]{\begingroup\ttfamily\@tfor\next:=#1\do{\next\hspace{0pt}}\endgroup}
+\makeatother
+
+\icmltitlerunning{Small-Data MACE Adaptation and a Heterogeneous-Pool Gate Audit}
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Small-Data MACE Adaptation Degraded Copper Force Tails: A Heterogeneous-Pool Gate Audit}
+
+  \begin{icmlauthorlist}
+    \icmlauthor{Anonymous Authors}{anon}
+  \end{icmlauthorlist}
+  \icmlaffiliation{anon}{Anonymous Institution}
+  \icmlcorrespondingauthor{Anonymous Authors}{anonymous@example.com}
+  \icmlkeywords{machine learning interatomic potentials, transfer learning, active learning, uncertainty, negative results}
+  \vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Foundation interatomic potentials invite adaptation with few system-specific labels, yet both adaptation and the numerical gates preceding active learning can fail. We report an exact-commit NVIDIA L4 pilot in which three 20-epoch last-block/readout MACE adaptations trained on 32 copper elastic and surface configurations were evaluated on one frozen 40-frame, 300 K AIMD validation trajectory. Relative to MACE-MP-0 zero shot, the adapted ensemble increased force-component MAE from 0.07298 to 0.13582 eV\,\AA$^{-1}$ and atomic force-vector P95 from 0.25132 to 0.47470 eV\,\AA$^{-1}$; every optimizer seed degraded the tail metric. A pre-label audit also found that a preregistered pool-wide median-disagreement gate rejected the committee even though 61 of 141 candidates exceeded its numerical floor and the 36th-largest score exceeded that floor by more than three orders of magnitude. These are validation-only pilot findings: no acquisition arm, protected frozen test, stress test, or cross-provider replication is reported.
+\end{abstract}
+
+\section{Introduction}
+
+Foundation machine learning interatomic potentials (MLIPs) offer broad chemical coverage and economical transfer to target systems \citep{batatia2025foundation,radova2025frozen}. Their apparent convenience creates two quiet failure modes. First, a small and structurally narrow labeled set can move an otherwise useful model in the wrong direction; universal MLIPs already exhibit systematic force softening that average errors can conceal \citep{deng2025softening}. Second, an active-learning controller can abort before acquiring data if its committee-viability statistic is poorly matched to the selection rule.
+
+Committee disagreement is a standard acquisition signal \citep{schran2020committee}, often combined with diversity or stratified sampling \citep{zaverkin2024uncertainty,qi2024robust}. Such signals are neither observed error nor universally calibrated uncertainty, particularly under misspecification \citep{perez2025misspecified}. A gate over the entire candidate pool therefore need not answer the operational question posed by a top-$k$ acquisition policy.
+
+We examine these issues in a preregistered copper pilot. Our contribution is deliberately narrow: on one 300 K validation trajectory, three independently seeded fixed-epoch MACE adaptations consistently degraded force-tail accuracy, and a label-free audit showed that an all-pool median-disagreement gate was misaligned with a 36-candidate selection window. The protected test labels were never accessed, so we make no claim about active-learning policy superiority or general copper performance.
+
+\section{Frozen Pilot Design}
+
+\paragraph{Data and split.}
+We used the public mlearn Cu benchmark \citep{zuo2020performance}, whose source calculations use VASP 5.4.1, PBE, PAW, and a 520 eV plane-wave cutoff. The normalized dataset contains 293 configurations. Whole source groups were assigned to 32 initially labeled elastic/surface structures, a 141-structure acquisition pool, 40 AIMD-300 K validation frames (4,320 atoms), a protected 60-frame frozen test, and a 20-frame elastic stress test. The pool comprises 80 elastic, 40 AIMD-1000 K, 20 vacancy-3000 K, and one surface configuration. Stress-tensor labels were excluded because their unit provenance is inferred. Split membership and primary metrics were hash-frozen before execution.
+
+\paragraph{Model and adaptation.}
+The baseline was the MACE-MP-0 small checkpoint (SHA-256 prefix \texttt{2ddb079c}), MACE 0.3.16. Each adapted member restarted from identical checkpoint bytes and trained only the last interaction and readout: 20 full epochs, AdamW at initial learning rate $5\times10^{-4}$, batch size 4, energy/force loss weights 1/100, and seeds 42, 43, and 44. The final epoch was fixed in advance; validation loss drove only the learning-rate scheduler. Each fit performed 160 optimizer steps, changed 10 parameter tensors and zero frozen tensors, and used approximately 2.01 GB peak GPU memory on one NVIDIA L4.
+
+\paragraph{Metrics and numerical floor.}
+We report energy MAE per atom, force-component MAE/RMSE, the linear-method 95th percentile of atomic force-vector error, the configuration-equal no-intercept force slope $\beta$, and median signed force-magnitude bias. Values $\beta<1$ indicate softening. Repeated inference with the same calculator gave maximum force-component drift $3.1787\times10^{-7}$ eV\,\AA$^{-1}$; reload drift was $2.9476\times10^{-7}$ eV\,\AA$^{-1}$. The original viability threshold was therefore $\max(10\times\text{drift},10^{-6})=3.1787\times10^{-6}$ eV\,\AA$^{-1}$.
+
+For configuration $x$ with $N_x$ atoms and a three-member committee, the label-free score was
+\begin{equation}
+d(x)=\frac{1}{N_x}\sum_i\left[\frac{1}{3}\sum_m
+\lVert\mathbf F_{mi}-\bar{\mathbf F}_i\rVert_2^2\right]^{1/2}.
+\end{equation}
+The preregistered gate required the median $d(x)$ over the full pool to exceed the numerical threshold.
+
+\section{Results}
+
+\subsection{Fixed-Epoch Adaptation Degraded Validation Forces}
+
+Table~\ref{tab:metrics} shows that the adapted ensemble was worse on every aggregate validation metric. Force-component MAE rose by 86.1\%, force RMSE by 86.7\%, and force-vector P95 by 88.9\%. The force slope decreased from 0.8031 to 0.6238 and the median magnitude bias became more negative, consistent with stronger underestimation. The three seed-specific P95 values were 0.47390, 0.48363, and 0.46595 eV\,\AA$^{-1}$, all above the 0.25132 eV\,\AA$^{-1}$ zero-shot value.
+
+\begin{table}[t]
+\caption{Final metrics on the 40-frame AIMD-300 K validation trajectory. ``Adapted'' is the mean-prediction ensemble. No uncertainty interval is implied.}
+\label{tab:metrics}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Metric & Zero shot & Adapted & Change \\
+\midrule
+Energy MAE (eV/atom) & 0.00374 & 0.00631 & +68.8\% \\
+Force MAE (eV/\AA) & 0.07298 & 0.13582 & +86.1\% \\
+Force RMSE (eV/\AA) & 0.09065 & 0.16928 & +86.7\% \\
+Vector P95 (eV/\AA) & 0.25132 & 0.47470 & +88.9\% \\
+Softening slope $\beta$ & 0.80311 & 0.62381 & $-0.17930$ \\
+Magnitude bias (eV/\AA) & $-0.13674$ & $-0.25864$ & $-0.12190$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The fixed final epoch is consequential. Figure~\ref{fig:pilot}a shows that each trace reached its best validation force MAE at epoch 0 or 1 (0.05395--0.05600 eV\,\AA$^{-1}$), then trended upward and crossed the zero-shot line. Because early stopping was disabled by design, this is evidence of recipe fragility, not evidence that all small-data transfer is harmful. The seeds share the same 32 labels and validation trajectory; they are optimization repeats, not independent data or policy replicates.
+
+\begin{figure*}[t]
+\centering
+\begin{subfigure}[t]{0.44\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../figures/validation_training_trace.png}
+  \caption{Per-seed validation trace.}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.51\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{../figures/pool_disagreement.png}
+  \caption{Label-free pool disagreement.}
+\end{subfigure}
+\caption{Real L4 pilot evidence. (a) All fixed-epoch adaptations eventually exceed the zero-shot force-MAE baseline. (b) The heterogeneous pool median lies below the numerical gate because 80 elastic frames have near-floor scores, although the acquisition window contains 36 high-disagreement candidates. Points are configurations; line styles remain distinguishable in grayscale.}
+\label{fig:pilot}
+\end{figure*}
+
+\subsection{The Pool-Wide Gate Answered the Wrong Question}
+
+The original median gate failed: the pool-wide median was $4.8231\times10^{-7}$ eV\,\AA$^{-1}$, below the $3.1787\times10^{-6}$ threshold. This did not reflect a uniformly collapsed committee. A post-failure, pre-label audit found scores from $2.8068\times10^{-7}$ to $8.5629\times10^{-3}$ eV\,\AA$^{-1}$; 61 candidates exceeded the threshold, and the 36th-largest score was $6.8541\times10^{-3}$ eV\,\AA$^{-1}$. All 40 AIMD-1000 K and all 20 vacancy-3000 K candidates exceeded the threshold, while none of the 80 elastic candidates did (Figure~\ref{fig:pilot}b).
+
+Thus the median asked whether most of the heterogeneous pool was informative, whereas the acquisition policy needed only a viable 36-member shortlist. Before any pool label was revealed, we recorded a protocol amendment replacing the all-pool median with three selection-window checks: at least 36 scores above the floor, the 36th score above the floor, and at most 20\% ties within that window. This amendment is an auditable methodological response to a falsified assumption, not a validated universal gate.
+
+\section{Discussion and Limitations}
+
+The pilot supports two operational lessons. First, small-data adaptation needs trajectory-aware monitoring: a fixed epoch budget can erase an early validation gain and amplify force softening. Second, numerical viability should be defined on the candidate window actually consumed by acquisition, especially when pool groups differ greatly in force scale. Neither lesson establishes a new acquisition policy's superiority.
+
+The scope is intentionally constrained. Results cover one element, one checkpoint, one 32-configuration training set, one correlated validation trajectory, and one adaptation recipe in a single L4 session. Frames, atoms, and force components are nested observations; no population confidence interval or statistical significance claim is justified. We have not isolated whether composition mismatch, learning rate, objective weighting, or fixed-duration optimization caused the degradation. Most importantly, no random, disagreement, diversity, or tail-risk acquisition round has completed; the frozen AIMD-3000 K/vacancy-300 K test and elastic stress test remain unopened, and no VESSL cross-provider replication exists. The preregistered tail-risk hypothesis is therefore unanswered.
+
+\section{Conclusion}
+
+In this real-GPU Cu pilot, a fixed 20-epoch last-block/readout adaptation consistently worsened final validation force tails across three seeds, while an all-pool median gate blocked execution despite a viable top-36 committee window. Reporting these failures before accessing protected labels turns them into actionable design constraints rather than post hoc success criteria. Completing the acquisition rounds and one-shot frozen evaluation is required before any benchmark-level conclusion.
+
+\typeout{MAIN_BODY_END_PAGE=\thepage}
+
+\bibliography{references}
+\bibliographystyle{icml2026}
+
+\clearpage
+\input{appendix}
+
+\end{document}

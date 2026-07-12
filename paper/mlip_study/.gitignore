@@ -1,0 +1,6 @@
+.DS_Store
+final/*.aux
+final/*.bbl
+final/*.blg
+final/*.log
+final/*.out

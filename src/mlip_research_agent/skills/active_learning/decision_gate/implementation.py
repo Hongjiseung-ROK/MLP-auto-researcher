@@ -18,6 +18,7 @@ from mlip_research_agent.skills.active_learning.decision_gate.validators import 
 )
 from mlip_research_agent.skills.active_learning.diversity_select.implementation import (
     farthest_point_selection,
+    resolve_descriptors,
 )
 from mlip_research_agent.skills.active_learning.diversity_select.schema import (
     DiversitySelectInput,
@@ -44,7 +45,8 @@ class DecisionGateSkill(Skill):
 
     def run(self, inputs: BaseModel, ctx: SkillContext) -> BaseModel:
         params = expect_inputs(inputs, DecisionGateInput)
-        validate_inputs(params)
+        descriptors = resolve_descriptors(params, ctx)
+        validate_inputs(params, descriptors)
 
         # Stage 1: invalid filtering.
         valid = [s for s in params.signals if not s.invalid]
@@ -67,15 +69,14 @@ class DecisionGateSkill(Skill):
 
         # Stage 3: diversity selection inside the window (validated with the
         # same fail-closed descriptor rules as diversity_select).
-        window_descriptors = params.descriptors.model_copy(
+        window_descriptors = descriptors.model_copy(
             update={
                 "vectors": {
-                    c: params.descriptors.vectors[c] for c in window_ids
+                    c: descriptors.vectors[c] for c in window_ids
                 }
             }
         )
-        validate_descriptor_inputs(
-            DiversitySelectInput(
+        descriptor_input = DiversitySelectInput(
                 pool_candidate_ids=window_ids,
                 metadata={c: params.metadata[c] for c in window_ids},
                 descriptors=window_descriptors,
@@ -83,9 +84,9 @@ class DecisionGateSkill(Skill):
                 campaign_id=params.campaign_id,
                 round_id=params.round_id,
             )
-        )
+        validate_descriptor_inputs(descriptor_input, window_descriptors)
         matrix = np.asarray(
-            [params.descriptors.vectors[c] for c in window_ids], dtype=float
+            [descriptors.vectors[c] for c in window_ids], dtype=float
         )
         picks = farthest_point_selection(window_ids, matrix, params.budget)
 
@@ -119,6 +120,7 @@ class DecisionGateSkill(Skill):
             "campaign_id": params.campaign_id,
             "round_id": params.round_id,
             "policy_version": POLICY_VERSION,
+            "descriptor_artifact": params.descriptor_artifact,
             "pipeline": [
                 "invalid_filtering",
                 "uncertainty_window",

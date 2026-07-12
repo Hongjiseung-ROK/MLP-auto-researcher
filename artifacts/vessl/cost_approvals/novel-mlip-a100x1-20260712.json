@@ -1,0 +1,9 @@
+{
+  "approval_artifact_sha256": "bb80ceff93513e022c2f2e2c9962c516c09f9cad039b8717f649afd8586c7eba",
+  "approved_at": "2026-07-12T06:26:07Z",
+  "approved_by": "repository owner via campaign-specific explicit authorization",
+  "content_sha256": "8a42c1fbbb5fdb113dc36997ef18ecf7c352e8619bd22456ad845aa717ea6fab",
+  "cost_card_sha256": "15bc8389cc8471fe62c187be5ff09f03f15e2be978fd37627e83bc9a61a70bb4",
+  "expires_at": "2026-07-19T06:26:07Z",
+  "schema_version": "1.0.0"
+}

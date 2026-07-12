@@ -1,0 +1,43 @@
+{
+  "active_job_count": 0,
+  "billing": {
+    "balance": 15,
+    "burnRatePerHour": 0
+  },
+  "campaign_volume": {
+    "activeJobs": [],
+    "activeWorkspaces": [],
+    "createdBy": "Jiseung Hong",
+    "description": "Bounded campaign inputs and hash-verified artifacts",
+    "jobCount": 0,
+    "monthlyCostInMicrocredit": 0,
+    "name": "novel-mlip-ralph-20260712",
+    "slug": "objvol-okbbesmemio8",
+    "storageSlug": "object_storage_8xrzqen4pjrd",
+    "usedSizeBytes": 0,
+    "workspaceCount": 0
+  },
+  "image": "quay.io/vessl-ai/torch@sha256:8bd418d49eeed841a607582b614c9d3ba86590b07d1be671816176c47253344a",
+  "observed_at": "2026-07-12T06:26:07Z",
+  "schema_version": "1.0.0",
+  "selected_resource_spec": {
+    "acceleratorLimit": 1,
+    "acceleratorName": "A100 SXM",
+    "acceleratorOnChipMemoryInGb": 80,
+    "attributes": {
+      "gpuType": "A100 SXM",
+      "region": "us-west-2",
+      "volume": []
+    },
+    "availability": "high",
+    "clusterName": "betelgeuse-na",
+    "clusterSlug": "cluster-betelgeuse",
+    "cpuLimitInMillicore": 11000,
+    "ephemeralStorageLimitInByte": 200000000000,
+    "hourlyCostInMicrocredit": 1550000,
+    "isUsable": true,
+    "memoryLimitInByte": 128000000000,
+    "name": "VESSL A100 SXM \u00d71",
+    "slug": "resourcespec-a100x1"
+  }
+}

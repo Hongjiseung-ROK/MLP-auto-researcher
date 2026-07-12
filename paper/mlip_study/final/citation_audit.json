@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "verified_at": "2026-07-12",
+  "verification_method": "DOI content negotiation and Crossref works metadata",
+  "references": [
+    {"key": "batatia2025foundation", "doi": "10.1063/5.0297006", "status": "verified"},
+    {"key": "deng2025softening", "doi": "10.1038/s41524-024-01500-6", "status": "verified"},
+    {"key": "radova2025frozen", "doi": "10.1038/s41524-025-01727-x", "status": "verified"},
+    {"key": "zuo2020performance", "doi": "10.1021/acs.jpca.9b08723", "status": "verified"},
+    {"key": "schran2020committee", "doi": "10.1063/5.0016004", "status": "verified"},
+    {"key": "zaverkin2024uncertainty", "doi": "10.1038/s41524-024-01254-1", "status": "verified"},
+    {"key": "qi2024robust", "doi": "10.1038/s41524-024-01227-4", "status": "verified"},
+    {"key": "perez2025misspecified", "doi": "10.1038/s41524-025-01758-4", "status": "verified"}
+  ],
+  "unresolved": []
+}

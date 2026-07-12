@@ -4,26 +4,17 @@ from __future__ import annotations
 
 import numpy as np
 
-from mlip_research_agent.schemas.failure import FailureClass, Severity
 from mlip_research_agent.skills.active_learning.diversity_select.schema import (
+    DescriptorSet,
     DiversitySelectInput,
 )
 from mlip_research_agent.skills.active_learning.selection_types import (
     reject,
     validate_candidate_pool,
 )
-from mlip_research_agent.skills.base import SkillError
 
 
-def validate_inputs(params: DiversitySelectInput) -> None:
-    if params.descriptors.source == "mace_descriptor_adapter":
-        raise SkillError(
-            "the MACE descriptor adapter is a declared future boundary and is not "
-            "implemented; fixture descriptors are the only supported source",
-            failure_class=FailureClass.TOOL_ERROR,
-            severity=Severity.HIGH,
-            retryable=False,
-        )
+def validate_inputs(params: DiversitySelectInput, descriptors: DescriptorSet) -> None:
     validate_candidate_pool(params.pool_candidate_ids, params.metadata)
     missing_meta = sorted(set(params.pool_candidate_ids) - set(params.metadata))
     if missing_meta:
@@ -33,17 +24,17 @@ def validate_inputs(params: DiversitySelectInput) -> None:
             f"budget {params.budget} exceeds pool size {len(params.pool_candidate_ids)}"
         )
     pool = set(params.pool_candidate_ids)
-    covered = set(params.descriptors.vectors)
+    covered = set(descriptors.vectors)
     if covered != pool:
         missing = sorted(pool - covered)
         extra = sorted(covered - pool)
         raise reject(
             f"descriptors do not match the pool (missing {missing[:3]}, extra {extra[:3]})"
         )
-    dim = params.descriptors.dimension
+    dim = descriptors.dimension
     seen: dict[tuple[float, ...], str] = {}
     for candidate_id in sorted(pool):
-        vector = params.descriptors.vectors[candidate_id]
+        vector = descriptors.vectors[candidate_id]
         if len(vector) != dim:
             raise reject(
                 f"candidate {candidate_id}: descriptor length {len(vector)} != {dim}"

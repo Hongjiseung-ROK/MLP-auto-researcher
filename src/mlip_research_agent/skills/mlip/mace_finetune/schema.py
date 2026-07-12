@@ -49,8 +49,13 @@ class MACEFineTuneInput(BaseModel):
     training_lineage_artifact: str
     checkpoint_manifest_path: str
     checkpoint_path: str
-    execution_mode: Literal["boundary_test", "pilot"] = "boundary_test"
+    execution_mode: Literal["boundary_test", "pilot", "authorized_campaign"] = (
+        "boundary_test"
+    )
     h2_preregistration_frozen: bool = False
+    campaign_id: str | None = None
+    research_spec_sha256: str | None = Field(default=None, min_length=64, max_length=64)
+    campaign_authorization_artifact: str | None = None
     run_name: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]{2,63}$")
     seed: int = Field(ge=0)
     max_epochs: int = Field(gt=0, le=500)
@@ -61,6 +66,7 @@ class MACEFineTuneInput(BaseModel):
     learning_rate: float = Field(gt=0)
     batch_size: int = Field(gt=0)
     valid_batch_size: int = Field(gt=0)
+    epoch_mode: Literal["single_batch", "full_epoch"] = "single_batch"
     e0_policy: Literal["foundation"] = "foundation"
     energy_loss_weight: float = Field(default=1.0, gt=0)
     force_loss_weight: float = Field(default=100.0, gt=0)
@@ -74,11 +80,36 @@ class MACEFineTuneInput(BaseModel):
     def _approval_boundary(self) -> MACEFineTuneInput:
         if self.execution_mode == "pilot" and not self.h2_preregistration_frozen:
             raise ValueError("pilot fine-tuning requires a frozen H2 preregistration")
+        if self.execution_mode == "authorized_campaign":
+            missing = [
+                name
+                for name, value in (
+                    ("campaign_id", self.campaign_id),
+                    ("research_spec_sha256", self.research_spec_sha256),
+                    ("campaign_authorization_artifact", self.campaign_authorization_artifact),
+                )
+                if value is None
+            ]
+            if missing:
+                raise ValueError(
+                    "authorized campaign fine-tuning requires " + ", ".join(missing)
+                )
         if self.execution_mode == "boundary_test":
             if self.h2_preregistration_frozen:
                 raise ValueError("boundary test cannot claim H2 preregistration approval")
             if self.max_epochs > 2 or self.max_optimizer_steps > 2:
                 raise ValueError("boundary test is limited to two epochs/optimizer steps")
+            if self.epoch_mode != "single_batch":
+                raise ValueError("boundary test requires single_batch epoch mode")
+            if any(
+                value is not None
+                for value in (
+                    self.campaign_id,
+                    self.research_spec_sha256,
+                    self.campaign_authorization_artifact,
+                )
+            ):
+                raise ValueError("boundary test cannot carry campaign authorization fields")
         return self
 
 

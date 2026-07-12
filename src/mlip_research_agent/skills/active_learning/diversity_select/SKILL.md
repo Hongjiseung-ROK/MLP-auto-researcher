@@ -6,9 +6,9 @@ Deterministic farthest-point selection over explicit descriptor artifacts.
 
 - Inputs: pool candidate ids, label-free metadata, an explicit
   `DescriptorSet` (candidate → fixed-length vector), and an exact budget.
-- Descriptor sources: `fixture` (deterministic CI path) or
-  `mace_descriptor_adapter` — the latter is a *declared future boundary*
-  that fails closed until a reviewed adapter exists. No SOAP dependency.
+- Descriptor sources: `fixture` (deterministic CI path) or the reviewed
+  `mace_descriptor_adapter`, which consumes the label-free acquisition view
+  and a content-pinned MACE checkpoint. No SOAP dependency.
 - Validation rejects: budget over pool, descriptors not matching the pool,
   wrong dimensions, non-finite components, and duplicate descriptors.
 - Selection: farthest-point sampling seeded at the candidate farthest from
