@@ -14,6 +14,11 @@ from mlip_research_agent.research.auto_research.acceptance_policy import (
     AcceptanceConstraints,
     decide,
 )
+from mlip_research_agent.research.auto_research.adapters import (
+    AdapterRunResult,
+    BenchmarkAdapter,
+    SyntheticQuadraticAdapter,
+)
 from mlip_research_agent.research.auto_research.controller import (
     AutoResearchController,
     ControllerError,
@@ -68,6 +73,11 @@ from mlip_research_agent.research.auto_research.proposal_policy import (
     PriorOutcome,
     generate_proposal,
 )
+from mlip_research_agent.research.auto_research.review import (
+    AgentReview,
+    ReviewPacket,
+    ReviewSynthesis,
+)
 from mlip_research_agent.research.auto_research.round_state import (
     ALLOWED_TRANSITIONS,
     TERMINAL_STATES,
@@ -79,11 +89,6 @@ from mlip_research_agent.research.auto_research.round_state import (
 )
 from mlip_research_agent.research.auto_research.synthetic_evaluator import (
     SyntheticAggregateEvaluator,
-)
-from mlip_research_agent.research.auto_research.synthetic_fixture import (
-    AdapterRunResult,
-    BenchmarkAdapter,
-    SyntheticQuadraticAdapter,
 )
 from mlip_research_agent.research.auto_research.tea_time_boundary import (
     TeaTimeReviewRecord,
@@ -103,6 +108,7 @@ __all__ = [
     "TERMINAL_STATES",
     "AcceptanceConstraints",
     "AdapterRunResult",
+    "AgentReview",
     "AllowedRange",
     "AutoResearchController",
     "BaselineReference",
@@ -140,6 +146,8 @@ __all__ = [
     "ResearchLesson",
     "ResearchObjective",
     "ResourceUsage",
+    "ReviewPacket",
+    "ReviewSynthesis",
     "RoundState",
     "SealError",
     "StoppingRule",

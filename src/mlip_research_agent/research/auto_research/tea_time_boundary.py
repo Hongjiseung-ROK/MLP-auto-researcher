@@ -12,8 +12,6 @@ agent-text and can never satisfy an evidence gate.
 
 from __future__ import annotations
 
-from collections import Counter
-
 from pydantic import ConfigDict, Field
 
 from mlip_research_agent.research.auto_research.mutation import MutationClass
@@ -94,8 +92,12 @@ def select_trigger(
     if is_first_proposal:
         return TeaTimeTrigger.AUTO_RESEARCH_FIRST_PROPOSAL
     if prior_mutation_classes:
-        counts = Counter(prior_mutation_classes[-REPEATED_MUTATION_CLASS_THRESHOLD:])
-        _, streak = counts.most_common(1)[0]
+        latest = prior_mutation_classes[-1]
+        streak = 0
+        for mutation_class in reversed(prior_mutation_classes):
+            if mutation_class is not latest:
+                break
+            streak += 1
         if streak >= REPEATED_MUTATION_CLASS_THRESHOLD:
             return TeaTimeTrigger.AUTO_RESEARCH_REPEATED_MUTATION_CLASS
     return TeaTimeTrigger.AUTO_RESEARCH_ITERATION_BOUNDARY
@@ -146,8 +148,7 @@ def run_tea_time_review(
     assert isinstance(output, TeaTimeOutput)
 
     decisions_text = (
-        ", ".join(f"{k}={v}" for k, v in sorted(prior_decisions_summary.items()))
-        or "none yet"
+        ", ".join(f"{k}={v}" for k, v in sorted(prior_decisions_summary.items())) or "none yet"
     )
     failure_text = failure_category or "none"
     return TeaTimeReviewRecord(

@@ -29,6 +29,10 @@ from mlip_research_agent.research.auto_research.acceptance_policy import (
     AcceptanceConstraints,
     decide,
 )
+from mlip_research_agent.research.auto_research.adapters.base import (
+    AdapterRunResult,
+    BenchmarkAdapter,
+)
 from mlip_research_agent.research.auto_research.decision import (
     DecisionValue,
     ExperimentDecision,
@@ -63,16 +67,17 @@ from mlip_research_agent.research.auto_research.proposal_policy import (
     PriorOutcome,
     generate_proposal,
 )
+from mlip_research_agent.research.auto_research.review import (
+    AgentReview,
+    ReviewPacket,
+    ReviewSynthesis,
+)
 from mlip_research_agent.research.auto_research.round_state import (
     TERMINAL_STATES,
     CompletionStatus,
     IterationRecord,
     LoopState,
     RoundState,
-)
-from mlip_research_agent.research.auto_research.synthetic_fixture import (
-    AdapterRunResult,
-    BenchmarkAdapter,
 )
 from mlip_research_agent.research.auto_research.tea_time_boundary import (
     TeaTimeReviewRecord,
@@ -132,6 +137,8 @@ class AutoResearchController:
         base_config: dict[str, ConfigValue],
         fixture_seed: int,
         git_commit: str,
+        external_review_after_iteration: int | None = None,
+        initial_proposal: ExperimentProposal | None = None,
     ) -> None:
         require_sealed(objective, "research objective")
         if evaluator.name != objective.required_evaluator:
@@ -140,9 +147,7 @@ class AutoResearchController:
                 f"required evaluator {objective.required_evaluator!r}"
             )
         if adapter.remote and objective.budget.max_remote_jobs == 0:
-            raise ControllerError(
-                "the objective permits no remote jobs but the adapter is remote"
-            )
+            raise ControllerError("the objective permits no remote jobs but the adapter is remote")
         self.run_id = run_id
         self.run_dir = run_dir
         self.objective = objective
@@ -153,6 +158,14 @@ class AutoResearchController:
         self.base_config = dict(base_config)
         self.fixture_seed = fixture_seed
         self.git_commit = git_commit
+        self.external_review_after_iteration = external_review_after_iteration
+        self.initial_proposal = initial_proposal
+        if initial_proposal is not None:
+            require_sealed(initial_proposal, "initial proposal")
+            if initial_proposal.objective_id != objective.objective_id:
+                raise ControllerError("initial proposal targets a different objective")
+            if initial_proposal.parent_iteration_id is not None:
+                raise ControllerError("initial proposal cannot have a parent iteration")
 
         run_dir.mkdir(parents=True, exist_ok=True)
         self.registry = ArtifactRegistry.load(run_dir)
@@ -165,9 +178,7 @@ class AutoResearchController:
                     "resume refused: the objective on disk differs from the one provided"
                 )
         else:
-            self.state = RoundState(
-                run_id=run_id, objective_sha256=objective.content_sha256
-            )
+            self.state = RoundState(run_id=run_id, objective_sha256=objective.content_sha256)
             self.state.save(run_dir)
             self.events.emit(EventType.RUN_STARTED, payload={"run_id": run_id})
 
@@ -175,9 +186,57 @@ class AutoResearchController:
 
     def run(self) -> LoopState:
         """Drive the loop to a terminal state."""
-        while self.state.state not in TERMINAL_STATES:
+        while self.state.state not in TERMINAL_STATES | {LoopState.AWAITING_EXTERNAL_REVIEW}:
             self.step()
         return self.state.state
+
+    def resume_with_external_review(
+        self,
+        *,
+        reviews: list[AgentReview],
+        review_packet: ReviewPacket,
+        synthesis: ReviewSynthesis,
+        proposal: ExperimentProposal,
+    ) -> None:
+        """Seal the host review boundary and make iteration 2 runnable."""
+        if self.state.state is not LoopState.AWAITING_EXTERNAL_REVIEW:
+            raise ControllerError("controller is not awaiting an external review")
+        by_role = {review.role: review for review in reviews}
+        require_sealed(review_packet, "review packet")
+        if len(by_role) != 3 or len(reviews) != 3:
+            raise ControllerError("exactly three unique specialized reviews are required")
+        for review in reviews:
+            require_sealed(review, f"{review.role} review")
+            if review.review_status in {"stop", "escalate"}:
+                raise ControllerError(f"review role {review.role} requested {review.review_status}")
+            if synthesis.review_hashes.get(review.role) != review.content_sha256:
+                raise ControllerError(f"synthesis hash mismatch for {review.role}")
+            if review.review_packet_sha256 != review_packet.content_sha256:
+                raise ControllerError(f"review packet hash mismatch for {review.role}")
+        require_sealed(synthesis, "review synthesis")
+        if synthesis.review_packet_sha256 != review_packet.content_sha256:
+            raise ControllerError("synthesis review-packet hash mismatch")
+        require_sealed(proposal, "external proposal")
+        if proposal.parent_iteration_id != "iteration-001":
+            raise ControllerError("external proposal must descend from iteration-001")
+        synthesis_reference = f"review_synthesis:{synthesis.content_sha256}"
+        if synthesis_reference not in proposal.required_skills:
+            raise ControllerError("external proposal does not reference the review synthesis")
+        review_dir = self.run_dir / "agent_reviews" / "iteration-001"
+        review_dir.mkdir(parents=True, exist_ok=True)
+        for role, review in sorted(by_role.items()):
+            self._write_node(review_dir, f"{role}.json", review, "agent_text")
+        self._write_node(review_dir, "review_packet.json", review_packet, "agent_text")
+        self._write_node(review_dir, "synthesis.json", synthesis, "agent_text")
+        self._write_node(self._iteration_dir(), "proposal.json", proposal, "auto_research")
+        self.state.iterations.append(
+            IterationRecord(
+                iteration_id=self.state.current_iteration_id,
+                proposal_id=proposal.proposal_id,
+            )
+        )
+        self.state.transition(LoopState.NEXT_PROPOSAL_READY)
+        self._checkpoint()
 
     def step(self) -> LoopState:
         """Execute exactly one state-machine unit of work and checkpoint."""
@@ -237,16 +296,12 @@ class AutoResearchController:
         path = directory / filename
         if path.exists():
             if path.read_text() != model.canonical_text():
-                raise ControllerError(
-                    f"trace is append-only; {path} exists with different content"
-                )
+                raise ControllerError(f"trace is append-only; {path} exists with different content")
         else:
             path.write_text(model.canonical_text())
         return self.registry.register(path, kind=kind, step_id=directory.name)
 
-    def _load_node(
-        self, directory: Path, filename: str, model_cls: type[_CAM]
-    ) -> _CAM:
+    def _load_node(self, directory: Path, filename: str, model_cls: type[_CAM]) -> _CAM:
         model = model_cls.model_validate_json((directory / filename).read_text())
         require_sealed(model, filename)
         return model
@@ -284,6 +339,15 @@ class AutoResearchController:
 
     def _handle_initialized(self) -> None:
         # Run-level artifacts.
+        for filename, kind in (
+            ("compute_attestation.json", "compute_attestation"),
+            ("dataset_verification.json", "dataset_verification"),
+            ("split_verification.json", "split_verification"),
+            ("checkpoint_verification.json", "checkpoint_verification"),
+        ):
+            path = self.run_dir / filename
+            if path.is_file():
+                self.registry.register(path, kind=kind, step_id="run")
         objective_path = self.run_dir / "objective.json"
         if not objective_path.is_file():
             objective_path.write_text(self.objective.canonical_text())
@@ -310,7 +374,10 @@ class AutoResearchController:
                 )
                 + "\n"
             )
-            self.registry.register(environment_path, kind="auto_research", step_id="run")
+        self.registry.register(environment_path, kind="auto_research", step_id="run")
+        freeze_path = self.run_dir / "pip_freeze.txt"
+        if freeze_path.is_file():
+            self.registry.register(freeze_path, kind="environment_lock", step_id="run")
 
         self.store.initialize(self.base_config)
 
@@ -324,7 +391,7 @@ class AutoResearchController:
         baseline_metrics = self._evaluate_baseline(baseline_dir, result)
         self.state.baseline_metrics = baseline_metrics
 
-        proposal = generate_proposal(
+        proposal = self.initial_proposal or generate_proposal(
             objective=self.objective,
             policy=self.policy,
             current_config=self.store.current_config(),
@@ -341,16 +408,21 @@ class AutoResearchController:
         )
         self.state.transition(LoopState.PROPOSAL_READY)
 
-    def _evaluate_baseline(
-        self, baseline_dir: Path, result: AdapterRunResult
-    ) -> dict[str, float]:
+    def _evaluate_baseline(self, baseline_dir: Path, result: AdapterRunResult) -> dict[str, float]:
         assert result.predictions_path and result.predictions_rerun_path
+        self.registry.register(
+            Path(result.fixture_definition_path),
+            kind="auto_research",
+            step_id="baseline",
+        )
         predictions = self.registry.register(
             Path(result.predictions_path), kind="auto_research", step_id="baseline"
         )
         rerun = self.registry.register(
             Path(result.predictions_rerun_path), kind="auto_research", step_id="baseline"
         )
+        for path_str in result.additional_artifact_paths:
+            self.registry.register(Path(path_str), kind="auto_research", step_id="baseline")
         legality = LegalityResult(
             proposal_id="baseline",
             policy_id=self.policy.policy_id,
@@ -395,9 +467,17 @@ class AutoResearchController:
             self.state.partial_reason = "proposal requires remote compute with no remote budget"
             self.state.transition(LoopState.BLOCKED)
             return
-        prior_classes = [
-            MutationClass.BOUNDED_MUTABLE for _ in self.state.iterations[:-1]
-        ]
+        prior_classes: list[MutationClass] = []
+        for record in self.state.iterations[:-1]:
+            legality_path = self.run_dir / record.iteration_id / "legality.json"
+            if not legality_path.is_file():
+                continue
+            legality = self._load_node(
+                self.run_dir / record.iteration_id,
+                "legality.json",
+                LegalityResult,
+            )
+            prior_classes.extend(legality.per_mutation_class)
         trigger = select_trigger(
             is_first_proposal=self.state.iteration_index == 0,
             proposal_is_remote=proposal.estimated_compute.remote,
@@ -417,9 +497,7 @@ class AutoResearchController:
         decisions_summary: dict[str, int] = {}
         for record in self.state.iterations[:-1]:
             if record.decision:
-                decisions_summary[record.decision] = (
-                    decisions_summary.get(record.decision, 0) + 1
-                )
+                decisions_summary[record.decision] = decisions_summary.get(record.decision, 0) + 1
         review = run_tea_time_review(
             ctx=ctx,
             objective=self.objective,
@@ -427,9 +505,7 @@ class AutoResearchController:
             trigger=trigger,
             prior_decisions_summary=decisions_summary,
             failure_category=self.state.last_failure_category,
-            remaining_iterations=(
-                self.objective.maximum_iterations - self.state.iteration_index
-            ),
+            remaining_iterations=(self.objective.maximum_iterations - self.state.iteration_index),
             remaining_compute_seconds=(
                 self.objective.budget.max_compute_seconds - self.state.compute_seconds_used
             ),
@@ -516,6 +592,11 @@ class AutoResearchController:
                     step_id=self.state.current_iteration_id,
                 )
                 produced.append(artifact.artifact_id)
+        for path_str in result.additional_artifact_paths:
+            artifact = self.registry.register(
+                Path(path_str), kind="auto_research", step_id=self.state.current_iteration_id
+            )
+            produced.append(artifact.artifact_id)
         if result.failure_path:
             artifact = self.registry.register(
                 Path(result.failure_path),
@@ -523,6 +604,30 @@ class AutoResearchController:
                 step_id=self.state.current_iteration_id,
             )
             failure_artifact_id = artifact.artifact_id
+            produced.append(artifact.artifact_id)
+        model_artifact_id: str | None = None
+        if result.model_path:
+            artifact = self.registry.register(
+                Path(result.model_path),
+                kind="fine_tuned_mace_model",
+                step_id=self.state.current_iteration_id,
+            )
+            model_artifact_id = artifact.artifact_id
+            produced.append(artifact.artifact_id)
+        split_artifact_id: str | None = None
+        if result.split_path:
+            artifact = self.registry.register(
+                Path(result.split_path),
+                kind="split_verification",
+                step_id="run",
+            )
+            split_artifact_id = artifact.artifact_id
+        if result.operation_receipt_path:
+            artifact = self.registry.register(
+                Path(result.operation_receipt_path),
+                kind="optimizer_operation_receipt",
+                step_id=self.state.current_iteration_id,
+            )
             produced.append(artifact.artifact_id)
 
         config_path = it_dir / "candidate_config.json"
@@ -539,9 +644,9 @@ class AutoResearchController:
             environment_artifact="run:environment.json",
             config_artifact=config_artifact.artifact_id,
             dataset_artifact=definition.artifact_id,
-            split_artifact=None,
-            model_artifact=None,
-            compute_attestation="local-cpu",
+            split_artifact=split_artifact_id,
+            model_artifact=model_artifact_id,
+            compute_attestation=result.compute_attestation,
             event_log_range=EventLogRange(
                 first_sequence=first_sequence, last_sequence=last_sequence
             ),
@@ -551,7 +656,7 @@ class AutoResearchController:
             resource_usage=ResourceUsage(
                 wall_seconds=result.simulated_wall_seconds,
                 peak_memory_mb=result.simulated_peak_memory_mb,
-                device="cpu",
+                device=result.device,
             ),
         ).sealed()
         self._write_node(it_dir, "execution.json", execution, "auto_research")
@@ -585,9 +690,7 @@ class AutoResearchController:
             self.state.transition(LoopState.DECIDED)
             return
 
-        prediction_ids = [
-            a for a in execution.produced_artifacts if "predictions" in a
-        ]
+        prediction_ids = [a for a in execution.produced_artifacts if "predictions" in a]
         metrics_path = it_dir / "metrics.json"
         outcome = self.evaluator.evaluate(
             evaluation_id=f"{proposal.proposal_id}-eval"[:64],
@@ -779,6 +882,10 @@ class AutoResearchController:
             self.state.transition(LoopState.PARTIAL)
             return
 
+        if self.external_review_after_iteration == self.state.iteration_index:
+            self.state.transition(LoopState.AWAITING_EXTERNAL_REVIEW)
+            return
+
         proposal = generate_proposal(
             objective=self.objective,
             policy=self.policy,
@@ -882,6 +989,8 @@ class AutoResearchController:
             iterations_completed=sum(1 for r in self.state.iterations if r.completed),
             iterations_planned=self.objective.maximum_iterations,
             reason=reason,
+            scientific_status=self.objective.scientific_status_ceiling.value,
+            claim_eligible=False,
         ).save(self.run_dir)
         self._write_trace_report()
         event = (
@@ -905,8 +1014,8 @@ class AutoResearchController:
             f"- compute used (simulated): {self.state.compute_seconds_used:.1f}s "
             f"of {self.objective.budget.max_compute_seconds:.1f}s",
             "",
-            "> Scientific status: non_scientific. Every number below comes from a "
-            "deterministic synthetic fixture; nothing here is claim-eligible.",
+            f"> Scientific status: {self.objective.scientific_status_ceiling.value}. "
+            "Nothing in this trace is claim-eligible.",
             "",
         ]
         for record in self.state.iterations:
