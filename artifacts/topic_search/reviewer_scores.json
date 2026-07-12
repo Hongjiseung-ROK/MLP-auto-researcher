@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "reviews": [
+    {"reviewer": "research_scout", "recommended_primary": "trace-fault-audit", "recommended_fallback": "metric-not-sufficient", "status": "completed", "engine": "codex_read_only_subagent"},
+    {"reviewer": "mlip_domain_scientist", "recommended_primary": "rerun-stability", "recommended_fallback": "validation-query-budget", "status": "completed", "engine": "codex_read_only_subagent"},
+    {"reviewer": "active_learning_scientist", "recommended_primary": "acquisition-stability", "recommended_fallback": "validation-query-budget", "status": "completed", "engine": "codex_read_only_subagent"},
+    {"reviewer": "claude_fable_topic_panel", "status": "blocked", "reason": "Claude Code reported session limit; reset time 17:10 Asia/Seoul. No Fable review was fabricated."}
+  ]
+}

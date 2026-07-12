@@ -1,0 +1,31 @@
+{
+  "auditor": "scripts/research/audit_paper_bundle.py",
+  "checks": {
+    "anonymous_source_scan_passed": true,
+    "compiled_with_shell_escape_disabled": true,
+    "figure_pdfs_present": true,
+    "font_count": 12,
+    "fonts_embedded": true,
+    "manual_visual_inspection_passed": true,
+    "official_style_hashes": {
+      "icml2026.bst": "0ec3d5eb9b02efb7e0b44a32f3775882f42a743d0bdc618f34e6936309b98764",
+      "icml2026.sty": "7cdcf90f6a59c5219e7f15c88f7ed09fcaf598dad91e6cdddc4dc3cb0e397a95"
+    },
+    "official_style_hashes_match_frozen_sources": true,
+    "overfull_boxes": false,
+    "page_count": 3,
+    "page_count_in_required_range": true,
+    "page_size": "612 x 792 pts (letter)",
+    "pdf_path_or_identity_leaks": [],
+    "rendered_page_count": 3,
+    "undefined_citations_or_references": false,
+    "us_letter": true
+  },
+  "nonblocking_warnings": [
+    "The ICML style emits a benign empty-anchor warning in anonymous mode.",
+    "Underfull boxes and the expected disabled-shell-escape epstopdf warning may appear."
+  ],
+  "paper_pdf_sha256": "ec168869fe51784db667752a9933ac4b6453ec9a4d3b3bd11fefb776dc776cc8",
+  "schema_version": "1.0.0",
+  "status": "pass"
+}

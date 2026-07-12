@@ -1,0 +1,11 @@
+{
+  "R": {
+    "Version": "4.6.1"
+  },
+  "Packages": {
+    "ggplot2": {"Package": "ggplot2", "Version": "4.0.3", "Source": "installed-host"},
+    "scales": {"Package": "scales", "Version": "1.4.0", "Source": "installed-host"},
+    "viridisLite": {"Package": "viridisLite", "Version": "0.4.3", "Source": "installed-host"}
+  },
+  "note": "Minimal figure dependency snapshot; no package installation was performed."
+}

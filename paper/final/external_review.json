@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0.0",
+  "review_protocol": {
+    "independent_agents": 3,
+    "access": "read-only",
+    "role_grouping": [
+      ["MLIP reviewer", "active-learning reviewer"],
+      ["statistical reviewer", "reproducibility reviewer"],
+      ["systems reviewer", "citation reviewer", "claim/adversarial reviewer"]
+    ],
+    "note": "Seven requested roles were covered by three independent read-only agents; this file does not imply seven independent agents. Recommendations below are retained even when later mechanical blockers were resolved."
+  },
+  "reviews": [
+    {
+      "reviewer_role": "MLIP reviewer",
+      "summary": "The MACE case is correctly limited to an infrastructure-only negative result, with correct mace-torch version, force-component-MAE units, relative changes, threshold decisions, and binary rerun interpretation.",
+      "strengths": ["T1/T2 ceiling is appropriate.", "Both rejection decisions and negative evidence are preserved.", "No checkpoint-improvement or physical-validity claim is made."],
+      "weaknesses": ["One device and two one-step trials cannot support a scientific result.", "No frozen-test, physical-property, uncertainty, or provider replication evidence exists."],
+      "blocking_issues": ["At review time the MACE method fields and approved label view were not fully bound to public evidence."],
+      "claim_corrections": ["Keep C3-C6 at T2.", "Describe iteration 2 as crossing an infrastructure decision threshold, not improving model quality."],
+      "missing_baselines": ["A second device/provider replay would strengthen a future reproducibility study."],
+      "missing_citations": ["A MACE-MP model-card citation would be needed only if the exact checkpoint were named publicly."],
+      "format_issues": [],
+      "recommendation_at_review": "reject_major_revision_then_weak_accept_if_packaging_fixed",
+      "confidence": 0.93
+    },
+    {
+      "reviewer_role": "active-learning reviewer",
+      "summary": "The paper makes no active-learning performance or sample-efficiency claim and explicitly states that no acquisition labels were accessed.",
+      "strengths": ["The scope excludes acquisition efficiency and protected labels.", "The real-MACE replay is not misrepresented as an active-learning campaign."],
+      "weaknesses": ["The work provides no evidence about query strategy, sample efficiency, or uncertainty calibration."],
+      "blocking_issues": [],
+      "claim_corrections": ["Continue to exclude active-learning claims."],
+      "missing_baselines": ["No acquisition baseline is needed for the current infrastructure-only question."],
+      "missing_citations": ["No active-learning citation is required without an active-learning claim."],
+      "format_issues": [],
+      "recommendation_at_review": "weak_accept_after_bundle_completion",
+      "confidence": 0.90
+    },
+    {
+      "reviewer_role": "statistical reviewer",
+      "summary": "Independent recomputation confirmed 52 records, 48 corrupt cases, four clean controls, 12 balanced families, semantic macro/micro recall 1.0, manifest macro/micro recall 1/12, and macro-recall gain 11/12.",
+      "strengths": ["The primary result is numerically correct.", "The clean-control statement avoids population inference.", "Amendment A-001 discloses the initial macro/micro representation error without rerunning cases."],
+      "weaknesses": ["The four seeds are deterministic instantiations, not independent samples.", "Fault-family weights are hand-defined and balanced by construction."],
+      "blocking_issues": ["At review time the analysis trusted macro fields in summary.json instead of deriving them from the ledger.", "The preregistered wall_seconds endpoint was under-specified and unreported."],
+      "claim_corrections": ["Report macro and micro for both methods.", "Treat elapsed timing only as a non-inferential diagnostic."],
+      "missing_baselines": ["A schema-only validator or stronger immutable-manifest baseline would be more informative."],
+      "missing_citations": [],
+      "format_issues": [],
+      "recommendation_at_review": "reject_major_revision_then_weak_accept_if_corrections_fixed",
+      "confidence": 0.97
+    },
+    {
+      "reviewer_role": "reproducibility reviewer",
+      "summary": "A temporary rerun reproduced every decision and summary endpoint, but timing-bearing ledger rows were not byte-identical. The paper therefore must promise deterministic outcomes rather than deterministic ledger bytes.",
+      "strengths": ["The research specification content hash recomputes.", "Remote source hashes and MACE calculations match private artifacts.", "The build uses shell escape disabled and official ICML assets."],
+      "weaknesses": ["elapsed_seconds varies with host scheduling.", "The initial reproduction command targeted the frozen default output directory."],
+      "blocking_issues": ["At review time public evidence locators were unresolved.", "At review time the PDF embedded an absolute local figure path.", "Cleanup, round-state, retry, and method bindings were incomplete."],
+      "claim_corrections": ["Say deterministic decisions and aggregate endpoints.", "Require a distinct reproduction output directory."],
+      "missing_baselines": ["Cross-provider execution remains future work."],
+      "missing_citations": [],
+      "format_issues": ["Rebuild in a neutral isolated directory and scan PDF strings."],
+      "recommendation_at_review": "reject_major_revision",
+      "confidence": 0.97
+    },
+    {
+      "reviewer_role": "systems reviewer",
+      "summary": "The framing is materially safer, but the experiment remains a white-box self-test of repository-defined invariants rather than independent robustness evidence.",
+      "strengths": ["The architecture separates proposal, execution, evaluation, decision, and evidence release.", "The paper preserves failures and uses a fail-closed claim ceiling."],
+      "weaknesses": ["Eleven of twelve faults are designed to evade a refreshable manifest.", "The comparator is intentionally weak.", "Fault and grader authors share the same contract."],
+      "blocking_issues": ["At review time required audit and submission files were absent."],
+      "claim_corrections": ["Use white-box contract coverage throughout.", "Do not use general robustness or superiority language."],
+      "missing_baselines": ["Consumer-owned signed manifest.", "Typed schema/provenance-DAG validator.", "Independently authored held-out faults."],
+      "missing_citations": ["Provenance-system and mutation-testing context would strengthen future positioning."],
+      "format_issues": [],
+      "recommendation_at_review": "weak_reject_even_after_mechanical_fixes_without_held_out_faults",
+      "confidence": 0.98
+    },
+    {
+      "reviewer_role": "citation reviewer",
+      "summary": "Spot checks found that the cited primary sources support their local sentences; Hsueh et al. supports controlled fault injection and official PyTorch documentation supports the exact-equality caveat.",
+      "strengths": ["All cited keys resolve.", "Bibliographic metadata provenance is recorded.", "No citation is used to support the new experimental counts."],
+      "weaknesses": ["Related work on provenance and mutation testing is thin."],
+      "blocking_issues": [],
+      "claim_corrections": ["Do not let related-work citations imply independent fault authorship."],
+      "missing_baselines": [],
+      "missing_citations": ["in-toto/SLSA or mutation-testing citations are optional future additions, not blockers for the narrowed claim."],
+      "format_issues": [],
+      "recommendation_at_review": "accept_citation_audit",
+      "confidence": 0.94
+    },
+    {
+      "reviewer_role": "claim/adversarial reviewer",
+      "summary": "The adversarial reviewer attempted to reject the paper and concluded that the finite-catalog result is honest but close to a self-confirming unit test. They retained a weak-reject scientific recommendation even if packaging blockers were repaired.",
+      "strengths": ["All numerical claims recompute.", "MACE negative evidence and T2 ceiling are explicit.", "The final title and abstract disclaim arbitrary robustness."],
+      "weaknesses": ["No independently authored held-out fault set.", "No competitive provenance baseline.", "Only four narrow clean controls."],
+      "blocking_issues": ["At review time public evidence was unresolved, required JSON audits were missing, and PDF path anonymity was fragile."],
+      "claim_corrections": ["Retain excluded claims and infrastructure_only status.", "Do not convert 0/4 clean rejections into a false-positive-rate estimate."],
+      "missing_baselines": ["Held-out faults or a materially stronger baseline."],
+      "missing_citations": ["Artifact provenance and mutation-testing literature would improve novelty positioning."],
+      "format_issues": ["A public repository draft PR can reveal authorship even when the PDF is anonymous; treat repository publication and anonymous conference submission as distinct disclosure channels."],
+      "recommendation_at_review": "weak_reject_major_revision",
+      "confidence": 0.98
+    }
+  ],
+  "resolution_ledger": [
+    {"issue": "Macro versus micro representation", "status": "resolved", "evidence": "evidence/amendments.jsonl A-001 and ledger-derived analysis consistency check"},
+    {"issue": "Under-specified wall_seconds endpoint", "status": "resolved_by_disclosure_and_claim_exclusion", "evidence": "evidence/amendments.jsonl A-002"},
+    {"issue": "Unresolved public evidence aliases", "status": "resolved", "evidence": "evidence_map.json and evidence/remote_trace_A.json"},
+    {"issue": "Missing MACE method, approval, cleanup, round-state, and retry bindings", "status": "resolved", "evidence": "claims.json C0/C6 and evidence_map.json"},
+    {"issue": "PDF absolute-path leak", "status": "resolved", "evidence": "format_audit.json neutral isolated build and strings scan"},
+    {"issue": "Public analysis source-path leak found during final verification", "status": "resolved", "evidence": "evidence/analysis.json blinded locators and claim_audit.json scan of all public text files"},
+    {"issue": "Small-sample points hidden", "status": "resolved", "evidence": "Figure 2 and figure_manifest.json"},
+    {"issue": "Held-out faults or competitive provenance baseline", "status": "unresolved_scope_limitation", "evidence": "paper limitations, self-review, excluded robustness claims"}
+  ],
+  "consensus": {
+    "numerical_validity": "supported",
+    "claim_ceiling": "T2 infrastructure-only",
+    "release_after_mechanical_fixes": "mixed: two groups conditional weak-accept; adversarial systems reviewer retains weak-reject for limited novelty and self-confirming design",
+    "negative_recommendation_preserved": true
+  },
+  "final_verification": {
+    "mechanical_release_status": "ready_with_disclosed_scope_limitations",
+    "mlip_active_learning_group": {"recommendation": "weak_accept_for_explicitly_T2_infrastructure_methodology_claim", "confidence": 0.99},
+    "statistical_reproducibility_group": {"recommendation": "weak_accept", "confidence": 0.99},
+    "adversarial_systems_citation_claim_group": {"recommendation": "weak_reject_for_limited_novelty_and_self_confirming_design", "confidence": 0.99},
+    "unanimous_mechanical_findings": [
+      "Required files and public evidence locators are complete.",
+      "All dependent hashes and sizes resolve.",
+      "The public text and PDF scans contain no searched identity, path, or commit leaks.",
+      "Claim, citation, and format audits pass."
+    ],
+    "unresolved_scientific_scope_limitation": "No independently authored held-out fault suite or competitive provenance baseline was added; this remains explicit in the paper and prevents a general robustness claim."
+  }
+}

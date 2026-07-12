@@ -1,0 +1,47 @@
+{
+  "absolute_recall_gain": 0.9166666666666666,
+  "campaign_id": "free-ralph-trace-audit",
+  "hypothesis_supported": true,
+  "manifest_only_fault_family_recall": {
+    "broken_lineage_parent": 0.0,
+    "decision_metric_inconsistency": 0.0,
+    "evaluator_identity_collision": 0.0,
+    "forbidden_label_payload": 0.0,
+    "forged_reject_without_rollback": 0.0,
+    "immutable_input_change": 0.0,
+    "inflated_scientific_status": 0.0,
+    "internal_seal_tamper": 0.0,
+    "missing_lesson": 0.0,
+    "missing_tea_time": 0.0,
+    "registered_artifact_corruption": 1.0,
+    "unauthorized_remote_attestation": 0.0
+  },
+  "manifest_only_macro_fault_recall": 0.08333333333333333,
+  "manifest_only_micro_fault_recall": 0.08333333333333333,
+  "n_clean_controls": 4,
+  "n_corrupt_cases": 48,
+  "n_fault_families": 12,
+  "schema_version": "1.0.0",
+  "semantic_clean_false_positive_rate": 0.0,
+  "semantic_fault_family_recall": {
+    "broken_lineage_parent": 1.0,
+    "decision_metric_inconsistency": 1.0,
+    "evaluator_identity_collision": 1.0,
+    "forbidden_label_payload": 1.0,
+    "forged_reject_without_rollback": 1.0,
+    "immutable_input_change": 1.0,
+    "inflated_scientific_status": 1.0,
+    "internal_seal_tamper": 1.0,
+    "missing_lesson": 1.0,
+    "missing_tea_time": 1.0,
+    "registered_artifact_corruption": 1.0,
+    "unauthorized_remote_attestation": 1.0
+  },
+  "semantic_macro_fault_recall": 1.0,
+  "semantic_micro_fault_recall": 1.0,
+  "thresholds": {
+    "absolute_recall_gain_min": 0.25,
+    "clean_false_positive_rate_max": 0.0,
+    "macro_recall_min": 0.9
+  }
+}

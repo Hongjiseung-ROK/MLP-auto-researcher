@@ -1,0 +1,37 @@
+{
+  "derived_files": {
+    "artifacts/auto_research/free-ralph-trace-audit/analysis/fault_detection_summary.csv": "a8868bb0ecb866d648458a8e64285a9bdf60208b25d1599cf36321fd69bae7fc",
+    "artifacts/auto_research/free-ralph-trace-audit/analysis/real_mace_case_study.csv": "973833712cf58c5a03908486fc1f53ee9c769ad5f7218f0797cf240ddad0b3a0",
+    "artifacts/auto_research/free-ralph-trace-audit/analysis/seed_level_fault_detection.csv": "b15132138e112b2f07e99bbd16b7e9d80a198fa737a58ef31951de2ca692c86e"
+  },
+  "headline": {
+    "absolute_recall_gain": 0.9166666666666666,
+    "clean_total": 4,
+    "corrupt_total": 48,
+    "manifest_detected": 4,
+    "manifest_only_macro_fault_recall": 0.08333333333333333,
+    "semantic_clean_false_positive_rate": 0.0,
+    "semantic_detected": 48,
+    "semantic_macro_fault_recall": 1.0
+  },
+  "schema_version": "1.0.0",
+  "source_files": {
+    "artifacts/auto_research/free-ralph-trace-audit/benchmark/experiment_ledger.jsonl": "f6bbd45076e63c75bb539fa72439413214bb7234f9199669133032cd3995e2ed",
+    "artifacts/auto_research/free-ralph-trace-audit/benchmark/summary.json": "258bdaaedada3dc621b21f62eda754e77be7cd610f3e982c768cfed59384e65b",
+    "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-001/decision.json": "e9fcf88db9c9139da781ae6c3be8e44075a37671877385d111d881169bde7697",
+    "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-001/evaluation.json": "c3c55f4bc32c5f59bbd11afb676cb039c2e08cf09e276f1400babef326e0c1ae",
+    "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-002/decision.json": "ef9bf371685003077dbe1c6821323f107163dc1c4b17a8590415e294a95e49a2",
+    "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-002/evaluation.json": "fff6d17e192e5dfc5dc109bc6042bf8378290e36c41a408b1a2e687976839aba"
+  },
+  "summary_consistency": {
+    "absolute_tolerance": 1e-12,
+    "checked_fields": [
+      "absolute_recall_gain",
+      "manifest_only_macro_fault_recall",
+      "manifest_only_micro_fault_recall",
+      "semantic_macro_fault_recall",
+      "semantic_micro_fault_recall"
+    ],
+    "passed": true
+  }
+}

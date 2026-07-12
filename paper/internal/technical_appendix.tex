@@ -1,0 +1,69 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{microtype}
+\title{Technical Appendix: White-Box Contract Audit for Autonomous MLIP Research}
+\author{Internal evidence edition}
+\date{12 July 2026}
+
+\begin{document}
+\maketitle
+
+\section{Frozen Research Contract}
+
+The preregistration froze four seeds, twelve single-fault families, zero retries per case, local CPU execution, and no remote or protected-data access. The primary endpoint was macro fault-detection recall. Success required semantic macro recall at least 0.90, no observed rejection among the four clean controls, and at least 0.25 absolute macro-recall gain over a mutable manifest-only integrity ablation. The canonical specification content hash is
+\texttt{a3361385e420d1692b5b10f87cdb0ffbbb122a4f08125cfed2ddcc513406819e}.
+
+\section{Fault Catalog and Frozen Outcomes}
+
+The fault families were missing Tea Time, missing lesson, evaluator identity collision, immutable-input change, forbidden label payload, unauthorized remote attestation, decision--metric inconsistency, internal-seal tamper, registered-artifact corruption, inflated scientific status, forged rejection without rollback, and broken lineage parent. Each family was applied once to a separate derived trace for each seed.
+
+\begin{table}[h]
+  \centering
+  \caption{Aggregates independently derived from the immutable ledger.}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Method & Detected & Corrupt total & Macro recall & Clean rejected \\
+    \midrule
+    Mutable manifest hashes & 4 & 48 & 0.0833 & 0/4 \\
+    Semantic contract grader & 48 & 48 & 1.0000 & 0/4 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The ledger hash is
+\texttt{f6bbd45076e63c75bb539fa72439413214bb7234f9199669133032cd3995e2ed}.
+Independent review found that the initial summary expressed the recall gain with micro quantities and omitted the manifest macro recall, although the preregistration named macro recall. Amendment A-001 recomputed only summary metadata from the frozen ledger. Because all twelve families have four cases, macro and micro recalls coincide and the numerical decision did not change. No case was rerun. The corrected summary hash is
+\texttt{258bdaaedada3dc621b21f62eda754e77be7cd610f3e982c768cfed59384e65b}.
+
+\section{Real-MACE Negative Case}
+
+The internal source bundle is
+\texttt{artifacts/auto\_research/ralphthon-mace-ec2d804/}, generated at exact commit
+\texttt{ec2d804fb3b6dafa012620d83436007569de5e7c}. The anonymous paper calls it \texttt{remote-trace-A}. The run was policy-attested on one NVIDIA L4 and used \texttt{mace-torch} 0.3.16, a candidate-only checkpoint, an approved bounded label view, and one optimizer step per iteration. Its trace-grade, completion, attestation, dataset, checkpoint, environment, operation, evaluation, and decision artifacts are enumerated with SHA-256 hashes in \texttt{private\_evidence\_map.json} and the public blinded evidence map.
+
+Iteration 1 changed validation force-component MAE by 0.053\%, below the frozen 0.1\% threshold. Iteration 2 changed it by 0.133\% and crossed that threshold. Both were rejected because the exact-equality reproducibility flag failed. The recorded value \texttt{rerun\_metric\_delta=1.0} is a binary mismatch indicator, not an error magnitude. The trace remained \texttt{infrastructure\_only} and \texttt{claim\_eligible=false}.
+
+\section{Reproduction and Audit}
+
+The local fault audit and derived analysis require no network call or secret:
+
+\begin{verbatim}
+env -u PYTHONPATH conda run -n mlip-research-agent \
+  python scripts/research/run_trace_fault_audit.py \
+  --output artifacts/reproductions/free-ralph-trace-audit
+env -u PYTHONPATH conda run -n mlip-research-agent \
+  python scripts/research/build_trace_audit_analysis.py \
+  --benchmark artifacts/reproductions/free-ralph-trace-audit \
+  --output artifacts/reproductions/free-ralph-trace-analysis
+Rscript paper/figures/render_figures.R "$PWD"
+\end{verbatim}
+
+The submitted ledger is the original execution ledger. Reproduction creates a new ledger for comparison; it must not overwrite the frozen evidence during audit. Decisions and summary endpoints reproduce, while per-row elapsed timings are host-dependent. Amendment A-002 therefore excludes the under-specified \texttt{wall\_seconds} secondary endpoint from interpretation. The paper was compiled with \texttt{pdflatex -no-shell-escape}; all citations and references resolved, all fonts are embedded, and the three-page letter-size PDF was visually inspected page by page.
+
+\section{Claim Ceiling}
+
+The local fault counts are T1 infrastructure facts, while the reused L4 observations are T2 remote-infrastructure observations. There is no T3--T5 scientific claim. In particular, the evidence does not establish an improved potential, general adversarial robustness, a physically significant rerun delta, or a population false-positive rate of zero.
+
+\end{document}

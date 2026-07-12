@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "not_for_anonymous_submission": true,
+  "bundle_aliases": {
+    "local-trace-audit": "artifacts/auto_research/free-ralph-trace-audit",
+    "remote-trace-A": "artifacts/auto_research/ralphthon-mace-ec2d804"
+  },
+  "remote_exact_commit": "ec2d804fb3b6dafa012620d83436007569de5e7c",
+  "remote_artifacts": {
+    "trace_grade": "artifacts/auto_research/ralphthon-mace-ec2d804/trace_grade.json",
+    "completion_status": "artifacts/auto_research/ralphthon-mace-ec2d804/completion_status.json",
+    "compute_attestation": "artifacts/auto_research/ralphthon-mace-ec2d804/compute_attestation.json",
+    "round_state": "artifacts/auto_research/ralphthon-mace-ec2d804/round_state.json",
+    "cleanup_confirmation": "artifacts/auto_research/ralphthon-mace-ec2d804/cleanup_confirmation.json",
+    "h1_approval": "docs/research/phase2_preregistration.md",
+    "checkpoint_verification": "artifacts/auto_research/ralphthon-mace-ec2d804/checkpoint_verification.json",
+    "dataset_verification": "artifacts/auto_research/ralphthon-mace-ec2d804/dataset_verification.json",
+    "environment": "artifacts/auto_research/ralphthon-mace-ec2d804/environment.json",
+    "iteration_001_evaluation": "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-001/evaluation.json",
+    "iteration_001_decision": "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-001/decision.json",
+    "iteration_001_operation": "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-001/workdir/operation/operation_completed.json",
+    "iteration_002_evaluation": "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-002/evaluation.json",
+    "iteration_002_decision": "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-002/decision.json",
+    "iteration_002_operation": "artifacts/auto_research/ralphthon-mace-ec2d804/iteration-002/workdir/operation/operation_completed.json"
+  }
+}

@@ -1,0 +1,52 @@
+schema_version: "1.0.0"
+campaign_id: free-ralph-trace-audit
+track: ralphthon_general_track_1
+route: research_system_evaluation
+question: >-
+  Does independent semantic re-derivation detect repository-defined research-trace
+  faults more completely than manifest-only verification without rejecting clean traces?
+hypothesis: >-
+  Across four preregistered synthetic trace seeds and twelve fault families, the
+  semantic grader will attain at least 0.90 macro fault recall, zero clean-trace
+  false positives, and at least a 0.25 absolute recall gain over the baseline.
+null_hypothesis: >-
+  The semantic grader misses any safety-critical fault family, rejects a clean trace,
+  or improves macro recall by less than 0.25 over the baseline.
+baseline: manifest_only_integrity_checker_v1
+candidate: semantic_trace_grader_v1
+primary_metric: macro_fault_detection_recall
+success_thresholds:
+  macro_fault_detection_recall_min: 0.90
+  clean_false_positive_rate_max: 0.0
+  absolute_recall_gain_min: 0.25
+seeds: [20260712, 20260713, 20260714, 20260715]
+fault_families:
+  - missing_tea_time
+  - missing_lesson
+  - evaluator_identity_collision
+  - immutable_input_change
+  - forbidden_label_payload
+  - unauthorized_remote_attestation
+  - decision_metric_inconsistency
+  - internal_seal_tamper
+  - registered_artifact_corruption
+  - inflated_scientific_status
+  - forged_reject_without_rollback
+  - broken_lineage_parent
+evidence_inputs:
+  - artifacts/auto_research/ralphthon-mace-ec2d804/trace_grade.json
+  - artifacts/auto_research/ralphthon-mace-ec2d804/iteration-001/decision.json
+  - artifacts/auto_research/ralphthon-mace-ec2d804/iteration-002/decision.json
+budgets:
+  local_cpu_minutes: 20
+  remote_gpu_jobs: 0
+  protected_validation_queries: 0
+  labels: 0
+  retries_per_case: 0
+stopping_rules:
+  - Stop after all 48 fault cases and four clean controls are evaluated once.
+  - Do not add, remove, or redefine a fault family after observing results.
+  - A crash is retained as a failed case and is not silently retried.
+pivot_conditions:
+  - If the experiment adapter cannot generate all preregistered cases, pivot to the metric-not-sufficient fallback paper.
+claim_ceiling: infrastructure_and_methodology_only

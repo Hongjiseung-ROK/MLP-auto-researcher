@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "content_hash_method": "sha256 of RFC-style compact JSON produced by jq -cS over the spec object",
+  "content_sha256": "a3361385e420d1692b5b10f87cdb0ffbbb122a4f08125cfed2ddcc513406819e",
+  "frozen_before_new_experiment": true,
+  "spec": {
+    "campaign_id": "free-ralph-trace-audit",
+    "route": "ralphthon_general_track_1_research_system_evaluation",
+    "question": "Does independent semantic re-derivation detect repository-defined research-trace faults more completely than manifest-only verification without rejecting clean traces?",
+    "hypothesis": "Across four fixed synthetic seeds and twelve fault families, the semantic grader attains at least 0.90 macro fault recall, zero clean-trace false positives, and at least 0.25 absolute recall gain over the manifest-only baseline.",
+    "null_hypothesis": "Any critical fault family is missed, any clean trace is rejected, or absolute macro-recall gain is below 0.25.",
+    "baseline": "manifest_only_integrity_checker_v1",
+    "candidate": "semantic_trace_grader_v1",
+    "primary_metric": "macro_fault_detection_recall",
+    "secondary_metrics": ["micro_fault_detection_recall", "clean_false_positive_rate", "absolute_recall_gain", "wall_seconds"],
+    "thresholds": {"macro_recall_min": 0.90, "clean_false_positive_rate_max": 0.0, "absolute_recall_gain_min": 0.25},
+    "seeds": [20260712, 20260713, 20260714, 20260715],
+    "fault_families": ["missing_tea_time", "missing_lesson", "evaluator_identity_collision", "immutable_input_change", "forbidden_label_payload", "unauthorized_remote_attestation", "decision_metric_inconsistency", "internal_seal_tamper", "registered_artifact_corruption", "inflated_scientific_status", "forged_reject_without_rollback", "broken_lineage_parent"],
+    "budgets": {"local_cpu_minutes": 20, "remote_gpu_jobs": 0, "protected_validation_queries": 0, "labels": 0, "retries_per_case": 0},
+    "stop_condition": "All 48 corrupt cases and four clean controls are evaluated exactly once, or the adapter cannot complete and the campaign pivots to the frozen fallback.",
+    "fallback_topic": "metric-not-sufficient",
+    "claim_ceiling": "infrastructure_and_methodology_only",
+    "existing_case_study_status": "infrastructure_only"
+  }
+}

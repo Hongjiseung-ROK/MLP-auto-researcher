@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "r_version": "4.6.1",
+  "plot_script": {"path": "paper/figures/render_figures.R", "sha256": "c2a99222b1c962fa172b0f53fab12559fe64c8e8c81c853a0acfd11faf7138c9"},
+  "dependency_lock": {"path": "paper/figures/renv.lock", "sha256": "11363afa786b3a85b58abfe59f563529832c5a3d3603e167569ef05f11676fdb"},
+  "figures": [
+    {
+      "figure_id": "F1",
+      "path": "paper/final/figures/evidence_workflow.pdf",
+      "sha256": "8edca6c89c7450762e19a1e582650ba136e587d23759cf726b26ac49593d273f",
+      "source_artifact_ids": ["research-spec", "benchmark-execution"],
+      "source_files": [
+        {"path": "paper/final/research_spec.json", "sha256": "bd098153ffb882b67007d6aa1d8de71cf122c494f07a5e83a8a1f3f10dfe1366"},
+        {"path": "paper/final/evidence/execution.json", "sha256": "75e1a1b51972e440bb19f34de3435d13b6a0ca5e358c92c912105e4e2d9aca46"}
+      ],
+      "caption_claim_ids": ["C0"]
+    },
+    {
+      "figure_id": "F2",
+      "path": "paper/final/figures/fault_detection_recall.pdf",
+      "sha256": "d70b876c162afc47ab5d26ca7a535394b82d486ab96af8080ff3c15d00821553",
+      "source_artifact_ids": ["benchmark-ledger", "analysis-json", "seed-level-analysis"],
+      "source_files": [
+        {"path": "paper/final/evidence/fault_detection_summary.csv", "sha256": "a8868bb0ecb866d648458a8e64285a9bdf60208b25d1599cf36321fd69bae7fc"},
+        {"path": "paper/final/evidence/seed_level_fault_detection.csv", "sha256": "b15132138e112b2f07e99bbd16b7e9d80a198fa737a58ef31951de2ca692c86e"}
+      ],
+      "caption_claim_ids": ["C1", "C2"],
+      "error_bars": "none; four seed-level recalls are shown as points and the finite 48-case catalog is summarized as exact counts without population inference"
+    }
+  ],
+  "checks": {"vector_pdf": true, "colorblind_safe": true, "grayscale_distinguishable": true, "units_or_dimensionless_labels_present": true, "embedded_fonts": true}
+}

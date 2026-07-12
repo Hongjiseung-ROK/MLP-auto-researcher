@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0.0",
+  "bundle_id": "remote-trace-A",
+  "redaction": {
+    "purpose": "Anonymous-review extract of a hash-verified private evidence bundle.",
+    "method": "Manual allowlist of aggregate infrastructure fields; repository commit, run identifiers, GPU UUID, provider session identifier, and local paths are omitted.",
+    "private_resolver": "paper/internal/private_evidence_map.json"
+  },
+  "scientific_status": "infrastructure_only",
+  "claim_eligible": false,
+  "approval": {
+    "h1_energy_force_labels_approved": true,
+    "stress_excluded": true,
+    "source_sha256": "352b4edab985ba1dd2c75a37818a681f0ad759257a19f5586d68a6de96264154"
+  },
+  "attestation": {
+    "policy_decision": "allow",
+    "accelerator": "NVIDIA L4",
+    "gpu_count": 1,
+    "cuda_runtime": "12.8",
+    "torch_version": "2.11.0+cu128",
+    "source_sha256": "eaf5c4198deb96895eb7ca8dc6b629539f77a378b4103d10c0223a04029c3b5a"
+  },
+  "environment": {
+    "mace_torch_version": "0.3.16",
+    "evaluator_name": "mlip_validation_evaluator/1.0.0",
+    "dependency_lock_sha256": "24fc2b6a66876ee0f8b31e5727a1dda7534d178434ff0ca1f61f2cdde1af0b0d",
+    "source_sha256": "b4b8ef23aba067d0ebe7404bff6d12cbb04c654ab7cdf0dc65bee368cab5c127"
+  },
+  "checkpoint": {
+    "model_id": "mace-mp-0-small-2023-12-10",
+    "scientific_status": "candidate_only",
+    "claim_eligible": false,
+    "source_sha256": "035778c820cd051db06b01e8a75b5d38a6b0bb36d5070c9d485b6ace5ee7f227"
+  },
+  "dataset": {
+    "contains_only_d0_and_validation": true,
+    "n_initial_labeled": 32,
+    "n_validation": 40,
+    "bounded_label_view_sha256": "90ef76ca4c927401ac59ee645236af23b6d49d229ec9da53cae0f16dd27e2be7",
+    "source_sha256": "9b68d22004cb31aa624619861718a1f0d5c9079bbfdeff955709439683abd51c"
+  },
+  "iterations": [
+    {
+      "iteration": 1,
+      "optimizer_steps": 1,
+      "operation_status": "complete",
+      "baseline_force_component_mae_ev_per_a": 0.07297993144655539,
+      "candidate_force_component_mae_ev_per_a": 0.07294113791747851,
+      "relative_improvement": 0.0005315643,
+      "metric_threshold": 0.001,
+      "metric_passed": false,
+      "rerun_metric_delta": 1.0,
+      "reproducibility_passed": false,
+      "decision": "reject",
+      "n_structures": 40,
+      "n_atoms": 4320,
+      "evaluator_source_sha256": "da9c552831fb68cccfe9d40692132c558d1b19eb2695da85db20434dcd46a14b",
+      "evaluation_source_sha256": "c3c55f4bc32c5f59bbd11afb676cb039c2e08cf09e276f1400babef326e0c1ae",
+      "decision_source_sha256": "e9fcf88db9c9139da781ae6c3be8e44075a37671877385d111d881169bde7697",
+      "operation_source_sha256": "5dc66dad9f736e5259d3636e9313b389a7023c4d71a59be2ea911ceb2578b30c"
+    },
+    {
+      "iteration": 2,
+      "optimizer_steps": 1,
+      "operation_status": "complete",
+      "baseline_force_component_mae_ev_per_a": 0.07297993144655539,
+      "candidate_force_component_mae_ev_per_a": 0.07288290133509026,
+      "relative_improvement": 0.0013295451,
+      "metric_threshold": 0.001,
+      "metric_passed": true,
+      "rerun_metric_delta": 1.0,
+      "reproducibility_passed": false,
+      "decision": "reject",
+      "n_structures": 40,
+      "n_atoms": 4320,
+      "evaluator_source_sha256": "da9c552831fb68cccfe9d40692132c558d1b19eb2695da85db20434dcd46a14b",
+      "evaluation_source_sha256": "fff6d17e192e5dfc5dc109bc6042bf8378290e36c41a408b1a2e687976839aba",
+      "decision_source_sha256": "ef9bf371685003077dbe1c6821323f107163dc1c4b17a8590415e294a95e49a2",
+      "operation_source_sha256": "034bb942b8b9739bda3b8cf701742181b8dd4ef0be289a639ff84de2ad8f939f"
+    }
+  ],
+  "completion": {
+    "status": "complete",
+    "iterations_completed": 2,
+    "trace_grade_passed": true,
+    "n_iterations_graded": 2,
+    "decisions": ["reject", "reject"],
+    "session_cleanup": "confirmed_absent_stable",
+    "trace_grade_source_sha256": "4ad3d222cbb0f006a295eab397fe14c00b03ae497524ae45d8bf0ae1c1e63bac",
+    "completion_source_sha256": "36093f830eb73c0ae65701eeb963fd192e7c0cdc4630f4800341ef8109cfb778",
+    "round_state_source_sha256": "472cc2d11eedbddc3111d6cb146e411733f5c15a7987444eed5a64a59ef509d0",
+    "cleanup_source_sha256": "a915f05d4573178512544ef4aad846de778250e4341968a2b7bf82f110a1b6f6"
+  }
+}
