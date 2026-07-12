@@ -1,0 +1,11 @@
+{
+  "acquisition_view_artifact": "pool:acquisition_view.json",
+  "checkpoint_manifest_path": "configs/models/mace_mp_0_small_candidate.json",
+  "checkpoint_path": "data/cache/models/2023-12-10-mace-128-L0_energy_epoch-249.model",
+  "device": "cuda",
+  "default_dtype": "float64",
+  "num_layers": -1,
+  "pooling": "mean",
+  "min_feature_std": 1e-12,
+  "l2_normalize": true
+}

@@ -32,7 +32,8 @@ class DecisionGateInput(BaseModel):
     pool_candidate_ids: list[str] = Field(min_length=1, max_length=100_000)
     metadata: dict[str, CandidateMeta]
     signals: list[UncertaintySignal] = Field(min_length=1)
-    descriptors: DescriptorSet
+    descriptors: DescriptorSet | None = None
+    descriptor_artifact: str | None = None
     budget: int = Field(gt=0, le=10_000)
     uncertainty_window_fraction: float = Field(
         default=0.5,
@@ -49,6 +50,12 @@ class DecisionGateInput(BaseModel):
         ids = [s.candidate_id for s in self.signals]
         if len(set(ids)) != len(ids):
             raise ValueError("duplicate uncertainty signals for one candidate")
+        if (self.descriptors is None) == (self.descriptor_artifact is None):
+            raise ValueError("provide exactly one of descriptors or descriptor_artifact")
+        if self.descriptors is not None and self.descriptors.source != "fixture":
+            raise ValueError(
+                "mace_descriptor_adapter vectors must come from a registered artifact"
+            )
         return self
 
 

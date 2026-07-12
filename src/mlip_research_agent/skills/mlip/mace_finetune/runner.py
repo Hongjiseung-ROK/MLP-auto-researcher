@@ -112,6 +112,29 @@ def _atomic_torch_save(torch: Any, payload: Any, path: Path) -> None:
     os.replace(temporary, path)
 
 
+def _validate_checkpoint_epoch_mode(state: dict[str, Any], requested_mode: str) -> None:
+    checkpoint_schema = state.get("schema_version")
+    if checkpoint_schema not in {"1.0.0", "1.1.0"}:
+        raise ValueError("unsupported controlled MACE checkpoint schema")
+    checkpoint_epoch_mode = (
+        "single_batch" if checkpoint_schema == "1.0.0" else state.get("epoch_mode")
+    )
+    if checkpoint_epoch_mode != requested_mode:
+        raise ValueError("controlled checkpoint epoch mode mismatch")
+
+
+def _epoch_batches(loader: Any, expected_batches: int) -> Iterator[Any]:
+    """Yield exactly the requested batches without prefetching one extra batch."""
+    iterator = iter(loader)
+    for _ in range(expected_batches):
+        try:
+            yield next(iterator)
+        except StopIteration as exc:
+            raise ValueError(
+                "controlled runner exhausted the training loader before epoch end"
+            ) from exc
+
+
 def _parameter_change_stats(base: dict[str, Any], model: Any) -> tuple[int, float]:
     import torch
 
@@ -206,6 +229,7 @@ def run_controlled_training(
     energy_loss_weight: float = 1.0,
     force_loss_weight: float = 100.0,
     trainable_layer_policy: str = "all",
+    epoch_mode: str = "single_batch",
 ) -> ControlledTrainingResult:
     """Run bounded optimizer steps and checkpoint the complete continuation state."""
     require_supported_mace()
@@ -249,8 +273,7 @@ def run_controlled_training(
             state: dict[str, Any] = torch.load(
                 resume_checkpoint_path, map_location="cpu", weights_only=False
             )
-            if state.get("schema_version") != "1.0.0":
-                raise ValueError("unsupported controlled MACE checkpoint schema")
+            _validate_checkpoint_epoch_mode(state, epoch_mode)
             if state.get("resume_contract_sha256") != resume_contract_sha256:
                 raise ValueError("controlled checkpoint resume contract mismatch")
             model.load_state_dict(state["model_state_dict"])
@@ -277,6 +300,19 @@ def run_controlled_training(
         loss_fn = WeightedEnergyForcesLoss(
             energy_weight=energy_loss_weight, forces_weight=force_loss_weight
         )
+        if epoch_mode not in {"single_batch", "full_epoch"}:
+            raise ValueError(f"unsupported epoch mode: {epoch_mode!r}")
+        batches_per_epoch = len(train_loader) if epoch_mode == "full_epoch" else 1
+        if batches_per_epoch < 1:
+            raise ValueError("controlled runner received an empty training loader")
+        requested_steps = min(
+            max_optimizer_steps - optimizer_steps,
+            (max_epochs - start_epoch) * batches_per_epoch,
+        )
+        if epoch_mode == "full_epoch" and requested_steps % batches_per_epoch != 0:
+            raise ValueError(
+                "full_epoch mode requires max_optimizer_steps to stop on an epoch boundary"
+            )
         output_args = {"energy": True, "forces": True, "virials": False, "stress": False}
         started = time.monotonic()
         stopped_early = False
@@ -285,22 +321,30 @@ def run_controlled_training(
             if optimizer_steps >= max_optimizer_steps:
                 break
             model.train()
-            batch = next(iter(train_loader), None)
-            if batch is None:
-                raise ValueError("controlled runner received an empty training loader")
-            # mace annotates take_step as returning float, but it returns a tensor.
-            loss: Any = take_step(
-                model,
-                loss_fn,
-                batch,
-                optimizer,
-                None,
-                output_args,
-                gradient_clip,
-                device,
-            )[0]
-            train_loss = float(loss.detach().cpu())
-            optimizer_steps += 1
+            epoch_losses: list[float] = []
+            for batch in _epoch_batches(train_loader, batches_per_epoch):
+                if time.monotonic() - started > max_wall_seconds:
+                    raise TimeoutError("controlled MACE training exceeded max_wall_seconds")
+                # mace annotates take_step as returning float, but it returns a tensor.
+                loss: Any = take_step(
+                    model,
+                    loss_fn,
+                    batch,
+                    optimizer,
+                    None,
+                    output_args,
+                    gradient_clip,
+                    device,
+                )[0]
+                epoch_losses.append(float(loss.detach().cpu()))
+                optimizer_steps += 1
+                if time.monotonic() - started > max_wall_seconds:
+                    raise TimeoutError("controlled MACE training exceeded max_wall_seconds")
+            if len(epoch_losses) != batches_per_epoch:
+                raise ValueError(
+                    "controlled runner did not complete the expected epoch batch count"
+                )
+            train_loss = float(sum(epoch_losses) / len(epoch_losses))
             model.eval()
             valid_loss_raw, aux = evaluate(model, loss_fn, validation_loader, output_args, device)
             valid_loss = float(valid_loss_raw)
@@ -319,14 +363,16 @@ def run_controlled_training(
                     "epoch": epoch,
                     "optimizer_step": optimizer_steps,
                     "training_loss": train_loss,
+                    "optimizer_steps_in_epoch": len(epoch_losses),
                     "validation_loss": valid_loss,
                     MONITOR: force_mae,
                     "learning_rate": float(optimizer.param_groups[0]["lr"]),
                 }
             )
             state = {
-                "schema_version": "1.0.0",
+                "schema_version": "1.1.0",
                 "mace_torch_version": SUPPORTED_MACE_VERSION,
+                "epoch_mode": epoch_mode,
                 "resume_contract_sha256": resume_contract_sha256,
                 "next_epoch": completed_epochs,
                 "optimizer_steps": optimizer_steps,
@@ -346,8 +392,6 @@ def run_controlled_training(
             if patience_count >= patience:
                 stopped_early = True
                 break
-            if time.monotonic() - started > max_wall_seconds:
-                raise TimeoutError("controlled MACE training exceeded max_wall_seconds")
 
         if completed_epochs == start_epoch:
             raise ValueError("fine-tune request performed no optimizer step")

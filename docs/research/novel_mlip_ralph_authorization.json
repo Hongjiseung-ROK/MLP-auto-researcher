@@ -1,0 +1,59 @@
+{
+  "authorization_status": "approved",
+  "authorized_actions": [
+    "real_gpu_inference",
+    "real_gpu_fine_tuning",
+    "real_active_learning_selection",
+    "oracle_label_reveal_within_frozen_budget",
+    "multi_round_retraining",
+    "colab_execution",
+    "vessl_execution",
+    "cross_provider_replication",
+    "final_frozen_test_evaluation",
+    "paper_drafting",
+    "figure_generation",
+    "appendix_generation",
+    "campaign_object_volume_use",
+    "approved_campaign_input_upload",
+    "hash_verified_artifact_download"
+  ],
+  "approved_by": "repository owner",
+  "campaign_id": "cu-tail-risk-ralph-20260712",
+  "compute_limits": {
+    "colab": {
+      "gpu_hours": 6.0,
+      "gpu_sessions": 3,
+      "hours_per_session": 2.0,
+      "permitted_accelerators": ["L4", "A100", "best available assigned accelerator"]
+    },
+    "global_gpu_hours": 22.0,
+    "parallel_brute_force_sweeps": false,
+    "paid_overage": false,
+    "vessl": {
+      "gpu_count_per_job": 1,
+      "gpu_hours_nominal_cap": 16.0,
+      "hours_per_job": 3.0,
+      "jobs": 8,
+      "live_credit_is_more_restrictive": true
+    }
+  },
+  "effective_at": "2026-07-12T06:21:47Z",
+  "expires_at": "2026-07-19T23:59:59Z",
+  "frozen_split_semantic_sha256": "3f909d7aaf10ee959aaebf4538e82fb4f391cba4cad5f5fd44850939629ef457",
+  "oracle_budget": {
+    "active_arms": ["random", "disagreement", "disagreement_fps", "tail_risk_fps"],
+    "labels_per_arm": 36,
+    "labels_per_round_per_arm": 12,
+    "rounds": 3
+  },
+  "owner_authorization_source": "Explicit compute and campaign authorization in the owner task received 2026-07-12; this record narrows but does not expand that scope.",
+  "research_spec_path": "artifacts/research_spec/novel_mlip_ralph_spec.json",
+  "research_spec_sha256": "9dea3391d6285a2ab7590a3cf18ad0f76992585d31d047eca892e63fb97a92d3",
+  "schema_version": "1.0.0",
+  "storage_limits": {
+    "campaign_object_volume_slug": "objvol-okbbesmemio8",
+    "maximum_campaign_bytes": 5368709120,
+    "persistent_secrets": false,
+    "remove_or_archive_after_hash_verified_pullback": true
+  }
+}

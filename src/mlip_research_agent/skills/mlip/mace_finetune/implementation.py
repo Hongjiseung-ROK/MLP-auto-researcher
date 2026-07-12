@@ -7,6 +7,7 @@ import json
 import os
 import shutil
 import tempfile
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -62,6 +63,7 @@ def _resume_contract(
         "gradient_clip": params.gradient_clip,
         "batch_size": params.batch_size,
         "valid_batch_size": params.valid_batch_size,
+        "epoch_mode": params.epoch_mode,
         "early_stopping_patience": params.early_stopping_patience,
         "monitor": MONITOR,
         "e0_policy": params.e0_policy,
@@ -74,6 +76,9 @@ def _resume_contract(
         "dataset_content_sha256": bundle.dataset.content_hash(),
         "split_semantic_sha256": bundle.split.semantic_hash(),
         "training_lineage_artifact": params.training_lineage_artifact,
+        "campaign_id": params.campaign_id,
+        "research_spec_sha256": params.research_spec_sha256,
+        "campaign_authorization_artifact": params.campaign_authorization_artifact,
         "train_record_ids": bundle.train_subset.record_ids,
         "validation_record_ids": bundle.validation_subset.record_ids,
     }
@@ -105,6 +110,33 @@ def _failure_properties(
             RecoveryDecision.REFINE,
         )
     return FailureClass.TOOL_ERROR, False, {}, RecoveryDecision.ESCALATE
+
+
+def _validate_campaign_authorization(params: MACEFineTuneInput, ctx: SkillContext) -> None:
+    artifact_id = params.campaign_authorization_artifact
+    if artifact_id is None or params.campaign_id is None or params.research_spec_sha256 is None:
+        raise validation_error("authorized campaign fields are incomplete")
+    artifact = ctx.registry.get(artifact_id)
+    if artifact is None or artifact.kind != "campaign_authorization":
+        raise validation_error("campaign authorization artifact is not registered")
+    if not ctx.registry.verify(artifact_id):
+        raise validation_error("campaign authorization artifact failed its hash check")
+    try:
+        payload = json.loads((ctx.run_dir / artifact.relative_path).read_text())
+        expires_at = datetime.fromisoformat(str(payload["expires_at"]).replace("Z", "+00:00"))
+        authorized_actions = set(payload["authorized_actions"])
+    except (KeyError, TypeError, ValueError, OSError, json.JSONDecodeError) as exc:
+        raise validation_error(f"campaign authorization artifact is invalid: {exc}") from exc
+    if payload.get("authorization_status") != "approved":
+        raise validation_error("campaign authorization is not approved")
+    if payload.get("campaign_id") != params.campaign_id:
+        raise validation_error("campaign authorization id mismatch")
+    if payload.get("research_spec_sha256") != params.research_spec_sha256:
+        raise validation_error("campaign authorization research-spec hash mismatch")
+    if "real_gpu_fine_tuning" not in authorized_actions:
+        raise validation_error("campaign authorization does not allow real GPU fine-tuning")
+    if expires_at.tzinfo is None or expires_at < datetime.now(UTC):
+        raise validation_error("campaign authorization is expired or has no timezone")
 
 
 def _record_failure(
@@ -152,7 +184,7 @@ def _record_failure(
 
 @register_skill
 class MACEFineTuneSkill(Skill):
-    """Run a bounded optimizer-step diagnostic without crossing the H2 gate."""
+    """Run a bounded diagnostic or a hash-bound, authorized campaign."""
 
     name = "mace_finetune"
     input_model = MACEFineTuneInput
@@ -167,6 +199,8 @@ class MACEFineTuneSkill(Skill):
                 "pilot fine-tuning is disabled until H2 selects a checkpoint and freezes "
                 "the preregistration"
             )
+        if params.execution_mode == "authorized_campaign":
+            _validate_campaign_authorization(params, ctx)
         bundle = load_and_validate_data(params, ctx.registry)
         manifest_path = local_file(params.checkpoint_manifest_path, "checkpoint manifest")
         foundation_path = local_file(params.checkpoint_path, "foundation checkpoint")
@@ -177,7 +211,10 @@ class MACEFineTuneSkill(Skill):
             raise validation_error(f"fine-tune checkpoint validation failed: {exc}") from exc
         if checkpoint_manifest.mace_torch_version != SUPPORTED_MACE_VERSION:
             raise validation_error("foundation checkpoint manifest has unsupported MACE version")
-        if checkpoint_manifest.scientific_status != "candidate_only":
+        if (
+            params.execution_mode == "boundary_test"
+            and checkpoint_manifest.scientific_status != "candidate_only"
+        ):
             raise validation_error(
                 "boundary test expects a candidate-only checkpoint before H2 selection"
             )
@@ -237,13 +274,19 @@ class MACEFineTuneSkill(Skill):
                 energy_loss_weight=params.energy_loss_weight,
                 force_loss_weight=params.force_loss_weight,
                 trainable_layer_policy=params.trainable_layer_policy,
+                epoch_mode=params.epoch_mode,
+            )
+            scientific_status = (
+                "campaign_experiment"
+                if params.execution_mode == "authorized_campaign"
+                else "training_boundary_only"
             )
             config_path = stage_dir / f"fine-tune-config-{suffix}.json"
             config_path.write_text(
                 json.dumps(
                     {
                         "schema_version": "1.0.0",
-                        "scientific_status": "training_boundary_only",
+                        "scientific_status": scientific_status,
                         "execution_mode": params.execution_mode,
                         "mace_torch_version": SUPPORTED_MACE_VERSION,
                         "resume_contract_sha256": contract_sha,
@@ -260,7 +303,7 @@ class MACEFineTuneSkill(Skill):
                 json.dumps(
                     {
                         "schema_version": "1.0.0",
-                        "scientific_status": "training_boundary_only",
+                        "scientific_status": scientific_status,
                         "monitor": MONITOR,
                         "best_validation_force_mae_ev_per_a": (
                             result.best_validation_force_mae_ev_per_a
@@ -301,8 +344,12 @@ class MACEFineTuneSkill(Skill):
                 json.dumps(
                     {
                         "schema_version": "1.0.0",
-                        "scientific_status": "training_boundary_only",
-                        "model_id": f"{checkpoint_manifest.model_id}-boundary-{params.seed}",
+                        "scientific_status": scientific_status,
+                        "model_id": (
+                            f"{checkpoint_manifest.model_id}-campaign-{params.seed}"
+                            if params.execution_mode == "authorized_campaign"
+                            else f"{checkpoint_manifest.model_id}-boundary-{params.seed}"
+                        ),
                         "base_checkpoint": resolved.model_dump(mode="json"),
                         "model_artifact": model_artifact.artifact_id,
                         "model_sha256": model_artifact.sha256,

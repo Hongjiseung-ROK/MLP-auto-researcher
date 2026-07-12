@@ -5,13 +5,14 @@ from __future__ import annotations
 import math
 
 from mlip_research_agent.skills.active_learning.decision_gate.schema import DecisionGateInput
+from mlip_research_agent.skills.active_learning.diversity_select.schema import DescriptorSet
 from mlip_research_agent.skills.active_learning.selection_types import (
     reject,
     validate_candidate_pool,
 )
 
 
-def validate_inputs(params: DecisionGateInput) -> None:
+def validate_inputs(params: DecisionGateInput, descriptors: DescriptorSet) -> None:
     validate_candidate_pool(params.pool_candidate_ids, params.metadata)
     missing_meta = sorted(set(params.pool_candidate_ids) - set(params.metadata))
     if missing_meta:
@@ -30,7 +31,7 @@ def validate_inputs(params: DecisionGateInput) -> None:
                 f"candidate {signal.candidate_id}: non-finite disagreement must be "
                 "flagged invalid, not ranked"
             )
-    descriptor_ids = set(params.descriptors.vectors)
+    descriptor_ids = set(descriptors.vectors)
     if not pool <= descriptor_ids:
         missing = sorted(pool - descriptor_ids)
         raise reject(f"descriptors missing for pool candidates: {missing[:3]}")

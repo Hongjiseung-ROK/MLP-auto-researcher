@@ -58,6 +58,48 @@ def run(tmp_path: Path, params: DiversitySelectInput) -> DiversitySelectOutput:
     return out
 
 
+def run_with_descriptor_artifact(
+    tmp_path: Path,
+    ids: list[str],
+    vectors: dict[str, list[float]],
+    *,
+    tamper: bool = False,
+) -> DiversitySelectOutput:
+    registry = ArtifactRegistry(tmp_path)
+    descriptor_path = tmp_path / "inputs" / "mace_descriptors.json"
+    descriptor_path.parent.mkdir(parents=True)
+    descriptor_path.write_text(
+        json.dumps(
+            {
+                "descriptor_set": {
+                    "source": "mace_descriptor_adapter",
+                    "dimension": 2,
+                    "vectors": vectors,
+                }
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    )
+    artifact = registry.register(descriptor_path, "mace_descriptors", "descriptor")
+    if tamper:
+        descriptor_path.write_text("{}\n")
+    params = make_inputs(
+        ids,
+        vectors,
+        budget=3,
+        descriptors=None,
+        descriptor_artifact=artifact.artifact_id,
+    )
+    ctx = SkillContext(
+        run_dir=tmp_path, step_id="div", seed=3, attempt=1, registry=registry
+    )
+    out = DiversitySelectSkill().run(params, ctx)
+    assert isinstance(out, DiversitySelectOutput)
+    return out
+
+
 def records(tmp_path: Path, out: DiversitySelectOutput) -> list[dict[str, Any]]:
     recs: list[dict[str, Any]] = json.loads((tmp_path / out.selection_path).read_text())[
         "records"
@@ -65,16 +107,31 @@ def records(tmp_path: Path, out: DiversitySelectOutput) -> list[dict[str, Any]]:
     return recs
 
 
-def test_mace_descriptor_source_fails_closed(tmp_path: Path) -> None:
+def test_mace_descriptor_source_uses_same_validated_fps_contract(tmp_path: Path) -> None:
     ids, vectors = clustered_fixture()
-    params = make_inputs(
-        ids,
-        vectors,
-        budget=3,
-        descriptors={"source": "mace_descriptor_adapter", "dimension": 2, "vectors": vectors},
-    )
-    with pytest.raises(SkillError, match="future boundary"):
-        run(tmp_path, params)
+    out = run_with_descriptor_artifact(tmp_path, ids, vectors)
+    assert out.n_selected == 3
+
+
+def test_inline_mace_descriptor_claim_is_rejected() -> None:
+    ids, vectors = clustered_fixture()
+    with pytest.raises(ValueError, match="registered artifact"):
+        make_inputs(
+            ids,
+            vectors,
+            budget=3,
+            descriptors={
+                "source": "mace_descriptor_adapter",
+                "dimension": 2,
+                "vectors": vectors,
+            },
+        )
+
+
+def test_tampered_mace_descriptor_artifact_is_rejected(tmp_path: Path) -> None:
+    ids, vectors = clustered_fixture()
+    with pytest.raises(SkillError, match="hash check"):
+        run_with_descriptor_artifact(tmp_path, ids, vectors, tamper=True)
 
 
 def test_dimension_mismatch_rejected(tmp_path: Path) -> None:
