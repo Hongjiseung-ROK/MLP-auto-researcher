@@ -1,8 +1,0 @@
-{
-  "checkpoint_sha256": "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736",
-  "checkpoint_size_bytes": 32581838,
-  "claim_eligible": false,
-  "mace_torch_version": "0.3.16",
-  "model_id": "mace-mp-0-small-2023-12-10",
-  "scientific_status": "candidate_only"
-}

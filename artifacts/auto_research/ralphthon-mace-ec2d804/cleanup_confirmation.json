@@ -1,8 +1,0 @@
-{
-  "claim_eligible": false,
-  "maximum_session_seconds": 3600,
-  "scientific_status": "infrastructure_only",
-  "session": "ral-ec2d804f",
-  "session_elapsed_seconds": 435.8330251669977,
-  "status": "confirmed_absent_stable"
-}

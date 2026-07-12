@@ -1,8 +1,0 @@
-{
-  "acquisition_pool_labels_accessed": false,
-  "claim_eligible": false,
-  "protected_partitions_accessed": false,
-  "scientific_status": "infrastructure_only",
-  "split_manifest_sha256": "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e",
-  "split_semantic_sha256": "4fb9397aeb3ec4ab3a52078b10663beff912d1bb209b5969b06406885ec6bfc9"
-}

@@ -1,9 +1,0 @@
-{
-  "batch_size": 32,
-  "energy_loss_weight": 1.0,
-  "force_loss_weight": 100.0,
-  "gradient_clip": 10.0,
-  "learning_rate": 0.0002,
-  "scheduler_patience": 5,
-  "trainable_layer_policy": "readout_only"
-}
