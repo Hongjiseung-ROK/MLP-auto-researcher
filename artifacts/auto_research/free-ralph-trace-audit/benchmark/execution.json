@@ -1,0 +1,27 @@
+{
+  "command": "python scripts/research/run_trace_fault_audit.py",
+  "fault_families": [
+    "missing_tea_time",
+    "missing_lesson",
+    "evaluator_identity_collision",
+    "immutable_input_change",
+    "forbidden_label_payload",
+    "unauthorized_remote_attestation",
+    "decision_metric_inconsistency",
+    "internal_seal_tamper",
+    "registered_artifact_corruption",
+    "inflated_scientific_status",
+    "forged_reject_without_rollback",
+    "broken_lineage_parent"
+  ],
+  "protected_data_used": false,
+  "remote_compute_used": false,
+  "retry_count": 0,
+  "schema_version": "1.0.0",
+  "seeds": [
+    20260712,
+    20260713,
+    20260714,
+    20260715
+  ]
+}

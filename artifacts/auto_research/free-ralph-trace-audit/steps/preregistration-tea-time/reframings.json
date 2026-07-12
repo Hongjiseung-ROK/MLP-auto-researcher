@@ -1,0 +1,90 @@
+{
+  "alternative_paths": [
+    {
+      "cost": "low local CPU",
+      "path_id": "trace_fault_audit",
+      "risk": "White-box faults may overstate external generality.",
+      "summary": "Evaluate semantic trace fault detection against manifest-only verification."
+    },
+    {
+      "cost": "minimal",
+      "path_id": "metric_not_sufficient",
+      "risk": "Only two observed iterations limit breadth.",
+      "summary": "Write the narrower negative-result paper from the frozen L4 replay."
+    },
+    {
+      "cost": "low local CPU",
+      "path_id": "acquisition_stability",
+      "risk": "Synthetic descriptors cannot establish sample efficiency.",
+      "summary": "Evaluate label-free acquisition stability on synthetic clustered pools."
+    }
+  ],
+  "benchmark_overfitting_audit": {
+    "audit_rule": "high when only benchmark-specific components are named; medium when they equal or outnumber reusable components; low otherwise",
+    "benchmark_role": "The Cu/MACE replay motivates the audit but is not the source of a model-performance claim.",
+    "benchmark_specific_components": [
+      "Cu replay case study"
+    ],
+    "controls": [
+      "controller, domain skill, and execution backend remain decoupled",
+      "benchmark-specific identifiers stay in configuration and fixtures",
+      "no hidden labels or detailed test metrics enter this reflection",
+      "reflection artifacts cannot support claims"
+    ],
+    "reusable_components": [
+      "artifact manifest",
+      "claim ceiling",
+      "decision re-derivation",
+      "semantic trace grader"
+    ],
+    "risk": "low"
+  },
+  "claim_eligible": false,
+  "current_stage_purpose": "Freeze a falsifiable local systems evaluation while preserving the real-MACE replay as infrastructure-only evidence.",
+  "evidence_class": "agent_text",
+  "focus_question": "Is fault-injected trace audit the strongest honest paper route under the current evidence and authorization boundaries?",
+  "owner_question_packet_draft": {
+    "questions": [],
+    "status": "no_consequential_questions"
+  },
+  "poem": {
+    "author": "Walt Whitman",
+    "key": "whitman-learnd-astronomer",
+    "lines": [
+      "When I heard the learn'd astronomer,",
+      "When the proofs, the figures, were ranged in columns before me,",
+      "When I was shown the charts and diagrams, to add, divide, and measure them,",
+      "When I sitting heard the astronomer where he lectured with much applause in the lecture-room,",
+      "How soon unaccountable I became tired and sick,",
+      "Till rising and gliding out I wander'd off by myself,",
+      "In the mystical moist night-air, and from time to time,",
+      "Look'd up in perfect silence at the stars."
+    ],
+    "title": "When I Heard the Learn'd Astronomer",
+    "why_it_helps": "leave the charts for a moment and look at the raw phenomenon"
+  },
+  "provocations": [
+    {
+      "poem_line": "Till rising and gliding out I wander'd off by myself,",
+      "prompt": "Assume the opposite of your current belief about: Is fault-injected trace audit the strongest honest paper route under the current evidence and authorization boundaries?. What in the data would you now read as support? Whatever you find was invisible a minute ago.",
+      "technique": "inversion"
+    },
+    {
+      "poem_line": "When the proofs, the figures, were ranged in columns before me,",
+      "prompt": "Ignore the average behavior entirely. Start the story of Is fault-injected trace audit the strongest honest paper route under the current evidence and authorization boundaries? from the single strangest point and work outward.",
+      "technique": "outlier_first"
+    },
+    {
+      "poem_line": "In the mystical moist night-air, and from time to time,",
+      "prompt": "List what is absent from the data about Is fault-injected trace audit the strongest honest paper route under the current evidence and authorization boundaries?: configurations never sampled, regimes never visited, failures never recorded. The absence has a shape; sketch it.",
+      "technique": "negative_space"
+    },
+    {
+      "poem_line": "Look'd up in perfect silence at the stars.",
+      "prompt": "Write the single measurement that would kill your favorite answer to Is fault-injected trace audit the strongest honest paper route under the current evidence and authorization boundaries?. If you cannot afford to make it, say so out loud.",
+      "technique": "falsification"
+    }
+  ],
+  "schema_version": "2.0.0",
+  "trigger": "preregistration_freeze"
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "artifact_id": "preregistration-tea-time:reframings.json",
+    "created_by_step": "preregistration-tea-time",
+    "kind": "reflection",
+    "relative_path": "steps/preregistration-tea-time/reframings.json",
+    "sha256": "9c77a09faaa5f0c2ab05d98233cec7254c0f660ec83d4ba72018656044263234",
+    "size_bytes": 4512
+  },
+  {
+    "artifact_id": "preregistration-tea-time:tea_time_report.md",
+    "created_by_step": "preregistration-tea-time",
+    "kind": "reflection",
+    "relative_path": "steps/preregistration-tea-time/tea_time_report.md",
+    "sha256": "a39f94acb3a311c283ba32190f7f29f77bf6019a2adf59b8d097b0f15559fafb",
+    "size_bytes": 3727
+  }
+]

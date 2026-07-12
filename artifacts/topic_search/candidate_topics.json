@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0.0",
+  "score_direction": "5 is most favorable for every dimension, including low compute cost, short time to paper, and low inconclusive-result risk",
+  "candidates": [
+    {
+      "id": "trace-fault-audit",
+      "title": "Fault-injected auditability of autonomous MLIP research traces",
+      "family": "research-system evaluation",
+      "question": "Does independent artifact re-derivation detect materially more trace faults than manifest-only verification without rejecting clean traces?",
+      "hypothesis": "The semantic grader attains at least 0.90 macro fault recall, zero clean-trace false positives, and at least a 0.25 absolute recall gain over the manifest-only baseline.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 4, "ml_relevance": 5, "computational_chemistry_relevance": 4, "available_evidence": 5, "new_experiment_feasibility": 5, "compute_cost": 5, "time_to_paper": 5, "risk_of_inconclusive_results": 5, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 57
+    },
+    {
+      "id": "metric-not-sufficient",
+      "title": "When metric improvement is not sufficient evidence",
+      "family": "negative results",
+      "question": "How often does metric-only selection promote a candidate that a constraint-complete MLIP policy rejects?",
+      "hypothesis": "Metric-only and full-policy decisions diverge when reproducibility or safety constraints fail.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 4, "ml_relevance": 4, "computational_chemistry_relevance": 5, "available_evidence": 5, "new_experiment_feasibility": 5, "compute_cost": 5, "time_to_paper": 5, "risk_of_inconclusive_results": 4, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 56
+    },
+    {
+      "id": "rerun-stability",
+      "title": "Decision-aware MACE rerun stability",
+      "family": "reproducibility",
+      "question": "Does tolerance-based comparison distinguish harmless floating-point drift from decision-changing instability better than exact equality?",
+      "hypothesis": "Continuous deltas reduce false rejection while preserving detection of acceptance-boundary crossings.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 4, "ml_relevance": 5, "computational_chemistry_relevance": 5, "available_evidence": 5, "new_experiment_feasibility": 4, "compute_cost": 4, "time_to_paper": 4, "risk_of_inconclusive_results": 4, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 54
+    },
+    {
+      "id": "validation-query-budget",
+      "title": "Validation-query budgets against adaptive overfitting",
+      "family": "evaluation methodology",
+      "question": "Does a frozen query budget reduce winner's-curse optimism in sequential MLIP tuning?",
+      "hypothesis": "A query budget plus reserved confirmation reduces validation-to-shadow optimism relative to evaluating every candidate.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 5, "ml_relevance": 5, "computational_chemistry_relevance": 3, "available_evidence": 4, "new_experiment_feasibility": 5, "compute_cost": 5, "time_to_paper": 5, "risk_of_inconclusive_results": 4, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 55
+    },
+    {
+      "id": "acquisition-stability",
+      "title": "Robust disagreement-diversity acquisition under tiny budgets",
+      "family": "active learning",
+      "question": "Is disagreement-window plus diversity selection more stable to small prediction perturbations than disagreement top-k?",
+      "hypothesis": "The hybrid gate improves selection Jaccard similarity by at least 0.15 while retaining at least 90 percent of mean disagreement.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 4, "ml_relevance": 4, "computational_chemistry_relevance": 5, "available_evidence": 5, "new_experiment_feasibility": 5, "compute_cost": 5, "time_to_paper": 5, "risk_of_inconclusive_results": 4, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 56
+    },
+    {
+      "id": "exactly-once",
+      "title": "Exactly-once optimizer execution under crash injection",
+      "family": "systems reliability",
+      "question": "Do sealed receipts prevent duplicate optimizer effects under interruption better than resend-on-timeout execution?",
+      "hypothesis": "The receipt protocol yields zero duplicate optimizer steps and escalates every ambiguous start.",
+      "scores": {"novelty": 3, "falsifiability": 5, "scientific_relevance": 3, "ml_relevance": 5, "computational_chemistry_relevance": 4, "available_evidence": 4, "new_experiment_feasibility": 5, "compute_cost": 5, "time_to_paper": 4, "risk_of_inconclusive_results": 5, "useful_negative_evidence": 4, "track1_fit": 5},
+      "total": 52
+    },
+    {
+      "id": "e0-ranking",
+      "title": "E0-aware checkpoint evaluation without post-hoc selection",
+      "family": "MLIP evaluation",
+      "question": "Can reference-centered and force-only endpoints prevent atomic-reference alignment from masquerading as checkpoint superiority?",
+      "hypothesis": "Raw energy rankings are more sensitive to fixed E0 shifts than centered-energy or force rankings.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 5, "ml_relevance": 4, "computational_chemistry_relevance": 5, "available_evidence": 4, "new_experiment_feasibility": 4, "compute_cost": 4, "time_to_paper": 4, "risk_of_inconclusive_results": 3, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 52
+    },
+    {
+      "id": "stagnation-gates",
+      "title": "Stagnation-aware stopping and pivot gates",
+      "family": "agent decision policy",
+      "question": "Can preregistered stagnation gates reduce validation queries without increasing false accepts?",
+      "hypothesis": "Stopping after two non-improvements or a reproducibility violation reduces queries by at least 25 percent with no more than one percentage point higher false acceptance.",
+      "scores": {"novelty": 4, "falsifiability": 5, "scientific_relevance": 5, "ml_relevance": 5, "computational_chemistry_relevance": 3, "available_evidence": 5, "new_experiment_feasibility": 5, "compute_cost": 5, "time_to_paper": 5, "risk_of_inconclusive_results": 4, "useful_negative_evidence": 5, "track1_fit": 5},
+      "total": 56
+    },
+    {
+      "id": "action-conditioned-acquisition",
+      "title": "Action-conditioned prediction of acquisition outcomes",
+      "family": "world model",
+      "question": "Can a model predict the next MLIP state conditioned on the acquisition action?",
+      "hypothesis": "Action conditioning improves next-state metric prediction over a state-only predictor.",
+      "scores": {"novelty": 4, "falsifiability": 4, "scientific_relevance": 4, "ml_relevance": 5, "computational_chemistry_relevance": 5, "available_evidence": 1, "new_experiment_feasibility": 1, "compute_cost": 2, "time_to_paper": 1, "risk_of_inconclusive_results": 1, "useful_negative_evidence": 3, "track1_fit": 3},
+      "total": 34,
+      "rejected_reason": "No authorized acquisition-action transition dataset exists; calling the current replay a world model would violate the intervention-identifiability gate."
+    }
+  ]
+}

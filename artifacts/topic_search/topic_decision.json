@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "selected_primary": "trace-fault-audit",
+  "selected_fallback": "metric-not-sufficient",
+  "route": "general_track_1_research_system_evaluation",
+  "decision": "The fault-injection audit is selected because it is falsifiable, requires no protected labels or new remote compute, exercises the existing research harness, admits a meaningful negative outcome, and can use the verified real-MACE replay as an infrastructure-only case study. The fallback is already supported by the second remote iteration, where the primary metric threshold passed but reproducibility failed and the candidate was rejected.",
+  "world_model_gate": {
+    "selected": false,
+    "reason": "No observed, authorized action-to-next-state dataset exists for acquisition interventions."
+  },
+  "compute_decision": {
+    "remote_compute": false,
+    "reason": "Live credit and A100 inventory were verified, but the sealed cost approval, image digest approval, submission-schema calibration, H2 calibration protocol, and fresh remote-execution authorization are absent."
+  },
+  "claim_ceiling": "T2_remote_infrastructure_observation"
+}

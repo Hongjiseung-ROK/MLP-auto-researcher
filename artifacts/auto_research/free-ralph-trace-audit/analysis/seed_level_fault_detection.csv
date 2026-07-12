@@ -1,0 +1,9 @@
+seed,method,detected,corrupt_total,recall
+20260712,Manifest only,1,12,0.08333333333333333
+20260712,Semantic grader,12,12,1.0
+20260713,Manifest only,1,12,0.08333333333333333
+20260713,Semantic grader,12,12,1.0
+20260714,Manifest only,1,12,0.08333333333333333
+20260714,Semantic grader,12,12,1.0
+20260715,Manifest only,1,12,0.08333333333333333
+20260715,Semantic grader,12,12,1.0
