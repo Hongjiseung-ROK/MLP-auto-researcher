@@ -86,3 +86,13 @@ is unclear, fixtures become synthetically perturbed derivatives and the
 downloader remains the only acquisition path.
 Status: **resolved — BSD-3-Clause permits the committed four-record fixture
 with notice retention; full data remain fetched and gitignored.**
+
+**P2-Q8. Current VESSL Cloud installation, live schema, and spend approval.**
+May the official `vesslctl` installer modify the host PATH, after which the
+owner completes browser authentication and reviews the bundled skill? A later,
+separate decision must select one live A100 resource spec and approve the exact
+organization/team, price, credit, image, duration, storage, mounts, timeout,
+and cleanup card. Status: **open.** `vesslctl` is not installed; the installer,
+auth flow, skill install, live inventory, Job-file schema calibration, and all
+billable commands remain unexecuted. Credit availability will not count as
+authorization.

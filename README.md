@@ -29,6 +29,15 @@ rather than the final research topic. No full pilot, scientific fine-tuning
 result, or publication-grade claim has been completed; H2 (preregistration),
 H3 (pilot authorization), and H5 (claim release) remain open owner gates.
 
+The official Ralphthon @ICML plugin is pinned byte-for-byte at version `0.5.0`,
+commit `a9f4f258…`, and exposed through `.agents/skills` and `.claude/skills`.
+MLIP research uses the official General Track 1 route; the official VESSL
+cookbook Karpathy Training route remains separate and its `val_bpb` evidence
+cannot mix with MLIP energy/force metrics. A current-Cloud `vesslctl`
+transport, sealed cost gate, and two-sequential-Job MLIP replay contract are
+locally implemented and dry-run verified. No billable VESSL run, VESSL
+replication, or claim-bearing Track 1 paper has occurred.
+
 ## Setup
 
 ```bash
@@ -71,6 +80,12 @@ explicitly opt-in.
   `tests/`, `examples/`.
 - `src/mlip_research_agent/runtime/` — event-sourced executor, checkpoints,
   bounded recovery policy.
+- `third_party/ralphthon-icml/` — immutable official plugin snapshot plus
+  content-addressed source manifest.
+- `src/mlip_research_agent/compute/vessl_*.py`, `scripts/vessl/` — current
+  `vesslctl` read-only transport, cost gate, and dry-run two-Job replay contract.
+- `docs/competition/`, `paper/track1/` — General Track 1 routing, official
+  template copy, and non-claim-bearing evidence-map schema.
 - `configs/research/program_guardrail.yaml` — machine-readable statement that the
   current benchmark is a scaffold, including non-goals, claim ceiling, next gate,
   and criteria for leaving benchmark mode.

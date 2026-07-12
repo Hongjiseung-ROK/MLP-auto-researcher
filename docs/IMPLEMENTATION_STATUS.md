@@ -1,8 +1,8 @@
 # Implementation Status
 
-Last updated: 2026-07-12 (Phase 2 Level 4.5 — bounded Colab staging and the
-local synthetic Auto Research loop verified; PR #3 merged to `main` as
-`99a7a724`).
+Last updated: 2026-07-12 (Phase 2 Level 4.5 and remote real-MACE
+infrastructure replay verified; official Ralphthon/VESSL integration locally
+implemented and dry-run verified only).
 
 Phase 1 below remains the deterministic regression baseline. Current Phase 2
 truth is tracked in `docs/PHASE2_IMPLEMENTATION_STATUS.md`: qualified data,
@@ -25,7 +25,10 @@ and stable cleanup. This is infrastructure evidence only; H2/H3/H5 remain open.
 | Runtime attestation, immutable records (`compute/attestation.py`) | Done |
 | Preflight store + staleness gate (`compute/preflight.py`) | Done |
 | Router with audit log, override control, VESSL preflight gate (`compute/router.py`) | Done |
-| Local/Colab/VESSL adapters + mock transports (`local.py`, `_remote.py`, `colab.py`, `vessl.py`) | Done (mock transports; real transports gated on auth/budget answers) |
+| Local/Colab adapters + mock transports (`local.py`, `_remote.py`, `colab.py`, `vessl.py`) | Done |
+| Official Ralphthon plugin pin + project skill links | Done — version 0.5.0 at `a9f4f258…`; upstream tests/validator pass |
+| Current `vesslctl` read-only transport + sealed cost gate | Implemented locally; CLI missing, live schema/auth/cost inventory unavailable |
+| Two-sequential-Job VESSL MLIP replay | Dry-run contract verified; no Job, Workspace, Storage, or Volume created |
 | Colab CLI security review (google-colab-cli v0.6.0, pinned) | Done — `docs/SKILL_SECURITY_REVIEW.md`, ACCEPT with caveats |
 | Workspace skill `colab_preflight` (full contract + security.md) | Done |
 | Reflection skill `tea_time_with_reading_poem` (full contract, agent-text only) | Done |
@@ -33,7 +36,8 @@ and stable cleanup. This is infrastructure evidence only; H2/H3/H5 remain open.
 | Compute test suite (§11 acceptance list, `colab_remote`/`vessl_remote` markers) | Delegated to subagent, integrating |
 | Secret/large-file staging gate (`scripts/check_staged.py`) | Done |
 | GitHub publication to Hongjiseung-ROK/MLP-auto-researcher | Pending final gates |
-| Real Colab preflight / real VESSL run | **Not run** — blocked on owner budget/auth answers (by design) |
+| Real Colab replay | Done at `ec2d804` (infrastructure-only) |
+| Real VESSL run | **Not run** — blocked on CLI install, auth, live schema/cost card, and explicit spend authorization |
 
 ## Milestone 1 — mock vertical slice: **complete** (2026-07-10)
 
@@ -71,8 +75,8 @@ on clean machines plain `conda run` works.)
 
 ## Not implemented (deliberately or still in Phase 2)
 
-- A completed real-data remote Auto Research replay, DFT execution, a full
-  active-learning campaign, or a completed GPU research pilot.
+- A real VESSL replay, DFT execution, a full active-learning campaign, or a
+  completed GPU research pilot.
 - Claim-bearing model selection or checkpoint promotion; the replay target is
   infrastructure-only.
 - OpenHands runtime integration (OQ-8), MLflow/DVC/RO-Crate adapters (OQ-9).
@@ -95,7 +99,7 @@ on clean machines plain `conda run` works.)
 
 ## Next Phase 2 sequence
 
-Validate the exact-commit real-data/real-MACE Auto Research pipeline in one
-Colab L4 session, with a host review pause between two connected iterations,
-then retain the result as infrastructure evidence only. H2 remains unfrozen;
+After separate owner approval, install/authenticate `vesslctl`, calibrate the
+documented Job file schema from the live CLI, present the complete live A100
+cost card, and stop before `vesslctl job create --file`. H2 remains unfrozen;
 H3 and H5 remain open.

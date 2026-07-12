@@ -9,7 +9,8 @@ tests pass) / `verified` (independent fresh-context review passed) /
 Branch history: `phase2/real-colab-research` was merged to `main` as PR #2
 (merge commit `cb5b927`, 2026-07-11), and the Ralphthon core loop was merged
 as PR #3 (`99a7a724`, 2026-07-12). Current work continues on
-`phase3/remote-mlip-loop`. Phase 1 behavior is preserved; every interface
+`phase4/ralphthon-vessl-harness`, stacked from the green Phase 3 head while
+PR #4 remains open. Phase 1 behavior is preserved; every interface
 migration is recorded in `docs/PHASE2_DECISIONS.md`.
 
 Last updated: 2026-07-12.
@@ -37,8 +38,8 @@ Last updated: 2026-07-12.
 | WP4 | Real MACE fine-tuning | `skills/mlip/mace_finetune/` | WP3 | — | implemented locally + Colab-staged (full SKILL contract; boundary test: one real optimizer step changes 26 tensors; checkpoint round-trip resumes at epoch boundary on CPU and L4; NaN→LR/OOM→batch repair taxonomy tested) |
 | WP6 | Random + ensemble-UQ + diversity acquisition | `skills/active_learning/{random_select,ensemble_uq,diversity_select,decision_gate}/` | WP2, WP4 | — | implemented and locally tested; merged in PR #3 |
 | WP7 | Multi-round controller + stopping rules | `research/auto_research/` controller, round state schema | WP4–WP6 | — | implemented and independently trace-graded over two connected synthetic iterations; merged in PR #3 |
-| WP8 | Exact-commit infrastructure replay + later bounded pilot | `compute/*`, `configs/compute_policy.yaml`, `scripts/colab/` | WP7 | replay authorization is separate; **H3** still gates a pilot | infrastructure replay verified at `ec2d804`; full pilot remains blocked on H3 |
-| WP9 | Claim classes, evidence bundle, pilot report, VESSL spec | `schemas/claims.py` extension, `docs/research/{human_gates,colab_pilot_runbook,vessl_replication_spec}.md` | all | H5 for claim release | in_progress (claim classes/evidence tiers implemented; remaining bundle/report/spec deferred) |
+| WP8 | Exact-commit infrastructure replay + later bounded pilot | `compute/*`, `configs/compute_policy.yaml`, `scripts/{colab,vessl}/` | WP7 | replay authorization is separate; **H3** still gates a pilot | Colab infrastructure replay verified at `ec2d804`; VESSL two-Job contract dry-run verified only; full pilot blocked on H3 |
+| WP9 | Competition evidence, claim classes, pilot report, VESSL spec | `schemas/claims.py`, `third_party/ralphthon-icml/`, `docs/{competition,runbooks}/` | all | H5 for claim release | official plugin integrated; Track 1 template/evidence schema and VESSL cost gate implemented; no VESSL replication or claim release |
 
 ## Acceptance tests per WP (from plan_phase_2.md §10, §20)
 
@@ -100,6 +101,11 @@ one L4 with aggregate-only specialist review between them; both independent
 decisions were REJECT and support no model or scientific claim. No full pilot, scientific
 fine-tuning result, or publication-eligible claim has occurred; boundary
 runs use synthetic fixtures, never the protected Cu partitions.
+
+Official Ralphthon version 0.5.0 is pinned at `a9f4f258…`; MLIP routes through
+General Track 1. The current-Cloud `vesslctl` provider and two-sequential-Job
+contract are locally implemented/dry-run verified. `vesslctl` is absent, no
+live A100 inventory or price was selected, and no VESSL resource was created.
 
 Evidence (2026-07-12, through commit `8247a68` + staging record):
 default `pytest` 281 passed / 7 skipped (opt-in real-model + optional-dep

@@ -12,8 +12,9 @@ from typing import ClassVar
 
 from mlip_research_agent.compute._remote import RemoteProviderBase
 from mlip_research_agent.compute.schemas import GpuObservation, ProviderName
+from mlip_research_agent.compute.vessl_cloud import VesslCloudProvider
 
-__all__ = ["VesslProvider", "mock_a100_80gb_observation"]
+__all__ = ["VesslCloudProvider", "VesslProvider", "mock_a100_80gb_observation"]
 
 VESSL_AUTH_GUIDANCE = (
     "Install the current `vesslctl` CLI after explicit approval, then authenticate with "

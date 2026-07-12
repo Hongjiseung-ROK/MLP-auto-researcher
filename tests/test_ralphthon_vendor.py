@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 import yaml
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VENDOR_ROOT = REPO_ROOT / "third_party" / "ralphthon-icml"
 EXPECTED_COMMIT = "a9f4f2583648ef4ca54f980f951ae393d153473f"
