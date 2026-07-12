@@ -77,6 +77,7 @@ from mlip_research_agent.research.auto_research.review import (
     AgentReview,
     ReviewPacket,
     ReviewSynthesis,
+    verify_review_packet,
 )
 from mlip_research_agent.research.auto_research.round_state import (
     ALLOWED_TRANSITIONS,
@@ -161,4 +162,5 @@ __all__ = [
     "require_sealed",
     "run_tea_time_review",
     "select_trigger",
+    "verify_review_packet",
 ]

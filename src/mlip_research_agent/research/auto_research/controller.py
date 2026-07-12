@@ -71,6 +71,7 @@ from mlip_research_agent.research.auto_research.review import (
     AgentReview,
     ReviewPacket,
     ReviewSynthesis,
+    verify_review_packet,
 )
 from mlip_research_agent.research.auto_research.round_state import (
     TERMINAL_STATES,
@@ -203,6 +204,7 @@ class AutoResearchController:
             raise ControllerError("controller is not awaiting an external review")
         by_role = {review.role: review for review in reviews}
         require_sealed(review_packet, "review packet")
+        verify_review_packet(review_packet, self.run_dir)
         if len(by_role) != 3 or len(reviews) != 3:
             raise ControllerError("exactly three unique specialized reviews are required")
         for review in reviews:
@@ -837,19 +839,18 @@ class AutoResearchController:
                 mutation.scientific_effect
                 if decision.decision is DecisionValue.ACCEPT
                 else "The mutation did not produce the hypothesized effect within bounds; "
-                "the fixture landscape or the step size is the likely reason."
+                "the bounded response surface or step size is the likely reason."
             ),
             alternative_explanations=[
-                "The synthetic landscape's noise floor masks a smaller true effect.",
+                "The aggregate metric may mask a smaller configuration-specific effect.",
                 "The step size was too large or too small to reveal the mechanism.",
             ],
             limits=(
-                "Synthetic deterministic fixture; no scientific claim transfers to any "
-                "real MLIP system. Aggregate metrics only."
+                "Bounded infrastructure iteration; aggregate validation metrics support no "
+                "scientific or checkpoint-selection claim."
             ),
             applicability_conditions=(
-                "Applies only to this fixture landscape and this bounded mutation policy "
-                "within the declared ranges."
+                "Applies only to this adapter, exact inputs, and bounded mutation policy."
             ),
             anti_pattern=(
                 f"decision={decision.decision.value}: do not repeat an identical "
@@ -1011,7 +1012,7 @@ class AutoResearchController:
             f"- iterations completed: "
             f"{sum(1 for r in self.state.iterations if r.completed)} / "
             f"{self.objective.maximum_iterations}",
-            f"- compute used (simulated): {self.state.compute_seconds_used:.1f}s "
+            f"- compute used (recorded execution time): {self.state.compute_seconds_used:.1f}s "
             f"of {self.objective.budget.max_compute_seconds:.1f}s",
             "",
             f"> Scientific status: {self.objective.scientific_status_ceiling.value}. "

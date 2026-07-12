@@ -42,17 +42,24 @@ def _bounded_value(
 ) -> ConfigValue:
     allowed = policy.bounded_mutable[key]
     direction_lower = direction.lower()
-    increase = any(word in direction_lower for word in ("increase", "raise", "larger"))
+    increase_words = any(word in direction_lower for word in ("increase", "raise", "larger"))
+    decrease_words = any(word in direction_lower for word in ("decrease", "reduce", "smaller"))
+    if increase_words == decrease_words and allowed.value_type != "choice":
+        raise ValueError("numeric review direction must unambiguously increase or decrease")
+    increase = increase_words
     if key == "batch_size" and not increase:
         raise ValueError(
             "batch_size cannot decrease below the fixed 32-record replay training set"
         )
     if allowed.value_type == "choice":
         assert allowed.choices is not None
-        choices = [choice for choice in allowed.choices if choice != old]
-        if not choices:
-            raise ValueError(f"no alternative allowed value for {key}")
-        return choices[0]
+        prefix = "set_to:"
+        if not direction_lower.startswith(prefix):
+            raise ValueError("choice review direction must use set_to:<allowed-choice>")
+        selected = direction_lower.removeprefix(prefix).strip()
+        if selected == old or selected not in allowed.choices:
+            raise ValueError(f"invalid choice direction for {key}: {selected}")
+        return selected
     if isinstance(old, bool) or not isinstance(old, int | float):
         raise ValueError(f"current value for {key} is not numeric")
     assert allowed.minimum is not None and allowed.maximum is not None
@@ -163,6 +170,8 @@ def seal_bundle(
         estimated_compute=EstimatedCompute(device="gpu", estimated_seconds=600.0, remote=True),
         required_skills=[
             "tea_time_with_reading_poem",
+            "mace_finetune",
+            "mlip_metrics",
             f"review_synthesis:{synthesis.content_sha256}",
         ],
         risk_class="medium",

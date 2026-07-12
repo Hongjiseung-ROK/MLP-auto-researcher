@@ -145,10 +145,15 @@ def verify_registered_manifest(root: Path) -> None:
 
 
 def _confirm_stopped(session: str, *, deadline: float) -> str:
+    absent_polls = 0
     while True:
         sessions = _run(["colab", "sessions"], timeout=min(30, _remaining(deadline)))
         if session not in sessions:
-            return "confirmed_absent"
+            absent_polls += 1
+            if absent_polls >= 3:
+                return "confirmed_absent_stable"
+        else:
+            absent_polls = 0
         if _remaining(deadline) <= 5:
             raise RuntimeError(f"Colab session {session} remains active")
         time.sleep(2)
@@ -174,7 +179,10 @@ def run_replay(args: argparse.Namespace) -> Path:
     verify_bounded_view_membership(view, split)
     if args.output.exists():
         raise ReplayContractError("pull-back destination must not already exist")
+    if args.review_bundle.exists():
+        raise ReplayContractError("review bundle must not preexist the iteration-1 pause")
     deadline = time.monotonic() + args.max_runtime_minutes * 60
+    session_started = time.monotonic()
     session = f"ral-{args.commit[:8]}"
     run_id = f"ralphthon-mace-{args.commit[:8]}"
     cleanup_attempt_required = False
@@ -323,7 +331,7 @@ print('REMOTE_STEP_OK')
                     stop_error = f"stop command timed out: {exc}"
                 cleanup_deadline = time.monotonic() + 120
                 cleanup_state = _confirm_stopped(session, deadline=cleanup_deadline)
-                if stop_error and cleanup_state != "confirmed_absent":
+                if stop_error and cleanup_state != "confirmed_absent_stable":
                     raise RuntimeError(f"failed to stop Colab session: {stop_error}")
                 print(f"COLAB_CLEANUP={cleanup_state}:{session}", flush=True)
         (temporary_output / "cleanup_confirmation.json").write_text(
@@ -331,6 +339,8 @@ print('REMOTE_STEP_OK')
                 {
                     "session": session,
                     "status": cleanup_state,
+                    "session_elapsed_seconds": time.monotonic() - session_started,
+                    "maximum_session_seconds": args.max_runtime_minutes * 60,
                     "scientific_status": "infrastructure_only",
                     "claim_eligible": False,
                 },

@@ -126,3 +126,10 @@ def build_review_packet(run_dir: Path) -> ReviewPacket:
         artifact_file_sha256=hashes,
         allowed_evidence_artifact_ids=sorted(payloads),
     ).sealed()
+
+
+def verify_review_packet(packet: ReviewPacket, run_dir: Path) -> None:
+    """Rebind a sealed packet to the exact iteration-one files on disk."""
+    expected = build_review_packet(run_dir)
+    if not packet.verify_seal() or packet != expected:
+        raise ValueError("review packet does not match the current iteration-one artifacts")

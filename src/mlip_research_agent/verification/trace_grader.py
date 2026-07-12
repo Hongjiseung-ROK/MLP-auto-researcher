@@ -49,12 +49,20 @@ from mlip_research_agent.research.auto_research.mutation import (
     MutationPolicy,
 )
 from mlip_research_agent.research.auto_research.objective import ResearchObjective
+from mlip_research_agent.research.auto_research.operations import (
+    OptimizerOperationReceipt,
+    OptimizerOperationRequest,
+)
 from mlip_research_agent.research.auto_research.proposal import ExperimentProposal
 from mlip_research_agent.research.auto_research.tea_time_boundary import (
     REQUIRED_TRIGGERS,
     TeaTimeReviewRecord,
 )
-from mlip_research_agent.research.auto_research.validators import ContentAddressedModel
+from mlip_research_agent.research.auto_research.validators import (
+    ContentAddressedModel,
+    canonical_json,
+    sha256_of_text,
+)
 
 #: Payload keys that indicate protected data leaked into the trace.
 FORBIDDEN_TRACE_KEYS = frozenset(
@@ -178,6 +186,7 @@ class _Grader:
         if objective is not None and policy is not None and lineage is not None:
             assert isinstance(objective, ResearchObjective)
             self._check_lineage_objective(lineage, objective)
+            self._check_lineage_nodes(lineage)
             baseline_metrics = self._baseline_metrics()
             for iteration in lineage.iterations:
                 it_dir = self.run_dir / iteration.iteration_id
@@ -246,6 +255,39 @@ class _Grader:
                 "objective node hash does not match objective.json",
             )
 
+    def _check_lineage_nodes(self, lineage: ExperimentLineage) -> None:
+        completion = self._load_json(self.run_dir / "completion_status.json")
+        if isinstance(completion, dict) and len(lineage.iterations) != completion.get(
+            "iterations_completed"
+        ):
+            self.flag("lineage", "lineage.json", "lineage iteration count mismatches completion")
+        for iteration in lineage.iterations:
+            it_dir = self.run_dir / iteration.iteration_id
+            nodes = {node.kind: node for node in iteration.nodes}
+            expected_kinds = {
+                kind for kind, (filename, _) in NODE_FILES.items() if (it_dir / filename).is_file()
+            }
+            if set(nodes) != expected_kinds:
+                self.flag(
+                    "lineage",
+                    iteration.iteration_id,
+                    "lineage node set differs from on-disk chain",
+                )
+            for kind, node in nodes.items():
+                filename, model_cls = NODE_FILES[kind]
+                model = self._load(it_dir, filename, model_cls)
+                expected_id = f"{iteration.iteration_id}:{filename}"
+                if model is not None and (
+                    node.content_sha256 != model.content_sha256
+                    or node.node_id != expected_id
+                    or node.artifact_id != expected_id
+                ):
+                    self.flag(
+                        "lineage",
+                        iteration.iteration_id,
+                        f"lineage node {kind.value} does not bind the actual artifact",
+                    )
+
     def _baseline_metrics(self) -> dict[str, float]:
         baseline = self._load(
             self.run_dir / "baseline", "evaluation.json", EvaluationOutcome
@@ -294,6 +336,16 @@ class _Grader:
         ):
             if not artifact_rel:
                 self.flag("skill_selection", loc, "tea time skill artifacts missing")
+            else:
+                registry = ArtifactRegistry.load(self.run_dir)
+                artifact = registry.get(artifact_rel)
+                if artifact is None or not registry.verify(artifact_rel):
+                    self.flag(
+                        "skill_selection",
+                        loc,
+                        f"tea time artifact is missing or unregistered: {artifact_rel}",
+                    )
+        self._check_tea_time_event_order(iteration_id)
 
         # Mutation legality and bounds.
         if legality.proposal_id != proposal.proposal_id:
@@ -449,6 +501,39 @@ class _Grader:
         ):
             return dict(evaluation.aggregate_metrics)
         return baseline_metrics
+
+    def _check_tea_time_event_order(self, iteration_id: str) -> None:
+        path = self.run_dir / "events.jsonl"
+        if not path.is_file():
+            self.flag("tea_time", iteration_id, "event log is absent")
+            return
+        events = [json.loads(line) for line in path.read_text().splitlines() if line]
+        tea_sequences = [
+            event["sequence"]
+            for event in events
+            if event.get("event_type") == "step_started"
+            and event.get("step_id")
+            in {
+                f"{iteration_id}:proposal_ready",
+                f"{iteration_id}:next_proposal_ready",
+            }
+        ]
+        execution_sequences = [
+            event["sequence"]
+            for event in events
+            if event.get("event_type") == "step_started"
+            and event.get("step_id") == f"{iteration_id}:mutation_applied"
+        ]
+        if (
+            len(tea_sequences) != 1
+            or len(execution_sequences) != 1
+            or tea_sequences[0] >= execution_sequences[0]
+        ):
+            self.flag(
+                "tea_time",
+                iteration_id,
+                "Tea Time is not uniquely event-ordered before execution",
+            )
 
     def _load_optional_diff(self, it_dir: Path) -> MutationDiff | None:
         if not (it_dir / "mutation_diff.json").is_file():
@@ -639,6 +724,14 @@ def grade_remote_infrastructure_trace(
         remote_infrastructure_authorized=True,
     ).grade()
     violations: list[TraceViolation] = list(core.violations)
+    if core.n_iterations_graded != 2:
+        violations.append(
+            TraceViolation(
+                check="lineage",
+                location="lineage.json",
+                detail="remote replay must contain exactly two graded iterations",
+            )
+        )
 
     def flag(check: str, location: str, detail: str) -> None:
         violations.append(TraceViolation(check=check, location=location, detail=detail))
@@ -720,9 +813,20 @@ def grade_remote_infrastructure_trace(
         Path(__file__).resolve().parents[3]
         / "scripts/colab/ralphthon_mace_replay_requirements.txt"
     )
+    replay_config = (
+        Path(__file__).resolve().parents[3]
+        / "configs/research/ralphthon_mace_replay.yaml"
+    )
     if (
         environment.get("dependency_lock_sha256") != sha256_file(dependency_lock)
         or environment.get("pip_freeze_sha256") != sha256_file(run_dir / "pip_freeze.txt")
+        or attestation.get("environment_hash") != sha256_file(dependency_lock)
+        or attestation.get("config_hash") != sha256_file(replay_config)
+        or not str(environment.get("torch_version", "")).startswith("2.11.0")
+        or environment.get("mace_torch_version") != "0.3.16"
+        or environment.get("e3nn_version") != "0.4.4"
+        or environment.get("numpy_version") != "2.0.2"
+        or environment.get("ase_version") != "3.29.0"
     ):
         flag("dependency_lock", "environment.json", "dependency lock/freeze identity mismatch")
     baseline_evaluation = json.loads((run_dir / "baseline/evaluation.json").read_text())
@@ -741,13 +845,19 @@ def grade_remote_infrastructure_trace(
     ) is not False:
         flag("unsupported_claims", "completion_status.json", "completion status is claim-bearing")
     cleanup = json.loads((run_dir / "cleanup_confirmation.json").read_text())
-    if cleanup.get("status") != "confirmed_absent":
+    if (
+        cleanup.get("status") != "confirmed_absent_stable"
+        or not isinstance(cleanup.get("session_elapsed_seconds"), int | float)
+        or cleanup.get("session_elapsed_seconds", 3601) > 3600
+        or cleanup.get("maximum_session_seconds") != 3600
+    ):
         flag("colab_cleanup", "cleanup_confirmation.json", "Colab session absence not confirmed")
     try:
         from mlip_research_agent.research.auto_research.review import (
             AgentReview,
             ReviewPacket,
             ReviewSynthesis,
+            verify_review_packet,
         )
 
         reviews = {
@@ -772,6 +882,7 @@ def grade_remote_infrastructure_trace(
                 "agent_reviews/iteration-001/review_packet.json",
                 "packet seal/link mismatch",
             )
+        verify_review_packet(packet, run_dir)
         if not synthesis.verify_seal():
             flag(
                 "agent_reviews",
@@ -823,9 +934,12 @@ def grade_remote_infrastructure_trace(
                 if expects_increase
                 else mutation2.new_value < mutation2.old_value
             )
+        elif isinstance(mutation2.new_value, str):
+            numeric_direction_ok = direction == f"set_to:{mutation2.new_value}".lower()
         if (
             mutation2.target_key != synthesis.recommended_mutation_class
             or not numeric_direction_ok
+            or not {"mace_finetune", "mlip_metrics"}.issubset(proposal2.required_skills)
         ):
             flag(
                 "proposal_lineage",
@@ -878,18 +992,61 @@ def grade_remote_infrastructure_trace(
         if execution.get("git_commit") != exact_commit:
             flag("exact_commit", f"{iteration}/execution.json", "execution commit mismatch")
         operation_dir = run_dir / iteration / "workdir" / "operation"
+        requests = list(operation_dir.glob("operation_request.json"))
         starts = list(operation_dir.glob("operation_started.json"))
         completes = list(operation_dir.glob("operation_completed.json"))
-        if len(starts) != 1 or len(completes) != 1:
-            flag("exactly_once", iteration, "requires one start and one completion receipt")
+        if len(requests) != 1 or len(starts) != 1 or len(completes) != 1:
+            flag(
+                "exactly_once",
+                iteration,
+                "requires one request, one start, and one completion receipt",
+            )
             continue
-        complete = json.loads(completes[0].read_text())
-        started = json.loads(starts[0].read_text())
-        operation_id = str(complete.get("operation_id"))
-        if operation_id in operation_ids or complete.get("optimizer_steps") != 1:
+        try:
+            request = OptimizerOperationRequest.model_validate_json(requests[0].read_text())
+            started = OptimizerOperationReceipt.model_validate_json(starts[0].read_text())
+            complete = OptimizerOperationReceipt.model_validate_json(completes[0].read_text())
+        except (OSError, ValueError, ValidationError) as exc:
+            flag("exactly_once", iteration, f"invalid optimizer request/receipt: {exc}")
+            continue
+        if not request.verify_seal() or not started.verify_seal() or not complete.verify_seal():
+            flag("exactly_once", iteration, "optimizer request/receipt seal mismatch")
+        operation_id = complete.operation_id
+        if operation_id in operation_ids or complete.optimizer_steps != 1:
             flag("exactly_once", iteration, "duplicate operation id or optimizer-step count")
-        if complete.get("request_sha256") != started.get("request_sha256"):
+        if (
+            complete.request_sha256 != started.request_sha256
+            or complete.request_sha256 != request.content_sha256
+            or started.status != "started"
+            or complete.status != "complete"
+        ):
             flag("exactly_once", iteration, "start/completion request identity mismatch")
+        candidate_config = json.loads((run_dir / iteration / "candidate_config.json").read_text())
+        if (
+            request.git_commit != exact_commit
+            or request.proposal_fingerprint != proposal.content_sha256
+            or request.config_fingerprint
+            != sha256_of_text(canonical_json(candidate_config))
+            or request.seed != proposal.seed
+            or request.dataset_content_sha256
+            != "bc9b78ca5e3b95f91bf34bbc3641a3d6e3f92338b4e3d97065165157848cfc48"
+            or request.split_manifest_sha256
+            != "80d9b95083ebba9d8f988a461525b326ba807c79da834b066d1917afc9d8a15e"
+            or request.checkpoint_sha256
+            != "2ddb079cee0e131eaaf6912ba581b394551ead283e95c99cfe78c605d10b5736"
+        ):
+            flag("exactly_once", iteration, "optimizer request is not bound to run inputs")
+        try:
+            output_hashes_match = (
+                complete.model_sha256
+                == sha256_file(run_dir / iteration / "workdir/fine_tuned.model")
+                and complete.checkpoint_sha256
+                == sha256_file(run_dir / iteration / "workdir/optimizer_checkpoint.pt")
+            )
+        except OSError:
+            output_hashes_match = False
+        if not output_hashes_match:
+            flag("exactly_once", iteration, "completion hashes do not match produced files")
         operation_ids.add(operation_id)
         decision = ExperimentDecision.model_validate_json(
             (run_dir / iteration / "decision.json").read_text()

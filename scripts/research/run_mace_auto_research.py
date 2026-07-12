@@ -138,6 +138,10 @@ def _write_run_verifications(args: argparse.Namespace) -> None:
         spec,
         observation,
         run_id=args.run_id,
+        environment_hash=sha256_file(
+            REPO_ROOT / "scripts/colab/ralphthon_mace_replay_requirements.txt"
+        ),
+        config_hash=sha256_file(REPO_ROOT / args.config),
     )
     if attestation.policy_decision is not Decision.ALLOW:
         raise RuntimeError(f"L4 attestation denied: {attestation.policy_reasons}")

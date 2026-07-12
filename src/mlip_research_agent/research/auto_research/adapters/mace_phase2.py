@@ -222,10 +222,15 @@ class MACEPhase2Adapter:
         operation_receipt_path: Path | None = None
         if workdir.name != "baseline":
             config_hash = sha256_of_text(canonical_json(config))
+            proposal = ExperimentProposal.model_validate_json(
+                (workdir.parent / "proposal.json").read_text()
+            )
+            if not proposal.verify_seal():
+                raise ValueError("optimizer request proposal seal mismatch")
             request = OptimizerOperationRequest(
                 operation_id=f"{workdir.parent.name}-{workdir.parent.parent.name}"[:64].lower(),
                 git_commit=self.git_commit,
-                proposal_fingerprint=config_hash,
+                proposal_fingerprint=proposal.content_sha256,
                 config_fingerprint=config_hash,
                 seed=seed,
                 dataset_content_sha256=view.source_dataset_content_sha256,

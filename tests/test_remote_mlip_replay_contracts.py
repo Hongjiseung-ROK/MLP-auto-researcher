@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import time
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
@@ -24,7 +25,6 @@ from mlip_research_agent.research.auto_research import (
     LocalDemoConfig,
     LoopState,
     MutationPolicy,
-    ReviewPacket,
     ReviewSynthesis,
     SyntheticAggregateEvaluator,
     SyntheticQuadraticAdapter,
@@ -224,11 +224,16 @@ def test_controller_pauses_for_sealed_external_reviews(tmp_path: Path) -> None:
     )
     assert controller.run() is LoopState.AWAITING_EXTERNAL_REVIEW
     assert not (controller.run_dir / "iteration-002").exists()
-    packet = ReviewPacket(
-        artifact_payloads={"iteration_001_evaluation": {}},
-        artifact_file_sha256={"iteration_001_evaluation": "b" * 64},
-        allowed_evidence_artifact_ids=["iteration_001_evaluation"],
-    ).sealed()
+    for name in (
+        "compute_attestation.json",
+        "dataset_verification.json",
+        "split_verification.json",
+        "checkpoint_verification.json",
+    ):
+        (controller.run_dir / name).write_text("{}\n")
+    from mlip_research_agent.research.auto_research.review import build_review_packet
+
+    packet = build_review_packet(controller.run_dir)
     reviews = [
         _review(role, packet.content_sha256)
         for role in ("mlip_scientist", "active_learning_scientist", "scientific_auditor")
@@ -385,6 +390,24 @@ def test_host_cleanup_runs_after_allocation_ambiguity(
     assert any(command[:2] == ["colab", "stop"] for command in stopped)
 
 
+def test_cleanup_requires_stable_absence(monkeypatch: pytest.MonkeyPatch) -> None:
+    module = _host_module()
+    observations = iter(["", "ral-aaaaaaaa", "", "", ""])
+    polls: list[int] = []
+
+    def sessions(command: list[str], **kwargs: object) -> str:
+        polls.append(1)
+        return next(observations)
+
+    monkeypatch.setattr(module, "_run", sessions)
+    monkeypatch.setattr(module.time, "sleep", lambda seconds: None)
+    assert (
+        module._confirm_stopped("ral-aaaaaaaa", deadline=time.monotonic() + 30)
+        == "confirmed_absent_stable"
+    )
+    assert len(polls) == 5
+
+
 @pytest.mark.parametrize("torch_count,smi", [(0, ""), (2, "GPU 0\nGPU 1\n"), (1, "")])
 def test_remote_rejects_observed_gpu_count_mismatch(torch_count: int, smi: str) -> None:
     module = _remote_module()
@@ -435,7 +458,10 @@ def test_host_review_sealer_binds_iteration_one_and_makes_legal_proposal(
         external_review_after_iteration=1,
     )
     assert controller.run() is LoopState.AWAITING_EXTERNAL_REVIEW
-    from mlip_research_agent.research.auto_research.review import build_review_packet
+    from mlip_research_agent.research.auto_research.review import (
+        build_review_packet,
+        verify_review_packet,
+    )
 
     for name in (
         "compute_attestation.json",
@@ -479,4 +505,8 @@ def test_host_review_sealer_binds_iteration_one_and_makes_legal_proposal(
     assert proposal.verify_seal()
     assert proposal.parent_iteration_id == "iteration-001"
     assert f"review_synthesis:{synthesis.content_sha256}" in proposal.required_skills
+    assert {"mace_finetune", "mlip_metrics"}.issubset(proposal.required_skills)
     assert (output / "READY").read_text() == "sealed\n"
+    (controller.run_dir / "iteration-001/evaluation.json").write_text("{}\n")
+    with pytest.raises(ValueError, match="does not match"):
+        verify_review_packet(packet, controller.run_dir)
